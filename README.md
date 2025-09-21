@@ -3,7 +3,7 @@
 
 <p align="center">
   <!-- Espacio para el logo -->
-  <img src="Proyecto/Source/logo.png" alt="Logo del Proyecto" width="200"/>
+  <img src="/Proyecto/Source/Logo.png" alt="Logo del Proyecto" width="200"/>
 </p>
 
 ---
