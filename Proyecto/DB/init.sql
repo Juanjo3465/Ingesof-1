@@ -25,13 +25,13 @@ CREATE TABLE IF NOT EXISTS Conjunto (
 -- =====================================================
 CREATE TABLE IF NOT EXISTS Usuario (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    cedula VARCHAR(20) UNIQUE NOT NULL,
+    cedula INT UNSIGNED UNIQUE NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     fecha_nacimiento DATE,
     correo VARCHAR(120) UNIQUE NOT NULL,
     contrasena VARCHAR(255) NOT NULL,
     celular VARCHAR(15),
-    rol VARCHAR(50) NOT NULL,
+    rol ENUM('Admin','Propietario','Residente') NOT NULL,
     INDEX idx_cedula (cedula),
     INDEX idx_correo (correo)
 );
@@ -63,7 +63,6 @@ CREATE TABLE IF NOT EXISTS Residente (
     id_usuario INT,
     id_apartamento INT,
     fecha_inicio DATE,
-    fecha_fin DATE,
     PRIMARY KEY (id_usuario, id_apartamento),
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_apartamento) REFERENCES Apartamentos(id_apartamento) ON DELETE CASCADE
