@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS Reserva (
     id_zona_comun INT NOT NULL,
     id_usuario INT NOT NULL,
     fecha_hora DATETIME NOT NULL,
+    cantidad_personas INT NOT NULL,
     duracion INT NOT NULL,
     costo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     estado VARCHAR(20) DEFAULT 'Pendiente',
@@ -110,8 +111,7 @@ CREATE TABLE IF NOT EXISTS Publicacion (
     fecha_publicacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     descripcion TEXT,
     categoria VARCHAR(50),
-    visibilidad BOOLEAN DEFAULT TRUE,
-    estado BOOLEAN DEFAULT TRUE,
+    visibilidad BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE,
     INDEX idx_fecha (fecha_publicacion),
     INDEX idx_categoria (categoria)
@@ -140,8 +140,10 @@ CREATE TABLE IF NOT EXISTS Mensaje (
     asunto VARCHAR(100) NOT NULL,
     descripcion TEXT,
     fecha_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    conversacion VARCHAR(200),
-    INDEX idx_fecha (fecha_hora)
+    conversacion INT NOT NULL,
+    FULLTEXT INDEX ft_mensaje_busqueda (asunto, descripcion),
+    INDEX idx_fecha (fecha_hora),
+    INDEX idx_conversacion (conversacion)
 );
 
 -- =====================================================
@@ -153,6 +155,7 @@ CREATE TABLE IF NOT EXISTS Documento_Mensaje (
     nombre VARCHAR(100),
     extension VARCHAR(10) NOT NULL,
     documento LONGBLOB NOT NULL,
+    fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_documento, id_mensaje),
     FOREIGN KEY (id_mensaje) REFERENCES Mensaje(id_mensaje) ON DELETE CASCADE
 );
@@ -163,7 +166,7 @@ CREATE TABLE IF NOT EXISTS Documento_Mensaje (
 CREATE TABLE IF NOT EXISTS Usuario_Mensaje (
     id_usuario INT,
     id_mensaje INT,
-    papel VARCHAR(50) NOT NULL,
+    papel ENUM('Emisor','Receptor'),
     destacado BOOLEAN DEFAULT FALSE,
     leido BOOLEAN DEFAULT FALSE,
     fecha_lectura DATETIME,
@@ -208,6 +211,7 @@ CREATE TABLE IF NOT EXISTS Asamblea (
 CREATE TABLE IF NOT EXISTS Delegado (
     id_propietario INT,
     id_asamblea INT,
+    cedula INT UNSIGNED NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     PRIMARY KEY (id_propietario, id_asamblea),
     FOREIGN KEY (id_propietario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE,
