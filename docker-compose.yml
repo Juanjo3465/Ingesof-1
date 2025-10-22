@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql_web
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3306:3306"                            # Expone MySQL en el puerto 3306 del host
+    volumes:
+      - mysql_data:/var/lib/mysql             
+    networks:
+      - webnet
+
+volumes:
+  mysql_data:
+
+networks:
+  webnet:
+    driver: bridge
