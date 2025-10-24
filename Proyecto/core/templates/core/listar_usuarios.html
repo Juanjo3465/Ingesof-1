@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Usuarios</title>
+</head>
+<body>
+    <h1>¡Conexión Exitosa! Usuarios en la Base de Datos</h1>
+
+    <ul>
+        {% for usuario in usuarios %}
+            <li>
+                <strong>Nombre:</strong> {{ usuario.nombre }} | 
+                <strong>Cédula:</strong> {{ usuario.cedula }} | 
+                <strong>Correo:</strong> {{ usuario.correo }}
+            </li>
+        {% empty %}
+            <li>No hay usuarios registrados en la base de datos.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
