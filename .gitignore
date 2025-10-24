@@ -2,6 +2,29 @@
 .gradle/
 build/
 
+#El entorno virual de django
+venv/
+/venv/
+
+#Archivos de configuracion local
+.env
+
+# Bases de datos locales
+*.sqlite3
+db.sqlite3
+
+# Archivos compilados de Python
+__pycache__/
+*.pyc
+
+# Archivos de tu editor de código
+.vscode/
+.idea/
+
+# Archivos estáticos y de medios (si los tienes)
+/static/
+/media/
+
 # Local configuration file (sdk path, etc)
 local.properties
 
