@@ -21,6 +21,9 @@ def listar_usuarios(request):
     contexto = {'usuarios': usuarios}
     return render(request, 'core/listar_usuarios.html', contexto)
 
+def header_user(request):
+    return render(request, 'core/header_user.html')
+
 
 def hola(request):
     return HttpResponse("Hola Django, la app core está funcionando ✅")
