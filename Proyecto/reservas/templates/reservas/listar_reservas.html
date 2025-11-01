@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Reservas</title>
+</head>
+<body>
+    <h1>Sistema de Reservas - Registros Actuales</h1>
+    <p>Esta página demuestra que la app 'reservas' está leyendo los datos correctamente desde la base de datos.</p>
+
+    <ul>
+        {# Este es el inicio de un bucle en el lenguaje de plantillas de Django. #}
+        {# La variable 'reservas' es la lista de objetos que le pasaremos desde la vista. #}
+        {% for reserva in reservas %}
+
+            <li>
+                {# Usamos la sintaxis de doble llave para acceder a los atributos de cada objeto 'reserva'. #}
+                <strong>ID Reserva:</strong> {{ reserva.id_reserva }} |
+                <strong>Usuario:</strong> {{ reserva.id_usuario.nombre }} |  {# Podemos navegar relaciones ForeignKey con la notación de punto #}
+                <strong>Zona Común:</strong> {{ reserva.id_zona_comun.nombre }} |
+                <strong>Fecha y Hora:</strong> {{ reserva.fecha_hora }}
+            </li>
+
+        {# El bloque 'empty' se mostrará si la lista 'reservas' que pasamos está vacía. #}
+        {# Es una forma muy limpia de manejar el caso de "no hay resultados". #}
+        {% empty %}
+            <li>No se encontraron reservas en la base de datos.</li>
+        {% endfor %}
+        {# Este es el fin del bucle. #}
+    </ul>
+</body>
+</html>
