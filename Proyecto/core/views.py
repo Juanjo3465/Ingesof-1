@@ -49,8 +49,19 @@ def enter_code(request):
         codigo_ingresado = request.POST.get('codigo')
         
         # Falta logica de verificar y reenviar codigo
+        
+        return redirect('Change_pass')
     
     return render(request, "core/enter_code.html")
+
+def change_password(request):    
+    if request.method == 'POST':
+        nueva_password = request.POST.get('nueva_password')
+        confirmar_password = request.POST.get('confirmar_password')
+        
+        # Falta logica de confirmar contraseña
+
+    return render(request, 'core/change_password.html')
 
 
 def hola(request):
