@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión</title>
+    <title>Restablecer Contraseña - Código</title>
     <style>
         * {
             margin: 0;
@@ -22,11 +23,11 @@
 
         /* Contenedor del modal */
         .modal-container {
-            background: linear-gradient(to bottom, #87CEEB 0%, #5F9EA0 100%);
-            border-radius: 10px;
-            padding: 40px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #5F9EA0 100%);;
+            border-radius: 5px;
+            padding: 40px 50px;
             width: 90%;
-            max-width: 400px;
+            max-width: 380px;
             position: relative;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
@@ -58,22 +59,21 @@
         /* Título */
         .modal-title {
             text-align: center;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: normal;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             color: #333;
         }
 
-        /* Labels */
-        .form-label {
-            display: block;
+        /* Texto descriptivo */
+        .form-description {
             text-align: center;
-            font-size: 14px;
-            margin-bottom: 8px;
+            font-size: 13px;
+            margin-bottom: 15px;
             color: #333;
         }
 
-        /* Inputs */
+        /* Input */
         .form-input {
             width: 100%;
             padding: 10px;
@@ -95,17 +95,19 @@
             border-bottom-color: #555;
         }
 
-        /* Botón iniciar sesión */
+        /* Botón siguiente */
         .submit-button {
             width: 100%;
-            padding: 12px;
+            max-width: 140px;
+            padding: 10px;
             background-color: #333;
             color: white;
             border: none;
-            border-radius: 25px;
-            font-size: 14px;
+            border-radius: 20px;
+            font-size: 13px;
             cursor: pointer;
-            margin-top: 10px;
+            display: block;
+            margin: 0 auto 15px;
             transition: background-color 0.3s;
         }
 
@@ -113,26 +115,25 @@
             background-color: #555;
         }
 
-        /* Link olvidó contraseña */
-        .forgot-password {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .forgot-link {
-            background-color: #555;
-            color: white;
-            padding: 10px 20px;
+        /* Botón reenviar */
+        .resend-button {
+            width: 100%;
+            max-width: 140px;
+            padding: 10px;
+            background-color: transparent;
+            color: #333;
+            border: 2px solid #333;
             border-radius: 20px;
-            text-decoration: none;
             font-size: 13px;
-            display: inline-block;
-            transition: background-color 0.3s;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            transition: all 0.3s;
         }
 
-        .forgot-link:hover {
-            background-color: #666;
+        .resend-button:hover {
+            background-color: #333;
+            color: white;
         }
     </style>
 </head>
@@ -140,43 +141,36 @@
     <div id="modalOverlay">
         <div class="modal-container">
 
-            <button class="close-button"> X </button>  <!-- Falta el URL -->
+            <button class="close-button">X</button> <!-- Falta logica de cerrar -->
 
-            <h2 class="modal-title">Inicio de sesión</h2>
+            <h2 class="modal-title">Restablecer contraseña</h2>
 
             {% if error %}
-            <div style="background-color: #ffcccc; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; color: #cc0000;">
+            <div style="background-color: #ffcccc; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; color: #cc0000; font-size: 12px;">
                 {{ error }}
             </div>
             {% endif %}
 
-            <form action="{% url 'Login' %}" method="POST">
+            <form action="{% url 'Enter_code' %}" method="POST">
                 {% csrf_token %}
-                
-                <label class="form-label">Ingrese su usuario</label>
+
+                <p class="form-description">Ingrese el código enviado a su correo:</p>
+
                 <input 
                     type="text" 
-                    name="username" 
+                    name="codigo" 
                     class="form-input" 
-                    placeholder="Usuario" 
+                    placeholder="Código" 
                     required
+                    maxlength="6"
                 >
 
-                <label class="form-label">Ingrese su contraseña</label>
-                <input 
-                    type="password" 
-                    name="password" 
-                    class="form-input" 
-                    placeholder="Contraseña" 
-                    required
-                >
-
-                <button type="submit" class="submit-button">Iniciar sesión</button>
+                <button type="submit" class="submit-button">Siguiente</button>  
             </form>
 
-            <div class="forgot-password">
-                <a href="Confirmar_usuario/" class="forgot-link">Olvidó su contraseña?</a>  <!-- Falta el URL -->
-            </div>
+            <button type="button" class="resend-button"> <!-- Falta la logica de reenvio -->
+                Reenviar
+            </button>
         </div>
     </div>
 </body>

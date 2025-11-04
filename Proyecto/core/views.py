@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Usuario 
 
@@ -39,8 +39,18 @@ def confirm_user(request):
         
         # Falta logica de confirmar usuario y enviar email (posible token)
         
+        return redirect('Enter_code')
+        
     
     return render(request, 'core/confirm_user.html')
+
+def enter_code(request):
+    if request.method == 'POST':
+        codigo_ingresado = request.POST.get('codigo')
+        
+        # Falta logica de verificar y reenviar codigo
+    
+    return render(request, "core/enter_code.html")
 
 
 def hola(request):
