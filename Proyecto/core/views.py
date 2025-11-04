@@ -24,6 +24,24 @@ def listar_usuarios(request):
 def header_user(request):
     return render(request, 'core/header_user.html')
 
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        # Falta logica de login
+    
+    return render(request, 'core/login_interface.html')
+
+def confirm_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        
+        # Falta logica de confirmar usuario y enviar email (posible token)
+        
+    
+    return render(request, 'core/confirm_user.html')
+
 
 def hola(request):
     return HttpResponse("Hola Django, la app core está funcionando ✅")
