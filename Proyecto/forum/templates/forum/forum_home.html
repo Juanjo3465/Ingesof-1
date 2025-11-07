@@ -1,0 +1,180 @@
+<!-- forum.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .forum-container {
+        background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 80%; /* Adjust as needed */
+        max-width: 900px;
+        height: 90%; /* Adjust as needed */
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+    .forum-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .forum-header .category-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    .forum-header .category-button {
+        background-color: #e0e0e0;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #333;
+    }
+    .forum-header .category-button.active {
+        background-color: #007bff; /* Blue for active */
+        color: white;
+    }
+    .forum-header .my-posts-button {
+        background-color: #28a745; /* Green */
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .posts-scroll-window {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding-right: 10px; /* For scrollbar */
+        position: relative;
+    }
+    .post-card {
+        background-color: white;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+    .post-card .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .post-card .user-info .material-icons {
+        font-size: 24px;
+        color: #555;
+    }
+    .post-card .username {
+        font-weight: bold;
+        color: #333;
+    }
+    .post-card .post-content {
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+    .post-card .post-image-placeholder {
+        background-color: #d3cce6; /* Light purple */
+        height: 150px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #6a5acd; /* Darker purple text */
+        margin-bottom: 10px;
+    }
+    .post-card .reply-icon {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        font-size: 20px;
+        color: #777;
+    }
+    .post-card .read-more {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .add-post-button {
+        position: absolute;
+        bottom: 30px; /* Adjust as needed */
+        right: 30px; /* Adjust as needed */
+        background-color: #007bff;
+        color: white;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 36px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        z-index: 10;
+    }
+</style>
+
+<div class="forum-container">
+    <div class="forum-header">
+        <div class="category-buttons">
+            <button class="category-button active">Categoria</button>
+            <button class="category-button">...</button>
+            <button class="category-button">...</button>
+        </div>
+        <button class="my-posts-button">Mis publicaciones</button>
+    </div>
+
+    <div class="posts-scroll-window">
+        <div class="post-card">
+            <div class="user-info">
+                <span class="material-icons">person</span>
+                <span class="username">Juan Perez</span>
+            </div>
+            <p class="post-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae repellat provident voluptatum velit laudantium similique doloribus quia perferendis debitis, architecto eligendi delectus...</p>
+            <div class="post-image-placeholder">Imagen</div>
+            <span class="material-icons reply-icon">reply</span>
+        </div>
+
+        <div class="post-card">
+            <div class="user-info">
+                <span class="material-icons">person</span>
+                <span class="username">Juan Perez</span>
+            </div>
+            <p class="post-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae repellat provident <a href="#" class="read-more">Leer mas...</a></p>
+            <span class="material-icons reply-icon">reply</span>
+        </div>
+
+        <div class="post-card">
+            <div class="user-info">
+                <span class="material-icons">person</span>
+                <span class="username">Maria Lopez</span>
+            </div>
+            <p class="post-content">This is another example post without an image. It could be a long discussion or a quick question to the community.</p>
+            <span class="material-icons reply-icon">reply</span>
+        </div>
+
+        <div class="post-card">
+            <div class="user-info">
+                <span class="material-icons">person</span>
+                <span class="username">Carlos Garcia</span>
+            </div>
+            <p class="post-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, earum. Repellat, illum. Reprehenderit, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae repellat provident voluptatum velit laudantium similique doloribus quia perferendis debitis, architecto eligendi delectus...</p>
+            <div class="post-image-placeholder">Another Image</div>
+            <span class="material-icons reply-icon">reply</span>
+        </div>
+        <!-- Add more post-card elements here to fill the scrollable window -->
+    </div>
+
+    <div class="add-post-button">
+        <span class="material-icons">add</span>
+    </div>
+</div>
+{% endblock %}
