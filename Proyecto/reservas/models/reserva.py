@@ -1,6 +1,4 @@
 from django.db import models
-from core.models import Usuario
-from .zonaComun import ZonaComun
 
 class Reserva(models.Model):
     id_reserva = models.AutoField(primary_key=True)
@@ -15,4 +13,3 @@ class Reserva(models.Model):
     class Meta:
         managed = False
         db_table = 'Reserva'
-
