@@ -2,7 +2,7 @@
 set -e
 
 # Variables de configuración para la conexión a MySQL
-MYSQL_SERVICE="mysql-db"
+MYSQL_SERVICE="mysql_db"
 MYSQL_USER="root"
 MYSQL_PASSWORD="1234"
 SQL_FILE="Proyecto/DB/init.sql"
