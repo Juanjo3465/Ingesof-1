@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'forum.apps.ForumConfig',
+    'reservas.apps.ReservasConfig',
 ]
 
 MIDDLEWARE = [

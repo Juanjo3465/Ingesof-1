@@ -11,26 +11,6 @@ class Usuario(models.Model):
     celular = models.CharField(max_length=15, blank=True, null=True)
     rol = models.CharField(max_length=11)
     
-    _estado_rol=None
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._estado_rol=self.get_state()
-        
-    def get_state(self):
-        
-        state={
-            'Admin':Administrador(),
-            'Propietario':Propietario(),
-            'Residente':Residente()    
-        }
-        
-        return state[self.rol]
-    
-    def get_permission(self):
-        return self._estado_rol.get_permission()
-        
-
     class Meta:
-        managed = False
         db_table = 'Usuario'
