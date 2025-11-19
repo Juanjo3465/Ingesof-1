@@ -3,7 +3,7 @@ from django.db import models
 class Reserva(models.Model):
     id_reserva = models.AutoField(primary_key=True)
     id_zona_comun = models.ForeignKey('ZonaComun', models.CASCADE, db_column='id_zona_comun')
-    id_usuario = models.ForeignKey('Usuario', models.CASCADE, db_column='id_usuario')
+    id_usuario = models.ForeignKey('core.Usuario', models.CASCADE, db_column='id_usuario')
     fecha_hora = models.DateTimeField()
     cantidad_personas = models.IntegerField()
     duracion = models.IntegerField()
@@ -13,4 +13,3 @@ class Reserva(models.Model):
     class Meta:
         managed = False
         db_table = 'Reserva'
-
