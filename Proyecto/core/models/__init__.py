@@ -9,11 +9,9 @@ from .mensaje import Mensaje
 from .peticion import Peticion
 from .publicacion import Publicacion
 from .reporte import Reporte
-from .reserva import Reserva
 from .residente import Residente
 from .usuario import Usuario
 from .usuarioMensaje import UsuarioMensaje
-from .zonaComun import ZonaComun
 
 __all__ = [
     'Apartamentos',

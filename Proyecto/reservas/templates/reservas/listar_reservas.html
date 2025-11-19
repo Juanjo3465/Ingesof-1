@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Reservas</title>
+</head>
+<body>
+    {% load tz %}
+    <h1>Sistema de Reservas - Registros Actuales</h1>
+    <p>Esta página demuestra que la app 'reservas' está leyendo los datos correctamente desde la base de datos.</p>
+
+    <ul>
+        {% for reserva in reservas %}
+
+            <li>
+                
+                <strong>ID Reserva:</strong> {{ reserva.id_reserva }} |
+                <strong>Usuario:</strong> {{ reserva.id_usuario.nombre }} |  
+                <strong>Zona Común:</strong> {{ reserva.id_zona_comun.nombre }} |
+                <strong>Fecha y Hora:</strong> {{ reserva.fecha_hora|localtime|date:"j F, Y, g:i a" }}
+
+            </li>
+        {% empty %}
+            <li>No se encontraron reservas en la base de datos.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
