@@ -1,5 +1,6 @@
+"""Urls del core del proyecto"""
 from django.urls import path
-from . import views
+from core.views import views
 
 urlpatterns = [
     path('Usuarios/', views.listar_usuarios, name='lista_de_usuarios'),

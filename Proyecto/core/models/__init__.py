@@ -1,3 +1,4 @@
+"""Paquete models"""
 from .apartamentos import Apartamentos
 from .asamblea import Asamblea
 from .conjunto import Conjunto

@@ -1,6 +1,8 @@
+"""Modelo Mensaje"""
 from django.db import models
 
 class Mensaje(models.Model):
+    """"""
     id_mensaje = models.AutoField(primary_key=True)
     categoria = models.CharField(max_length=50, blank=True, null=True)
     asunto = models.CharField(max_length=100)
@@ -9,5 +11,6 @@ class Mensaje(models.Model):
     conversacion = models.IntegerField()
 
     class Meta:
+        """"""
         managed = False
         db_table = 'Mensaje'

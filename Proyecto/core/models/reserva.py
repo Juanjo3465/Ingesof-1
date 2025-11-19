@@ -1,6 +1,8 @@
+"""Modulo Reserva"""
 from django.db import models
 
 class Reserva(models.Model):
+    """"""
     id_reserva = models.AutoField(primary_key=True)
     id_zona_comun = models.ForeignKey('ZonaComun', models.CASCADE, db_column='id_zona_comun')
     id_usuario = models.ForeignKey('Usuario', models.CASCADE, db_column='id_usuario')
@@ -11,6 +13,6 @@ class Reserva(models.Model):
     estado = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
+        """"""
         managed = False
         db_table = 'Reserva'
-
