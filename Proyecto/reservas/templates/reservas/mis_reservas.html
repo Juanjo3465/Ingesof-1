@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Reservas</title>
+    <link rel="stylesheet" href="{% static 'reservas/estilos_reserva.css' %}">
+</head>
+<body>
+    <div class="container">
+        
+        <h1 class="main-title">Residente</h1>
+        
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        <div class="form-box">
+            <h2>Mis reservas</h2>
+            
+            <form action = "{% url 'lista_de_reservas' %}" method="post">
+                {% csrf_token %}
+                
+                <div class="table-container" style="max-height: 400px;">
+                    <table class="reservas-table">
+                        <thead>
+                            <tr>
+                                <th>Zona Comun</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Cancelar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reserva in reservas %}
+                            <tr>
+                                <td>{{ reserva.id_zona_comun.nombre }}</td>
+                                <td>{{ reserva.fecha_hora|date:"d M Y" }}</td>
+                                <td>{{ reserva.fecha_hora|date:"h:i A" }}</td>
+                                <td>
+                                    <input type="checkbox" name="reservas_a_cancelar" value="{{ reserva.pk }}">
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" style="text-align: center;">No tienes ninguna reserva activa.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <button type="submit" class="btn-confirm">Confirmar</button>
+
+            </form>
+        </div>
+    </div>
+</body>
+</html>

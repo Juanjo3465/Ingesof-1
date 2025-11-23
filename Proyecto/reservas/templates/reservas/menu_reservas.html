@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú de Reservas</title>
+    <link rel="stylesheet" href="{% static 'reservas/estilos_reserva.css' %}">
+</head>
+<body>
+    <div class="container">
+        
+        <div class="menu-box">
+            
+            <h1 class="main-title">Residente</h1>
+            <p class="subtitle">Bienvenido al sistema de reservas para zonas comunes</p>
+            <p class="instruction-text">Para continuar selecciona lo que quieres hacer</p>
+            
+            <div class="menu-buttons">
+                
+                <a href="{% url 'horarios_disponibles' %}" class="btn-menu">Horarios disponibles</a>
+                <a href="{% url 'crear_reserva' %}" class="btn-menu">Reservar</a>
+                <a href="{% url 'lista_de_reservas' %}" class="btn-menu">Consultar mis reservaciones</a>
+                
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -9,6 +9,13 @@
 <body>
     <div class="container">
         <h1 class="main-title">Residente</h1>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <div class="form-box">
             <h2>Horarios disponibles mas proximos</h2>
                 <form action="{% url 'horarios_disponibles' %}" method="get" class="filter-form">
