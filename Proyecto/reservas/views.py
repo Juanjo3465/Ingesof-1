@@ -38,6 +38,7 @@ def listar_reservas(request):
         'reservas' : reservas_usuario 
     }
     return render(request,'reservas/mis_reservas.html',contexto)
+
 #Renderiza el template de crear_reservas
 def crear_reserva_view(request):
 
@@ -60,6 +61,14 @@ def crear_reserva_view(request):
             messages.error(request, 'Lo sentimos, este horario ya no está disponible. Por favor, elija otro.')
             return redirect('crear_reserva')
 
+        if not crear_reservas_service.valida_reserva_posterior_ahora(campos_ingresados):
+            messages.error(request, 'No se pueden hacer reservaciones en horarios previos a la fecha actual')
+            return redirect('crear_reserva')
+        
+        if not crear_reservas_service.valida_alcance_reserva(campos_ingresados):
+            messages.error(request, 'No se pueden agenda reservas en un rango superior a 6 meses')
+            return redirect('crear_reserva')
+        
         try:
             usuario_actual = Usuario.objects.get(pk=1)
             zona_comun_obj = ZonaComun.objects.get(pk=campos_ingresados['id_zona_comun'])

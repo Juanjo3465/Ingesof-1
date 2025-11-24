@@ -1,23 +1,13 @@
+{% extends 'base_reservas.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Mis Reservas</title>
-    <link rel="stylesheet" href="{% static 'reservas/estilos_reserva.css' %}">
-</head>
-<body>
-    <div class="container">
+
+{% block title %} Mis Reservas - My Building App {% endblock %}
         
+{% block content_1 %}
         <h1 class="main-title">Residente</h1>
-        
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+{% endblock %}
+
+{% block content_2 %}
         <div class="form-box">
             <h2>Mis reservas</h2>
             
@@ -57,6 +47,4 @@
 
             </form>
         </div>
-    </div>
-</body>
-</html>
+{% endblock %}

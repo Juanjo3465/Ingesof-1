@@ -1,17 +1,16 @@
+{% extends 'base_reservas.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Menú de Reservas</title>
-    <link rel="stylesheet" href="{% static 'reservas/estilos_reserva.css' %}">
-</head>
-<body>
-    <div class="container">
-        
+
+{% block title %} Menu Reservas - My Building App {% endblock %}
+
+{% block content_1 %}
         <div class="menu-box">
             
             <h1 class="main-title">Residente</h1>
+{% endblock %}
+
+{% block content_2 %}
+
             <p class="subtitle">Bienvenido al sistema de reservas para zonas comunes</p>
             <p class="instruction-text">Para continuar selecciona lo que quieres hacer</p>
             
@@ -24,6 +23,4 @@
             </div>
         </div>
 
-    </div>
-</body>
-</html>
+{% endblock %}
