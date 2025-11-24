@@ -1,6 +1,8 @@
+"""Modulo Apartamento"""
 from django.db import models
 
 class Apartamentos(models.Model):
+    """"""
     id_apartamento = models.AutoField(primary_key=True)
     interior = models.IntegerField(blank=True, null=True)
     torre = models.IntegerField()
@@ -14,6 +16,7 @@ class Apartamentos(models.Model):
     parqueadero = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """"""
         managed = False
         db_table = 'Apartamentos'
         unique_together = (('torre', 'numero'),)

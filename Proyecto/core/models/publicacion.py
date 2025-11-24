@@ -1,6 +1,8 @@
+"""Modulo Publicacion"""
 from django.db import models
 
 class Publicacion(models.Model):
+    """"""
     id_publicacion = models.AutoField(primary_key=True)
     id_usuario = models.ForeignKey('Usuario', models.CASCADE, db_column='id_usuario')
     titulo = models.CharField(max_length=150)
@@ -10,6 +12,6 @@ class Publicacion(models.Model):
     visibilidad = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """"""
         managed = False
         db_table = 'Publicacion'
-        

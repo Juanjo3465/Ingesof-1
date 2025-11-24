@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer Contraseña - Código</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Contenedor del modal */
+        .modal-container {
+            background: linear-gradient(to bottom, #87CEEB 0%, #5F9EA0 100%);
+            border-radius: 5px;
+            padding: 40px 50px;
+            width: 90%;
+            max-width: 380px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Botón cerrar (X) */
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .close-button:hover {
+            background-color: #555;
+        }
+
+        /* Título */
+        .modal-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: normal;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        /* Texto descriptivo */
+        .form-description {
+            text-align: center;
+            font-size: 13px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Input */
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-bottom: 2px solid #333;
+            background-color: transparent;
+            font-size: 14px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-input::placeholder {
+            color: #333;
+        }
+
+        .form-input:focus {
+            border-bottom-color: #555;
+        }
+
+        /* Botón siguiente */
+        .submit-button {
+            width: 100%;
+            max-width: 140px;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto 15px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #555;
+        }
+
+        /* Botón reenviar */
+        .resend-button {
+            width: 100%;
+            max-width: 140px;
+            padding: 10px;
+            background-color: transparent;
+            color: #333;
+            border: 2px solid #333;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            transition: all 0.3s;
+        }
+
+        .resend-button:hover {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="modalOverlay">
+        <div class="modal-container">
+
+            <button class="close-button">X</button> <!-- Falta logica de cerrar -->
+
+            <h2 class="modal-title">Restablecer contraseña</h2>
+
+            {% if error %}
+            <div style="background-color: #ffcccc; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; color: #cc0000; font-size: 12px;">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form action="{% url 'Enter_code' %}" method="POST">
+                {% csrf_token %}
+
+                <p class="form-description">Ingrese el código enviado a su correo:</p>
+
+                <input 
+                    type="text" 
+                    name="codigo" 
+                    class="form-input" 
+                    placeholder="Código" 
+                    required
+                    maxlength="6"
+                >
+
+                <button type="submit" class="submit-button">Siguiente</button>  
+            </form>
+
+            <button type="button" class="resend-button"> <!-- Falta la logica de reenvio -->
+                Reenviar
+            </button>
+        </div>
+    </div>
+</body>
+</html>
