@@ -134,6 +134,16 @@
         .forgot-link:hover {
             background-color: #666;
         }
+
+        /*Mensaje de error*/
+        .error-message {
+        background-color: #ffcccc;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        text-align: center;
+        color: #cc0000;
+        }
     </style>
 </head>
 <body>
@@ -145,7 +155,7 @@
             <h2 class="modal-title">Inicio de sesión</h2>
 
             {% if error %}
-            <div style="background-color: #ffcccc; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; color: #cc0000;">
+            <div class="error-message">
                 {{ error }}
             </div>
             {% endif %}
@@ -160,6 +170,7 @@
                     class="form-input" 
                     placeholder="Usuario" 
                     required
+                    value="{{ username }}"
                 >
 
                 <label class="form-label">Ingrese su contraseña</label>

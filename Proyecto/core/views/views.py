@@ -1,6 +1,8 @@
 """Funciones views de Django"""
 from django.shortcuts import render, redirect
 from ..models import Usuario
+from ..services import LogService
+from ..services.decorators import login_required
 
 class UsuarioManager:
     """"""
@@ -22,6 +24,7 @@ def listar_usuarios(request):
     contexto = {'usuarios': usuarios}
     return render(request, 'core/listar_usuarios.html', contexto)
 
+@login_required
 def header_user(request):
     """"""
     return render(request, 'core/header_user.html')
@@ -32,8 +35,18 @@ def login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Falta logica de login
+        log=LogService().login(request, username, password)
+        
+        if log:
+            return redirect('Header_user')
 
+        context= {
+            "error": "Usuario o contraseña incorrecta",
+            "username": username
+        }
+        
+        return render(request, 'core/login_interface.html', context)
+        
     return render(request, 'core/login_interface.html')
 
 def confirm_user(request):
