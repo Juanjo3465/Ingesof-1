@@ -1,6 +1,8 @@
+"""Modulo Conjunto"""
 from django.db import models
 
 class Conjunto(models.Model):
+    """"""
     id_conjunto = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=150)
@@ -13,5 +15,6 @@ class Conjunto(models.Model):
     estado_financiero = models.TextField(blank=True, null=True)
 
     class Meta:
+        """"""
         managed = False
         db_table = 'Conjunto'
