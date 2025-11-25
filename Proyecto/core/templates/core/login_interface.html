@@ -169,8 +169,8 @@
                     name="username" 
                     class="form-input" 
                     placeholder="Usuario" 
+                    value="{{ username|default:'' }}"
                     required
-                    value="{{ username }}"
                 >
 
                 <label class="form-label">Ingrese su contraseña</label>
@@ -186,7 +186,7 @@
             </form>
 
             <div class="forgot-password">
-                <a href="Confirmar_usuario/" class="forgot-link">Olvidó su contraseña?</a>  <!-- Falta el URL -->
+                <a href="{% url 'Confirm_user' %}" class="forgot-link">Olvidó su contraseña?</a> 
             </div>
         </div>
     </div>
