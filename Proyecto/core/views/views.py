@@ -21,10 +21,10 @@ def listar_usuarios(request):
     """"""
     manager = UsuarioManager()
     usuarios = manager.listar_todos()
-    contexto = {'usuarios': usuarios}
+    contexto = {'usuarios': usuarios, 'user_django': request.user.username}
     return render(request, 'core/listar_usuarios.html', contexto)
 
-@login_required
+
 def header_user(request):
     """"""
     return render(request, 'core/header_user.html')

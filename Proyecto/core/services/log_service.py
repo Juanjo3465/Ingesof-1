@@ -10,6 +10,7 @@ class LogService:
         
         auth=AuthenticationService()
         user = auth.authenticate(request, email=username, password=password)
+
         if not user:
             return False
 

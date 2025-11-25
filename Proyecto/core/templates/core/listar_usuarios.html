@@ -10,14 +10,14 @@
     <ul>
         {% for usuario in usuarios %}
             <li>
-                <strong>Nombre:</strong> {{ usuario.nombre }} | 
-                <strong>Cédula:</strong> {{ usuario.cedula }} | 
-                <strong>Correo:</strong> {{ usuario.correo }} |
-                <strong>Permisos:</strong> {{ usuario.get_permission}}
+                <strong>Nombre:</strong> {{ usuario.nombre}}
             </li>
         {% empty %}
             <li>No hay usuarios registrados en la base de datos.</li>
-        {% endfor %}
+        {% endfor %}           
+            <li>
+                <strong>user:</strong> {{ user_django}}
+            </li>
     </ul>
 </body>
 </html>
