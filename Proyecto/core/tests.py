@@ -1,6 +1,6 @@
 """Test del proyecto"""
 import unittest
-from services import services
+from services import services, RecoveryService
 import pytest
 from main import solicitar_contrasena, validar_asunto, validar_descripcion
 
@@ -29,14 +29,15 @@ class TestValidarCodigo(unittest.TestCase):
     """"""
     def test_validar_codigo(self):
         """"""
-        self.assertEqual(services.valid_code(services.create_autetication_code(),6,4),True)
-        self.assertEqual(services.valid_code(services.create_autetication_code(8,4),8,4),True)
-        self.assertEqual(services.valid_code(services.create_autetication_code(8,0),8,0),True)
-        self.assertEqual(services.valid_code(services.create_autetication_code(8,-1),8,0),True)
-        self.assertEqual(services.valid_code(services.create_autetication_code(0,4),0,0),True)
-        self.assertEqual(services.valid_code(services.create_autetication_code(0,-1),0,0),True)
-        self.assertEqual(services.valid_code(services.create_autetication_code(-2,4),0,0),True)
-        self.assertEqual(services.valid_code(services.create_autetication_code(-2,-3),0,0),True)
+        recovery=RecoveryService()
+        self.assertEqual(services.valid_code_format(recovery.create_autetication_code(),6,4),True)
+        self.assertEqual(services.valid_code_format(recovery.create_autetication_code(8,4),8,4),True)
+        self.assertEqual(services.valid_code_format(recovery.create_autetication_code(8,0),8,0),True)
+        self.assertEqual(services.valid_code_format(recovery.create_autetication_code(8,-1),8,0),True)
+        self.assertEqual(services.valid_code_format(recovery.create_autetication_code(0,4),0,0),True)
+        self.assertEqual(services.valid_code_format(recovery.create_autetication_code(0,-1),0,0),True)
+        self.assertEqual(services.valid_code_format(recovery.create_autetication_code(-2,4),0,0),True)
+        self.assertEqual(services.valid_code_format(recovery.create_autetication_code(-2,-3),0,0),True)
 
 ###############################
 #        TEST CONTRASEÑA      #

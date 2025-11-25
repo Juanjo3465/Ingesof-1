@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from ..models import Usuario
 from ..services import LogService
-from ..services.decorators import login_required
+from ..services.decorators import login_required, role_required
 
 class UsuarioManager:
     """"""
@@ -17,14 +17,15 @@ class UsuarioManager:
         """"""
         return Usuario.objects.all()
 
+@role_required(Usuario.Rol_Administrador)
 def listar_usuarios(request):
     """"""
     manager = UsuarioManager()
     usuarios = manager.listar_todos()
-    contexto = {'usuarios': usuarios, 'user_django': request.user.username}
+    contexto = {'usuarios': usuarios, 'user_django': request.user}
     return render(request, 'core/listar_usuarios.html', contexto)
 
-
+@login_required
 def header_user(request):
     """"""
     return render(request, 'core/header_user.html')

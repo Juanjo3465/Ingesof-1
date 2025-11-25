@@ -16,7 +16,8 @@
             <li>No hay usuarios registrados en la base de datos.</li>
         {% endfor %}           
             <li>
-                <strong>user:</strong> {{ user_django}}
+                <strong>user:</strong> {{ user_django.username}}
+                <strong>rol:</strong> {{ user_django.role.get_name}}
             </li>
     </ul>
 </body>
