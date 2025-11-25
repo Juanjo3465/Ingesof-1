@@ -114,6 +114,16 @@
         .submit-button:hover {
             background-color: #555;
         }
+
+        /*Mensaje de error*/
+        .error-message {
+        background-color: #ffcccc;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        text-align: center;
+        color: #cc0000;
+        }
     </style>
 </head>
 <body>
@@ -127,7 +137,7 @@
             <h2 class="modal-title">Restablecer contraseña</h2>
 
             {% if error %}
-            <div style="background-color: #ffcccc; padding: 10px; border-radius: 5px; margin-bottom: 20px; text-align: center; color: #cc0000; font-size: 13px;">
+            <div class="error-message">
                 {{ error }}
             </div>
             {% endif %}

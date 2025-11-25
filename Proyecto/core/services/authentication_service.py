@@ -38,15 +38,15 @@ class AuthenticationService:
 
     def get_user(self, user_id):
         """Devuelve el usuario y el rol de este, se utiliza en cada request"""
+        
         try:
             user = User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
 
         try:
-            usuario = Usuario.objects.get(correo=user.email)
+            usuario = Usuario.objects.get(correo=user.username)
             user.role = usuario.get_rol
         except Usuario.DoesNotExist:
             return None
-
         return user

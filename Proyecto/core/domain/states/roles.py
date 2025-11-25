@@ -5,25 +5,27 @@ class Role(ABC):
     """Interfaz base para el patrón State basado en roles"""
 
     @abstractmethod
-    def get_name(self):
+    def get_name():
         """"""
         pass
 
 class Administrador(Role):
     """"""
-    
-    def get_name(self):
+    @classmethod
+    def get_name(cls):
         """"""
         return 'Admin'
     
 class Propietario(Role):
     """"""
-    def get_name(self):
+    @classmethod
+    def get_name(cls):
         """"""
         return 'Propietario'
 
 class Residente(Role):
     """"""
-    def get_name(self):
+    @classmethod
+    def get_name(cls):
         """"""
         return 'Residente'
