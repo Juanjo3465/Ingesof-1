@@ -1,0 +1,88 @@
+/* Estilos de templates relacionados con el login */
+
+html, body {
+    height: 100%;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.modal-container form,
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-container {
+    background: linear-gradient(to bottom, #87CEEB 0%, #5F9EA0 100%);
+    border-radius: 10px;
+    padding: 30px 40px;
+    width: 90%;
+    min-width: 450px;
+    max-width: 550px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: normal;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.form-description {
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.forgot-password {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.forgot-link {
+    background-color: #555;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 13px;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.forgot-link:hover {
+    background-color: #666;
+}
+
+.resend-button {
+    width: 100%;
+    max-width: 140px;
+    padding: 10px;
+    background-color: transparent;
+    color: #333;
+    border: 2px solid #333;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    transition: all 0.3s;
+}
+
+.resend-button:hover {
+    background-color: #333;
+    color: white;
+}

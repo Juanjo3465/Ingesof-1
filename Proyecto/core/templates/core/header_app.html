@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My building App{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/css/css_general.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/css_header.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+
+            <div class="icon-square">
+                <img src="{% static 'images/Logo.png' %}" 
+                     alt="Building Icon"
+                     class="header-icon">
+            </div>
+
+            <h1 class="header-text">My building App</h1>
+        </div>
+
+        <div class="header-right">
+            {% block header_buttons %}
+            {% endblock %}
+        </div>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+/* Estilos del header - paleta antigua */
+
+.header {
+    background: linear-gradient(to bottom, #87CEEB 0%, #5F9EA0 100%);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #4A7C7E;
+}
+
+/* Grupos izquierda y derecha */
+.header-left,
+.header-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Botón base usado por los botones de header */
+.header-button,
+.conjunto-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.header-button:hover,
+.conjunto-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.icon-circle,
+.icon-square {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-circle {
+    border-radius: 50%;
+}
+
+.icon-square {
+    border-radius: 5px;
+    font-size: 24px;
+}
+
+.icon-home,
+.icon-box {
+    font-size: 32px;
+}
+
+.header-text {
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.header-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    filter: invert(100%);
+}
