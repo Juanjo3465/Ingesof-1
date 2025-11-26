@@ -28,7 +28,7 @@ def listar_usuarios(request):
 @login_required
 def header_user(request):
     """"""
-    return render(request, 'core/header_user.html')
+    return render(request, 'header_user.html')
 
 def login_view(request):
     """"""

@@ -1,15 +1,14 @@
+{% extends 'header_app.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restablecer Contraseña</title>
-    <link rel="stylesheet" href="{% static 'core/css/css_general.css' %}">
-    <link rel="stylesheet" href="{% static 'core/css/css_login_templates.css' %}">
-</head>
-<body>
 
+{% block title %}Restablecer Contraseña-Usuario{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/css_login_templates.css' %}">
+{% endblock %}
+
+{% block body_class %}modal-body{% endblock %}
+
+{% block content %}
     <div id="modalOverlay">
 
         <div class="modal-container">
@@ -40,6 +39,4 @@
             </form>
         </div>
     </div>
-</body>
-
-</html>
+{% endblock %}

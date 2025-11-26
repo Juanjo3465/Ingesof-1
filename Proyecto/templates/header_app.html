@@ -10,11 +10,12 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+
     <header class="header">
         <div class="header-left">
 
             <div class="icon-square">
-                <img src="{% static 'images/Logo.png' %}" 
+                <img src="{% static 'core/images/Logo.png' %}" 
                      alt="Building Icon"
                      class="header-icon">
             </div>
@@ -27,11 +28,14 @@
             {% endblock %}
         </div>
     </header>
-
+    
+    <div class = "{% block body_class %}{% endblock %}">
     {% block content %}
     {% endblock %}
+    </div>
 
     {% block extra_js %}{% endblock %}
+
 </body>
 
 </html>
