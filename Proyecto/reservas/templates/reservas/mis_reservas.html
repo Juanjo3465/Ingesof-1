@@ -1,0 +1,50 @@
+{% extends 'base_reservas.html' %}
+{% load static %}
+
+{% block title %} Mis Reservas - My Building App {% endblock %}
+        
+{% block content_1 %}
+        <h1 class="main-title">Residente</h1>
+{% endblock %}
+
+{% block content_2 %}
+        <div class="form-box">
+            <h2>Mis reservas</h2>
+            
+            <form action = "{% url 'lista_de_reservas' %}" method="post">
+                {% csrf_token %}
+                
+                <div class="table-container" style="max-height: 400px;">
+                    <table class="reservas-table">
+                        <thead>
+                            <tr>
+                                <th>Zona Comun</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Cancelar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reserva in reservas %}
+                            <tr>
+                                <td>{{ reserva.id_zona_comun.nombre }}</td>
+                                <td>{{ reserva.fecha_hora|date:"d M Y" }}</td>
+                                <td>{{ reserva.fecha_hora|date:"h:i A" }}</td>
+                                <td>
+                                    <input type="checkbox" name="reservas_a_cancelar" value="{{ reserva.pk }}">
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" style="text-align: center;">No tienes ninguna reserva activa.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <button type="submit" class="btn-confirm">Confirmar</button>
+
+            </form>
+        </div>
+{% endblock %}

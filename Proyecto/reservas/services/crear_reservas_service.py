@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from django.utils import timezone
 from django.contrib import messages
 from ..models import Reserva
@@ -37,3 +37,25 @@ def reserva_existe(campos_ingresados):
             fecha_hora=campos_ingresados['fecha_reserva_completa']
         ).exists()
     return existe
+
+def valida_reserva_posterior_ahora(campos_ingresados):
+    
+    dia_hora_reserva = campos_ingresados['fecha_reserva_completa']
+    ahora_local = timezone.now()
+    if dia_hora_reserva > ahora_local:
+        return True
+    return False
+
+def valida_alcance_reserva(campos_ingresados):
+    
+    dia_hora_reserva = campos_ingresados['fecha_reserva_completa']
+    dias_max_prev_reservar = 180
+    fecha_limite_reserva = timezone.now() + timedelta(days=dias_max_prev_reservar)
+    
+    if dia_hora_reserva > fecha_limite_reserva:
+        return False
+    
+    return True
+    
+    
+    
