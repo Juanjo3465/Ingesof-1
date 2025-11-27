@@ -17,18 +17,8 @@ class UsuarioManager:
         """"""
         return Usuario.objects.all()
 
-@role_required(Usuario.Rol_Administrador)
-def listar_usuarios(request):
-    """"""
-    manager = UsuarioManager()
-    usuarios = manager.listar_todos()
-    contexto = {'usuarios': usuarios, 'user_django': request.user}
-    return render(request, 'core/listar_usuarios.html', contexto)
-
-@login_required
-def header_user(request):
-    """"""
-    return render(request, 'header_user.html')
+def inicial_page(request):
+    return render(request, 'core/inicial_page.html')
 
 def login_view(request):
     """"""
@@ -81,3 +71,16 @@ def change_password(request):
         # Falta logica de confirmar contraseña
 
     return render(request, 'core/change_password.html')
+
+@role_required(Usuario.Rol_Administrador)
+def listar_usuarios(request):
+    """"""
+    manager = UsuarioManager()
+    usuarios = manager.listar_todos()
+    contexto = {'usuarios': usuarios, 'user_django': request.user}
+    return render(request, 'core/listar_usuarios.html', contexto)
+
+@login_required
+def header_user(request):
+    """"""
+    return render(request, 'header_user.html')
