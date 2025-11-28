@@ -1,0 +1,29 @@
+{% extends 'partials/header_app.html' %}
+{% load static %}
+{% block title %}Pagina inicial{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/css_inicial_page.css' %}">
+{% endblock %}
+{% block header_buttons %}
+<form action="{% url 'Login' %}" method="GET" style="display: inline;">
+  <button type="submit" class="log-button" style="width: auto;">
+    Iniciar Sesión
+  </button>
+</form>
+{% endblock %}
+{% block content %}
+<main class="hero-section">
+  <div class="hero-content">
+    <div class="logo-container">
+      <img src="{% static 'core/images/Logo.png' %}" alt="Logo del Proyecto" class="logo">
+    </div>
+    
+    <h1 class="welcome-title">Bienvenido a My Building App</h1>
+    
+    <p class="welcome-subtitle">
+      Sistema de gestión de conjuntos
+    </p>
+    
+  </div>
+</main>
+{% endblock %}

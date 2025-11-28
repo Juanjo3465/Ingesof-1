@@ -36,7 +36,7 @@
 ---
 
 ## 📌 Estado Actual del Proyecto  
-🚧 En fase inicial de **análisis y diseño de requerimientos**.  
+🚧 En fase de desarrollo de **las principales funcionalidades**.  
 
 ---
 

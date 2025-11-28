@@ -1,14 +1,13 @@
+{% extends 'base_reservas.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Horarios Disponibles</title>
-    <link rel="stylesheet" href="{% static 'reservas/estilos_reserva.css' %}">
-</head>
-<body>
-    <div class="container">
+
+{% block title %} Horarios Disponibles - My Building App {% endblock %}
+
+{% block content_1 %}
         <h1 class="main-title">Residente</h1>
+{% endblock %}
+
+{% block content_2 %}
         <div class="form-box">
             <h2>Horarios disponibles mas proximos</h2>
                 <form action="{% url 'horarios_disponibles' %}" method="get" class="filter-form">
@@ -61,6 +60,4 @@
 
                 </form>
         </div>
-    </div>
-</body>
-</html>
+{% endblock %}

@@ -1,6 +1,8 @@
+"""Modelo Peticion"""
 from django.db import models
 
 class Peticion(models.Model):
+    """"""
     id_peticion = models.AutoField(primary_key=True)
     id_asamblea = models.ForeignKey('Asamblea', models.CASCADE, db_column='id_asamblea')
     id_propietario = models.ForeignKey('Usuario', models.CASCADE, db_column='id_propietario')
@@ -10,5 +12,6 @@ class Peticion(models.Model):
     estado = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
+        """"""
         managed = False
         db_table = 'Peticion'

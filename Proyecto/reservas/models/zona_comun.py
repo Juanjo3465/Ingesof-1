@@ -1,6 +1,8 @@
+"""Modulo Zona-Comun"""
 from django.db import models
 
 class ZonaComun(models.Model):
+    """"""
     id_zona_comun = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
@@ -12,5 +14,6 @@ class ZonaComun(models.Model):
     reglamento_uso = models.TextField(blank=True, null=True)
 
     class Meta:
+        """"""
         managed = False
         db_table = 'Zona_comun'

@@ -1,0 +1,44 @@
+{% extends 'partials/header_app.html' %}
+{% load static %}
+{% block title %}Restablecer Contraseña - Codigo{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/css_login_templates.css' %}">
+{% endblock %}
+{% block body_class %}modal-body{% endblock %}
+{% block content %}
+    <div id="modalOverlay">
+        <div class="modal-container">
+
+            <a href="{% url 'Inicial_page' %}" class="close-button">X</a>
+
+            <h2 class="modal-title">Restablecer contraseña</h2>
+
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form action="{% url 'Enter_code' %}" method="POST">
+                {% csrf_token %}
+
+                <p class="form-description">Ingrese el código enviado a su correo:</p>
+
+                <input 
+                    type="text" 
+                    name="codigo" 
+                    class="form-input" 
+                    placeholder="Código"
+                    required
+                    maxlength="6"
+                >
+
+                <button type="submit" class="submit-button">Siguiente</button>  
+            </form>
+
+            <button type="button" class="resend-button">
+                Reenviar
+            </button>
+        </div>
+    </div>
+{% endblock %}

@@ -1,23 +1,14 @@
-{% comment %} Carga la librería de archivos estáticos de Django {% endcomment %}
+{% extends 'base_reservas.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Nueva Reserva</title>
-    <link rel="stylesheet" href="{% static 'reservas/estilos_reserva.css' %}">
-</head>
-<body>
-    <div class="container">
+{% block title %} Hacer Reservación - My Building App {% endblock %}
+
+{% block content_1 %}
         <h1 class="main-title">Residente</h1>
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+{% endblock %}
+
+{% block content_2%}
+
         <div class="form-box">
             <p>Por favor seleccione un día para mostrar la disponibilidad horaria</p>
             
@@ -59,6 +50,4 @@
                 <button type="submit" class="btn-confirm">Confirmar</button>
             </form>
         </div>
-    </div>
-</body>
-</html>
+{% endblock %}
