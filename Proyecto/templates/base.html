@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My Building App{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{% static 'reservas/estilos_reserva.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+
+        {% block content_1 %}
+    
+
+        {% endblock %}
+        
+        {% block mensaje %}
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+        {% endblock %}
+        {% block content_2 %}
+    
+
+        {% endblock %}
+
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
