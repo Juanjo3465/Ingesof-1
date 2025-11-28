@@ -57,6 +57,7 @@ body {
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s;
+    text-decoration: none;
 }
 
 .close-button:hover {
@@ -95,17 +96,4 @@ body {
     padding: 10px;
     border-radius: 20px;
     font-size: 13px;
-}
-
-.content-container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 20px;
-}
-
-.content-box {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }

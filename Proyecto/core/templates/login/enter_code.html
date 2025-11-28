@@ -1,4 +1,4 @@
-{% extends 'header_app.html' %}
+{% extends 'partials/header_app.html' %}
 {% load static %}
 {% block title %}Restablecer Contraseña - Codigo{% endblock %}
 {% block extra_css %}
@@ -9,7 +9,7 @@
     <div id="modalOverlay">
         <div class="modal-container">
 
-            <button class="close-button">X</button>
+            <a href="{% url 'Inicial_page' %}" class="close-button">X</a>
 
             <h2 class="modal-title">Restablecer contraseña</h2>
 

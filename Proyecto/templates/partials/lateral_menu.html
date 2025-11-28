@@ -1,0 +1,18 @@
+<aside class="sidebar">
+    <nav>
+        <ul class="sidebar-menu">
+            {% for item in menu_items %}
+                <li class="sidebar-menu-item">
+                    <a href="{% url item.url %}" class="sidebar-menu-link {% if request.resolver_match.url_name == item.url %}active{% endif %}">
+                        <span class="sidebar-menu-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="{{ item.icon_path }}" fill="#333"/>
+                            </svg>
+                        </span>
+                        <span>{{ item.name }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</aside>

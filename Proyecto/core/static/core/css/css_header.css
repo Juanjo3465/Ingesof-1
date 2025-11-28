@@ -1,3 +1,4 @@
+/* Estilos del header */
 /* Estilos del header - paleta antigua */
 
 .header {
@@ -9,7 +10,6 @@
     border-bottom: 3px solid #4A7C7E;
 }
 
-/* Grupos izquierda y derecha */
 .header-left,
 .header-right {
     display: flex;
@@ -17,23 +17,58 @@
     align-items: center;
 }
 
-/* Botón base usado por los botones de header */
-.header-button,
-.conjunto-button {
-    background: none;
-    border: none;
+.header-button{
+    background: linear-gradient(135deg, #87CEEB 0%, #5F9EA0 100%);
+    border: 2px solid #333;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    font-weight: 500;
 }
 
-.header-button:hover,
+.header-button:hover{
+    background: linear-gradient(135deg, #87CEEB 50%, #5F9EA0 100%);
+    border-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.header-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.conjunto-button {
+    background-color: #333;
+    border: 2px solid #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    color: white;
+    font-weight: 500;
+}
+
 .conjunto-button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #87CEEB 0%, #5F9EA0 100%);
+    border-color: #333;
+    color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.conjunto-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .icon-circle,
@@ -41,10 +76,27 @@
     width: 40px;
     height: 40px;
     background-color: #333;
-    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 2px solid #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.icon-circle:hover,
+.icon-square:hover {
+    background: linear-gradient(135deg, #87CEEB 50%, #5F9EA0 100%);
+    border-color: #333;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.icon-circle:active,
+.icon-square:active {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .icon-circle {
@@ -59,6 +111,7 @@
 .icon-home,
 .icon-box {
     font-size: 32px;
+    color: inherit; 
 }
 
 .header-text {
@@ -73,18 +126,28 @@
     object-fit: contain;
 }
 
-.logout-button {
-    background-color: #333;
+.log-button {
+    background: #333;
+    border: 2px solid #333;
     color: white;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    font-weight: 500;
 }
 
-.logout-button:hover {
-    background-color: #555;
+.log-button:hover {
+    background: #555;
+    border-color: #333;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.log-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .logout-modal {
@@ -142,23 +205,31 @@
 
 .btn-cancel, .btn-confirm {
     padding: 10px 25px;
-    border: none;
-    border-radius: 5px;
+    border: 2px solid #333;
+    border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .btn-cancel {
     background-color: #6c757d;
+    border-color: #6c757d;
     color: white;
 }
 
 .btn-cancel:hover {
-    background-color: #5a6268;
+    background: #333;
+    border-color: #333;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.btn-cancel:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .btn-confirm {
@@ -167,7 +238,13 @@
 }
 
 .btn-confirm:hover {
-    background-color: #555;
+    background: #555;
+    border-color: #333;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.btn-confirm:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
