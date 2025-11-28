@@ -17,20 +17,10 @@ class UsuarioManager:
         """"""
         return Usuario.objects.all()
 
-@role_required(Usuario.Rol_Administrador)
-def listar_usuarios(request):
-    """"""
-    manager = UsuarioManager()
-    usuarios = manager.listar_todos()
-    contexto = {'usuarios': usuarios, 'user_django': request.user}
-    return render(request, 'core/listar_usuarios.html', contexto)
+def inicial_page(request):
+    return render(request, 'inicial_page.html')
 
-@login_required
-def header_user(request):
-    """"""
-    return render(request, 'core/header_user.html')
-
-def login_view(request):
+def login(request):
     """"""
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -39,16 +29,16 @@ def login_view(request):
         log=LogService().login(request, username, password)
         
         if log:
-            return redirect('Header_user')
+            return redirect('Menu')
 
         context= {
             "error": "Usuario o contraseña incorrecta",
             "username": username
         }
         
-        return render(request, 'core/login_interface.html', context)
+        return render(request, 'login/login_interface.html', context)
         
-    return render(request, 'core/login_interface.html')
+    return render(request, 'login/login_interface.html')
 
 def confirm_user(request):
     """"""
@@ -59,7 +49,7 @@ def confirm_user(request):
 
         return redirect('Enter_code')
 
-    return render(request, 'core/confirm_user.html')
+    return render(request, 'login/confirm_user.html')
 
 def enter_code(request):
     """"""
@@ -70,7 +60,7 @@ def enter_code(request):
 
         return redirect('Change_pass')
 
-    return render(request, "core/enter_code.html")
+    return render(request, "login/enter_code.html")
 
 def change_password(request):
     """"""
@@ -80,4 +70,27 @@ def change_password(request):
 
         # Falta logica de confirmar contraseña
 
-    return render(request, 'core/change_password.html')
+    return render(request, 'login/change_password.html')
+
+@role_required(Usuario.Rol_Administrador)
+def listar_usuarios(request):
+    """"""
+    manager = UsuarioManager()
+    usuarios = manager.listar_todos()
+    contexto = {'usuarios': usuarios, 'user_django': request.user}
+    return render(request, 'listar_usuarios.html', contexto)
+
+@login_required
+def menu(request):
+    """"""
+    return render(request, 'base_menu.html')
+
+@login_required
+def logout(request):
+    """"""
+    if request.method == 'POST':
+        auth=LogService()
+        auth.logout(request)
+        return redirect('Inicial_page')
+    return redirect('Menu')
+    

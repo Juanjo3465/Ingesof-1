@@ -6,9 +6,9 @@ from ..domain.states.roles import Administrador, Propietario, Residente
 class Usuario(models.Model):
     """"""
     
-    Rol_Administrador='Admin'
-    Rol_Propietario='Propietario'
-    Rol_Residente='Residente'
+    Rol_Administrador=Administrador.get_name()
+    Rol_Propietario=Propietario.get_name()
+    Rol_Residente=Residente.get_name()
     
     id_usuario = models.AutoField(primary_key=True)
     cedula = models.PositiveIntegerField(unique=True)

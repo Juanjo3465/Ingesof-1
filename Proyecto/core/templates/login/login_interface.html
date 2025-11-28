@@ -1,0 +1,52 @@
+{% extends 'partials/header_app.html' %}
+{% load static %}
+{% block title %}Inicio de Sesión{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/css_login_templates.css' %}">
+{% endblock %}
+{% block body_class %}modal-body{% endblock %}
+{% block content %}
+    <div id="modalOverlay">
+        <div class="modal-container">
+
+            <a href="{% url 'Inicial_page' %}" class="close-button">X</a>
+
+            <h2 class="modal-title">Inicio de sesión</h2>
+
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form action="{% url 'Login' %}" method="POST">
+                {% csrf_token %}
+                
+                <label class="form-label">Ingrese su usuario</label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    class="form-input" 
+                    placeholder="Usuario" 
+                    value="{{ username|default:'' }}"
+                    required
+                >
+
+                <label class="form-label">Ingrese su contraseña</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    class="form-input" 
+                    placeholder="Contraseña" 
+                    required
+                >
+
+                <button type="submit" class="submit-button">Iniciar sesión</button>
+            </form>
+
+            <div class="forgot-password">
+                <a href="{% url 'Confirm_user' %}" class="forgot-link">Olvidó su contraseña?</a> 
+            </div>
+        </div>
+    </div>
+{% endblock %}
