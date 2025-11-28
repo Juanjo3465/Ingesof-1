@@ -57,5 +57,17 @@ def valida_alcance_reserva(campos_ingresados):
     
     return True
     
+def valida_limite_reservas_activas(id_usuario_actual,num_maximo_reservas_activas):
+    max_reservas_activas = num_maximo_reservas_activas
+    num_reservas_activas = contar_numero_reservas_activas(id_usuario_actual)
+    if num_reservas_activas > max_reservas_activas:
+        return False
+    return True
     
-    
+def contar_numero_reservas_activas(id_usuario_actual):
+    num_reservas_activas = Reserva.objects.filter(
+        id_usuario = id_usuario_actual,
+        fecha_hora__gt = timezone.now(),
+        estado = 'Confirmada'
+    ).count()
+    return num_reservas_activas
