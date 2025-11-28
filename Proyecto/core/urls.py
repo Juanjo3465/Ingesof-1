@@ -12,4 +12,5 @@ urlpatterns = [
     path('Cambiar-contraseña/', views.change_password, name='Change_pass'),
     path('Logout/', views.logout, name='Logout'),
     path('Verificar-sesion/', verify_session, name='Verify_session' ),
+    path('Mi-cuenta/', views.account_info, name='Account_info'),
 ]

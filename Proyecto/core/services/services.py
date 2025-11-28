@@ -1,9 +1,22 @@
 """Funciones servicios"""
+from django.contrib.auth.models import User
+from ..models import Usuario
 from re import match, search
 from secrets import choice
 from random import shuffle
 from string import ascii_uppercase,digits
 import datetime
+
+def get_app_user(user:User):
+    """Obtner el regitro de la base de datos de usuario"""
+    email=user.username
+    
+    try:
+        user_app=Usuario.objects.get(correo=email)
+    except Usuario.DoesNotExist:
+        return None
+    
+    return user_app
 
 def is_valid_email(email:str):
     """"""

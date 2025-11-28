@@ -1,38 +1,31 @@
+{% extends 'base_menu.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}My Building App{% endblock %}</title>
+
+{% block title %}Reservas - My Building App{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'reservas/estilos_reserva.css' %}">
+{% endblock %}
+
+{% block main_content %}
+<div class="reserva-container">
+
+    {% block content_1 %}
+    {% endblock %}
     
-    <link rel="stylesheet" href="{% static 'reservas/estilos_reserva.css' %}">
-
-    {% block extra_css %}{% endblock %}
-</head>
-<body>
-    <div class="container">
-
-        {% block content_1 %}
+    {% block mensaje %}
+    {% if messages %}
+    <ul class="reserva-messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endblock %}
     
+    {% block content_2 %}
+    {% endblock %}
 
-        {% endblock %}
-        
-        {% block mensaje %}
-                {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li class="{{ message.tags }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-        {% endblock %}
-        {% block content_2 %}
-    
-
-        {% endblock %}
-
-    </div>
-
-    {% block extra_js %}{% endblock %}
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,63 +1,66 @@
 {% extends 'base_reservas.html' %}
 {% load static %}
 
-{% block title %} Horarios Disponibles - My Building App {% endblock %}
+{% block title %}Horarios Disponibles - My Building App{% endblock %}
 
 {% block content_1 %}
-        <h1 class="main-title">Residente</h1>
+<h1 class="reserva-main-title">{{ user.role.get_name }}</h1>
 {% endblock %}
 
 {% block content_2 %}
-        <div class="form-box">
-            <h2>Horarios disponibles mas proximos</h2>
-                <form action="{% url 'horarios_disponibles' %}" method="get" class="filter-form">
-                    <select name="zona_id">
-                        <option value="">-- Mostrar Todas las Zonas --</option>
-                        {% for zona in todas_las_zonas %}
-                            <option value="{{ zona.pk }}">
-                                {{ zona.nombre }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="btn-filter">Filtrar</button>
-                </form>
-                <form action="{% url 'horarios_disponibles' %}" method="post">
-                    {% csrf_token %}
-                
-                        <div class="table-container">
-                        <table class="reservas-table">
-                            <thead>
-                                <tr>
-                                    <th>Zona Comun</th>
-                                    <th>Fecha</th>
-                                    <th>Hora</th>
-                                    <th>Reservar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for hueco in horarios_disponibles %}
-                                <tr>
-                                    <td>{{ hueco.zona_comun.nombre }}</td>
-                                    <td>{{ hueco.fecha_hora|date:"d M Y" }}</td>
-                                    <td>{{ hueco.fecha_hora|date:"h:i A" }}</td>
-                                    <td> 
-                                        <input 
-                                            type="checkbox" 
-                                            name="horarios_seleccionados" 
-                                            value="{{ hueco.zona_comun.pk }}_{{ hueco.fecha_hora.isoformat }}">
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="4">No hay horarios disponibles.</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <button type="submit" class="btn-confirm">Confirmar</button>
-
-                </form>
+<div class="reserva-form-box">
+    <h2 class="reserva-subtitle">Horarios disponibles más próximos</h2>
+    
+    <form action="{% url 'horarios_disponibles' %}" method="get" class="reserva-filter-form">
+        <select name="zona_id">
+            <option value="">-- Mostrar Todas las Zonas --</option>
+            {% for zona in todas_las_zonas %}
+                <option value="{{ zona.pk }}">
+                    {{ zona.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="reserva-btn-filter">Filtrar</button>
+    </form>
+    
+    <form action="{% url 'horarios_disponibles' %}" method="post">
+        {% csrf_token %}
+        
+        <div class="reserva-table-container">
+            <table class="reservas-table">
+                <thead>
+                    <tr>
+                        <th>Zona Común</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Reservar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hueco in horarios_disponibles %}
+                    <tr>
+                        <td>{{ hueco.zona_comun.nombre }}</td>
+                        <td>{{ hueco.fecha_hora|date:"d M Y" }}</td>
+                        <td>{{ hueco.fecha_hora|date:"h:i A" }}</td>
+                        <td> 
+                            <input 
+                                type="checkbox" 
+                                name="horarios_seleccionados" 
+                                value="{{ hueco.zona_comun.pk }}_{{ hueco.fecha_hora.isoformat }}">
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 20px; color: #666;">
+                            No hay horarios disponibles.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+        
+        <button type="submit" class="reserva-btn-confirm">Confirmar</button>
+    </form>
+</div>
 {% endblock %}
