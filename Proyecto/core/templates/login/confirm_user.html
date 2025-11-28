@@ -1,7 +1,7 @@
-{% extends 'header_app.html' %}
+{% extends 'partials/header_app.html' %}
 {% load static %}
 
-{% block title %}Restablecer Contraseña-Usuario{% endblock %}
+{% block title %}Restablecer Contraseña - Usuario{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/css_login_templates.css' %}">
 {% endblock %}
@@ -13,7 +13,7 @@
 
         <div class="modal-container">
 
-            <button class="close-button">X</button>
+            <a href="{% url 'Inicial_page' %}" class="close-button">X</a>
 
             <h2 class="modal-title">Restablecer contraseña</h2>
 
