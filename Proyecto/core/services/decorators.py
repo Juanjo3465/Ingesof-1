@@ -1,15 +1,29 @@
 """Decoradores utilizados en el proyecto"""
 from functools import wraps
 from django.shortcuts import redirect
-from django.views.decorators.cache import never_cache
 
 def login_required(view_func):
-    @never_cache
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return redirect("Inicial_page")
-        return view_func(request, *args, **kwargs)
+            response = redirect("Inicial_page")
+
+            response['Cache-Control'] = 'no-cache, no-store, must-revalidate, private, max-age=0'
+            response['Pragma'] = 'no-cache'
+            response['Expires'] = '0'
+            return response
+        
+        response = view_func(request, *args, **kwargs)
+        
+        response['Cache-Control'] = 'no-cache, no-store, must-revalidate, private, max-age=0'
+        response['Pragma'] = 'no-cache'
+        response['Expires'] = '0'
+        
+        response['X-Content-Type-Options'] = 'nosniff'
+        response['X-Frame-Options'] = 'DENY'
+        
+        return response
+    
     return wrapper
 
 def role_required(*allowed_roles):
