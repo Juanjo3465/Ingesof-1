@@ -1,17 +1,17 @@
 /* Estilos del menú lateral */
 
 .sidebar {
-    position: absolute; /* Cambiado de fixed a absolute para scroll */
+    position: absolute;
     left: 0;
-    top: 0; /* Empieza desde arriba */
+    top: 0;
     width: 250px;
-    min-height: 100vh; /* Altura mínima completa */
+    min-height: 100vh;
     background: linear-gradient(to bottom, #87CEEB 0%, #5F9EA0 100%);
     border-right: 3px solid #4A7C7E;
     padding: 0;
     box-shadow: 4px 0 10px rgba(0, 0, 0, 0.15);
     z-index: 100;
-    overflow-y: visible; /* Permite scroll natural */
+    overflow-y: visible;
     display: flex;
     flex-direction: column;
 }
@@ -20,15 +20,15 @@
     padding: 20px 0;
     flex: 1;
     display: flex;
-    align-items: center; /* Centra verticalmente el menú */
-    justify-content: center; /* Centra todo el nav */
+    align-items: center;
+    justify-content: center;
 }
 
 .sidebar-menu {
     list-style: none;
     padding: 0;
     margin: 0;
-    width: 100%; /* Ocupa todo el ancho del nav */
+    width: 100%;
 }
 
 .sidebar-menu-item {
@@ -46,7 +46,7 @@
     font-weight: 500;
     transition: all 0.3s ease;
     border-left: 4px solid transparent;
-    width: 100%; /* Ocupa todo el ancho */
+    width: 100%;
 }
 
 .sidebar-menu-link:hover {
@@ -85,15 +85,13 @@
     fill: #333;
 }
 
-/* Ajuste del contenido principal */
 .main-content {
     margin-left: 250px;
-    padding: 0; /* Sin padding para que esté pegado */
+    padding: 0;
     min-height: 100vh;
-    position: relative; /* Para que funcione con el sidebar absolute */
+    position: relative;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
@@ -109,7 +107,6 @@
     }
 }
 
-/* Animación de entrada */
 @keyframes slideInFromLeft {
     from {
         transform: translateX(-50px);
@@ -125,7 +122,6 @@
     animation: slideInFromLeft 0.3s ease;
 }
 
-/* Wrapper para el layout completo */
 .layout-wrapper {
     display: flex;
     min-height: 100vh;
