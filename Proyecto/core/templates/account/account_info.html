@@ -1,0 +1,51 @@
+{% extends "partials/header_user.html" %}
+{% load static %}
+{% load filters %}
+
+{% block title %}Informacion de cuenta{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/css_account.css' %}">
+{% endblock %}
+
+{% block body_content %}
+<div class="cuenta-container">
+    <div class="cuenta-card">
+        <h1 class="cuenta-title">Mi cuenta</h1>
+        
+        <div class="cuenta-info">
+            <div class="info-row">
+                <label class="info-label">Cedula:</label>
+                <span class="info-value">C.C. {{ usuario.cedula }}</span>
+            </div>
+            
+            <div class="info-row">
+                <label class="info-label">Nombre:</label>
+                <span class="info-value">{{ usuario.nombre }}</span>
+            </div>
+            
+            <div class="info-row">
+                <label class="info-label">Rol:</label>
+                <span class="info-value">{{ usuario.get_rol.get_name }}</span>
+            </div>
+            
+            <div class="info-row">
+                <label class="info-label">Fecha de nacimiento:</label>
+                <span class="info-value">{{ usuario.fecha_nacimiento|date:"d/m/Y" }}</span>
+            </div>
+            
+            <div class="info-row">
+                <label class="info-label">Correo:</label>
+                <span class="info-value">{{ usuario.correo }}</span>
+            </div>
+            
+            <div class="info-row">
+                <label class="info-label">Celular:</label>
+                <span class="info-value">{{ usuario.celular|format_phone }}</span>
+            </div>
+        </div>
+        
+        <a href="" class="submit-button">Editar</a>
+    </div>
+</div>
+{% endblock %}

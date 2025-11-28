@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from ..models import Usuario
 from ..services import LogService
 from ..services.decorators import login_required, role_required
+from ..services.services import get_app_user
 
 class UsuarioManager:
     """"""
@@ -93,4 +94,11 @@ def logout(request):
         auth.logout(request)
         return redirect('Inicial_page')
     return redirect('Menu')
+
+@login_required
+def account_info(request):
+    usuario = get_app_user(request.user)
+    
+    context = {'usuario' : usuario}
+    return render(request, 'account/account_info.html', context)
     

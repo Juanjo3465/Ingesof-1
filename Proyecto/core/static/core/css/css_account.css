@@ -1,0 +1,121 @@
+/* Estilos para la página Mi Cuenta */
+
+.cuenta-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+    padding: 40px 20px;
+    background-color: #f5f5f5;
+}
+
+.cuenta-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 50px 60px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.cuenta-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #87CEEB;
+    letter-spacing: 0.5px;
+}
+
+.cuenta-info {
+    margin-bottom: 40px;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    padding: 22px 15px;
+    border-bottom: 1px solid #e8e8e8;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.info-row:hover {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #5F9EA0;
+    letter-spacing: 0.3px;
+}
+
+.info-value {
+    font-size: 15px;
+    color: #333;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* Estilo especial para el botón editar */
+.cuenta-card .submit-button {
+    margin-top: 20px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    max-width: 250px;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cuenta-container {
+        padding: 30px 15px;
+    }
+    
+    .cuenta-card {
+        padding: 35px 30px;
+    }
+    
+    .cuenta-title {
+        font-size: 26px;
+        margin-bottom: 30px;
+    }
+    
+    .info-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 18px 12px;
+    }
+    
+    .info-label {
+        font-size: 14px;
+    }
+    
+    .info-value {
+        font-size: 14px;
+        padding-left: 0;
+    }
+    
+    .cuenta-card .submit-button {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .cuenta-card {
+        padding: 30px 20px;
+    }
+}
