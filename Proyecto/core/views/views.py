@@ -2,11 +2,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from ..models import Usuario
-from ..services import LogService, AccountService, AuthenticationService, PasswordService
+from ..models import Usuario, CodigoRecuperacion
+from ..services import LogService, AccountService, AuthenticationService, PasswordService, RecoveryService
 from ..services.decorators import login_required, role_required
 from .. services.validations import valide_password
-
+from datetime import timezone
 
 class UsuarioManager:
     """"""
@@ -49,9 +49,21 @@ def confirm_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
 
-        # Falta logica de confirmar usuario y enviar email (posible token)
+        recovery = AuthenticationService()
+        valid_user = recovery.is_existed_user(username)
+        
+        if not valid_user:
+            context = { 'error' : 'El usuario no existe' }
+            return render(request, 'login/confirm_user.html', context)
 
-        return redirect('Enter_code')
+        token = CodigoRecuperacion.send_authentication_code(username)
+        
+        if token:
+            request.session['reset_token'] = token
+            return redirect('Enter_code')
+        else:
+            context = { 'error' : 'No se pudo enviar el codigo, intentelo nuevamente' }
+            return render(request, 'login/confirm_user.html', context)
 
     return render(request, 'login/confirm_user.html')
 
@@ -62,11 +74,29 @@ def enter_code(request):
     context = {}
     context['back_page'] = back_page
     if request.method == 'POST':
-        codigo_ingresado = request.POST.get('codigo')
+        if 'reenviar' in request.POST:        
+            # Generar nuevo código
+            
+            old_token = request.session['reset_token']
+            username = CodigoRecuperacion.objects.get(token = old_token).username
+            new_token = CodigoRecuperacion.send_authentication_code(username)
+            
+            if new_token is None:
+                context['error'] = 'No se pudo reenviar el codigo, intentelo de nuevo'
+                return render(request, 'login/enter_code.html', context)
+            
+            request.session['reset_token']=new_token
+            return render(request, 'login/enter_code.html', context)
+        elif 'verificar' in request.POST:
+            codigo_ingresado = request.POST.get('codigo')        
+            token = request.session['reset_token']
+            valide = CodigoRecuperacion.validate_authentication_code(token, codigo_ingresado)
+            
+            if not valide:
+                context['error'] = 'Codigo invalido, intentelo de nuevo o solicite otro codigo'
+                return render(request, 'login/enter_code.html', context)
 
-        # Falta logica de verificar y reenviar codigo
-
-        return redirect('Change_pass')
+            return redirect('Change_pass')
 
     return render(request, "login/enter_code.html", context)
 
@@ -168,17 +198,27 @@ def edit_account(request):
 @login_required
 def confirm_password(request):
     if request.method == 'POST':
-        old_password = request.POST.get('old_password')
+        if 'siguiente' in request.POST:
+            old_password = request.POST.get('old_password')
+            
+            usuario = request.user.username
+            pass_check = AuthenticationService()
+            correct_password = pass_check.authenticate(request, usuario, old_password)
+            
+            if correct_password is None:
+                error = "Contraseña incorrecta"
+                context = { 'error' : error }
+                return render(request, 'login/confirm_password.html', context)
+            
+            return redirect('Change_pass')
+        elif 'olvido' in request.POST:
+            token = CodigoRecuperacion.send_authentication_code(request.user.username)
         
-        usuario = request.user.username
-        pass_check = AuthenticationService()
-        correct_password = pass_check.authenticate(request, usuario, old_password)
-        
-        if correct_password is None:
-            error = "Contraseña incorrecta"
-            context = { 'error' : error }
-            return render(request, 'login/confirm_password.html', context)
-        
-        return redirect('Change_pass')
+            if token:
+                request.session['reset_token'] = token
+                return redirect('Enter_code')
+            else:
+                context = { 'error' : 'No se pudo enviar el codigo, intentelo nuevamente' }
+                return render(request, 'login/confirm_user.html', context)
+            
     return render(request, 'login/confirm_password.html')
-    

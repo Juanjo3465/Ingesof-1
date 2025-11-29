@@ -50,3 +50,14 @@ class AuthenticationService:
         except Usuario.DoesNotExist:
             return None
         return user
+    
+    def is_existed_user(self, email):
+        """"""
+        try:
+            usuario = Usuario.objects.get(correo = email)
+            
+            return True
+        except Usuario.DoesNotExist:
+            
+            return False
+    
