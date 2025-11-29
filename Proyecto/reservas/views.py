@@ -11,7 +11,7 @@ def menu_reservas_view(request):
     contexto = {}
     return render(request,'reservas/menu_reservas.html',contexto)
 
-#Renderiza el template de listar_reservas
+#Renderiza el template de mis reservas
 def listar_reservas(request):
     id_usuario_actual = 1
     

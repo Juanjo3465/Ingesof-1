@@ -1,9 +1,12 @@
 """Funciones views de Django"""
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib import messages
 from ..models import Usuario
-from ..services import LogService
+from ..services import LogService, AccountService, AuthenticationService, PasswordService
 from ..services.decorators import login_required, role_required
-from ..services.services import get_app_user
+from .. services.validations import valide_password
+
 
 class UsuarioManager:
     """"""
@@ -54,6 +57,10 @@ def confirm_user(request):
 
 def enter_code(request):
     """"""
+    back_page = 'Account_info' if request.user.is_authenticated else 'Inicial_page'
+    
+    context = {}
+    context['back_page'] = back_page
     if request.method == 'POST':
         codigo_ingresado = request.POST.get('codigo')
 
@@ -61,15 +68,30 @@ def enter_code(request):
 
         return redirect('Change_pass')
 
-    return render(request, "login/enter_code.html")
+    return render(request, "login/enter_code.html", context)
 
+@login_required
 def change_password(request):
-    """"""
+    """"""    
     if request.method == 'POST':
-        nueva_password = request.POST.get('nueva_password')
-        confirmar_password = request.POST.get('confirmar_password')
+        nueva_password = request.POST.get('nueva_password', '').strip()
+        confirmar_password = request.POST.get('confirmar_password', '').strip()
 
-        # Falta logica de confirmar contraseña
+        if nueva_password != confirmar_password:
+            context = {'error': 'Las contraseñas no coinciden',}
+            return render(request, 'core/change_password.html', context)
+        
+        
+        mensaje_error = valide_password(nueva_password)
+        
+        if mensaje_error != "":
+            context = { 'error' : mensaje_error }
+            return render(request, 'core/change_password.html', context)
+        
+        service = PasswordService()
+        service.change_password(request.user, nueva_password)
+
+        return redirect('Account_info')
 
     return render(request, 'login/change_password.html')
 
@@ -97,8 +119,66 @@ def logout(request):
 
 @login_required
 def account_info(request):
-    usuario = get_app_user(request.user)
+    """"""
+    account=AccountService()
+    usuario = account.get_app_user(request.user)
     
     context = {'usuario' : usuario}
     return render(request, 'account/account_info.html', context)
+
+@login_required
+def edit_account(request):
+    """"""
+    account=AccountService()
+    usuario = account.get_app_user(request.user)
+    context = {'usuario' : usuario}
+    
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre', '')
+        fecha_nacimiento = request.POST.get('fecha_nacimiento', '')
+        correo = request.POST.get('correo', '')
+        celular = request.POST.get('celular', '')
+        
+        errores = account.edit_account_validation(
+            nombre, 
+            fecha_nacimiento, 
+            correo, 
+            celular
+        )
+
+
+        if User.objects.filter(username=correo.strip()).exclude(id=request.user.id).exists():
+                errores.append('Este correo electrónico ya está registrado')
+        
+        if errores != []:
+            for error in errores:
+                messages.error(request, error)
+            
+            return render(request, 'account/edit_account.html', context)
+
+        try:
+            account.edit_account(request, nombre, fecha_nacimiento, correo, celular)
+            
+            return redirect('Account_info')
+        except Exception as e:
+            messages.error(request, f'Error al guardar: {str(e)}')
+            return render(request, 'account/edit_account.html', context)
+    return render(request, 'account/edit_account.html', context)
+
+@login_required
+def confirm_password(request):
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        
+        usuario = request.user.username
+        pass_check = AuthenticationService()
+        correct_password = pass_check.authenticate(request, usuario, old_password)
+        
+        if correct_password is None:
+            error = "Contraseña incorrecta"
+            context = { 'error' : error }
+            return render(request, 'login/confirm_password.html', context)
+        
+        return redirect('Change_pass')
+    return render(request, 'login/confirm_password.html')
     

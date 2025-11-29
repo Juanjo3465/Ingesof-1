@@ -1,16 +1,13 @@
-/* css_reservas.css - Estilos adaptados para el módulo de reservas */
-/* Compatible con la paleta de colores principal del proyecto */
+/* Estilos adaptados para el módulo de reservas */
 
-/* Fondo para main-content cuando se usa con módulo de reservas */
 .main-content:has(.reserva-container) {
     background-color: #ffffff;
 }
 
-/* Contenedor principal - funciona dentro de main-content */
 .reserva-container {
     display: flex;
     flex-direction: column;
-    align-items: stretch; /* CAMBIO CLAVE: stretch en lugar de center */
+    align-items: stretch; 
     justify-content: center;
     gap: 20px;
     padding: 40px 20px;
@@ -20,58 +17,53 @@
     box-sizing: border-box;
 }
 
-/* Título principal */
 .reserva-main-title {
     font-size: 3.5em;
     color: #333;
     margin-bottom: 25px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-    /* REMOVIDO width: 100% ya que stretch lo maneja */
 }
 
-/* Caja de formulario */
 .reserva-form-box {
     background-color: rgba(255, 255, 255, 0.95);
-    padding: 35px 50px; /* Reducido padding vertical de 40px a 35px */
+    padding: 35px 50px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-    /* REMOVIDO width y max-width - ahora toma el 100% del container por stretch */
     text-align: center;
     border: 2px solid #87CEEB;
     margin: 0;
 }
 
-/* Columnas del formulario */
 .reserva-form-columns {
     display: flex;
     justify-content: space-around;
-    gap: 30px; /* Mayor espacio entre columnas */
+    gap: 30px;
     margin-top: 20px;
 }
 
 .reserva-form-column {
     background: linear-gradient(135deg, #5F9EA0 0%, #4A7C7E 100%);
     color: white;
-    padding: 20px; /* Reducido de 25px a 20px */
+    padding: 20px;
     border-radius: 8px;
     flex: 1;
-    min-width: 220px; /* Ancho mínimo más generoso */
+    min-width: 220px;
     border: 2px solid #333;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 .reserva-column-title {
     display: block;
-    margin-bottom: 12px; /* Reducido de 15px a 12px */
+    margin-bottom: 12px;
     font-weight: bold;
-    font-size: 1em; /* Reducido de 1.1em */
+    font-size: 1em;
     color: white;
 }
 
 .reserva-form-column label {
     display: block;
-    margin-bottom: 8px; /* Reducido de 10px */
+    margin-bottom: 8px;
     font-weight: 500;
     color: white;
 }
@@ -79,7 +71,7 @@
 .reserva-form-column select,
 .reserva-form-column input[type="date"] {
     width: 100%;
-    padding: 8px; /* Reducido de 10px */
+    padding: 8px;
     border-radius: 5px;
     border: 2px solid #333;
     box-sizing: border-box;
@@ -95,7 +87,7 @@
     border-color: #87CEEB;
 }
 
-/* Botón de confirmar reserva */
+
 .reserva-btn-confirm {
     background-color: #333;
     color: white;
@@ -123,7 +115,6 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-/* Tabla de reservas */
 .reserva-table-container {
     max-height: 400px;
     overflow-y: auto;
@@ -186,7 +177,6 @@
     background-color: rgba(135, 206, 235, 0.2);
 }
 
-/* Alineación de columnas */
 .reservas-table th:nth-child(1),
 .reservas-table td:nth-child(1) {
     width: 35%;
@@ -212,7 +202,6 @@
     text-align: center;
 }
 
-/* Mensajes de feedback */
 .reserva-messages {
     list-style: none;
     padding: 0;
@@ -254,7 +243,6 @@
     border-color: #2980b9;
 }
 
-/* Formulario de filtros */
 .reserva-filter-form {
     display: flex;
     gap: 15px;
@@ -306,13 +294,11 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-/* Menu de reservas */
 .reserva-menu-box {
     background-color: rgba(255, 255, 255, 0.95);
     padding: 50px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-    /* Sin restricción de ancho, ocupa el espacio del container */
     text-align: center;
     border: 2px solid #87CEEB;
 }
@@ -367,7 +353,6 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .reserva-container {
         padding: 20px 10px;
