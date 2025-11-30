@@ -1,15 +1,18 @@
 from django.contrib.auth.models import User
 from ..models import Apartamentos, Residente
-from .services import AccountService
+from .account_service import AccountService
 
 class ApartmentService:
     def get_resident_apartment(self,user: User):
         account = AccountService()
         usuario = account.get_app_user(user)
-
+        
+        resi=Residente.objects.all()
+        
         try:
             residencia = Residente.objects.get(id_usuario=usuario.id_usuario)
         except Residente.DoesNotExist:
+
             return None
 
         return residencia.id_apartamento

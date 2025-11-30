@@ -19,4 +19,9 @@ urlpatterns = [
     path('gestion-usuario/', views.gestion_usuarios_view, name='gestion_usuario'),
     path('crear_usuario/', views.crear_usuario_view, name='crear_usuario'),
     path('buscar_usuario/', views.buscar_usuario_admin_view, name='buscar_usuario'),
+    path('Apartamento/Residente/', views.resident_apartment, name='Resident_apartment'),
+    path('Apartamento/Propietario/', views.owner_apartment, name='Owner_apartment'),
+    path('Apartamento/Propietario/<int:id_apartamento>/', views.owner_apartment_info, name='Owner_apartment_info'),
+    path('Apartamento/Admin/', views.admin_apartment, name='Admin_apartment'),
+    path('Apartamento/Admin/<int:id_apartamento>/', views.admin_apartment_info, name='Admin_apartment_info'),
 ]

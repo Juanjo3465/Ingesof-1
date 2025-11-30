@@ -19,6 +19,10 @@ class Role(ABC):
         """"""
         pass
     
+    @abstractmethod
+    def get_apartment_url():
+        pass
+    
 class Administrador(Role):
     """"""
     @classmethod
@@ -37,6 +41,10 @@ class Administrador(Role):
             Role.Asamblea,
         ]
         return menu
+    
+    @classmethod
+    def get_apartment_url(cls):
+        return 'Admin_apartment'
     
     def configure_apartment(self):
         """
@@ -62,6 +70,11 @@ class Propietario(Role):
             Role.Asamblea,
         ]
         return menu
+    
+    @classmethod
+    def get_apartment_url(cls):
+        return 'Owner_apartment'
+    
     def configure_apartment(self, user, apartment):
         from ...services.services import configure_apartment
 
@@ -87,6 +100,11 @@ class Residente(Role):
             Role.Reserva,
         ]
         return menu
+    
+    @classmethod
+    def get_apartment_url(cls):
+        return 'Resident_apartment'
+    
     def configure_apartment(self, user, apartment):
         from ...services.services import configure_apartment
 

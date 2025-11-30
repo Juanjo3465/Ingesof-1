@@ -1,3 +1,18 @@
+"""Definien contextos globales"""
+
+def apartment_url(request):
+    """
+    Define la url para acceder a la informacion 
+    del apartamento dependiendo del rol
+    """
+    if not request.user.is_authenticated:
+        return {'apartment_url': ''}
+    
+    user = request.user
+    url = user.role.get_apartment_url()
+        
+    return {'apartment_url': url}
+
 def menu_context(request):
     """
     Context processor para el menú lateral.

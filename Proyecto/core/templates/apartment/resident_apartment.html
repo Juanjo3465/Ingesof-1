@@ -1,0 +1,51 @@
+{% extends 'partials/header_user.html' %}
+{% load static %}
+
+{% block title %}Información del Apartamento{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/css_apartment.css' %}">
+{% endblock %}
+
+{% block body_content %}
+<div class="apartment-container">
+    <h2 class="apartment-title">Apartamento</h2>
+    
+    <div class="apartment-info-card">
+        <div class="info-row">
+            <span class="info-label">Interior:</span>
+            <span class="info-value">{{ apartment.interior|default:"-" }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Torre:</span>
+            <span class="info-value">{{ apartment.torre|default:"-" }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Numero:</span>
+            <span class="info-value">{{ apartment.numero|default:"-" }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">N. habitaciones:</span>
+            <span class="info-value">{{ apartment.n_habitaciones|default:"-" }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">N. baños:</span>
+            <span class="info-value">{{ apartment.n_banos|default:"-" }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Clasificacion:</span>
+            <span class="info-value">{{ apartment.clasificacion|default:"-" }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Propietario:</span>
+            <span class="info-value">{{ apartment.id_propietario.nombre|default:"-" }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,70 +1,22 @@
 """Funciones servicios"""
-from django.contrib.auth.models import User
-from .account_service import AccountService
 from core.models.usuario import Usuario
 from core.models.apartamentos import Apartamentos
 from core.models.residente import Residente
-from re import match, search
-<<<<<<< HEAD
-=======
-from datetime import datetime
+from re import match
 
-def configure_apartment(user, obj_apartment):
-    """
-    Dependiendo el rol, ejecuta una funcion u otra, por eso recibe el obj completo
-    de usuario y de apartamento
-    """
-    if user is None:
-        print(f"Error en configure_apartment: no se encontró el usuario con username {user.nombre}")
-        return
->>>>>>> a9188d7ff6faeed6a91d27004f31b410e642b95e
-
+def configure_apartment(user:Usuario, id_apartment):
     rol = user.rol 
     
     config = {
-        Usuario.Rol_Propietario: Apartamentos.configure_owner,
-        Usuario.Rol_Residente: Residente.configure_resident,
+        Usuario.Rol_Propietario:Apartamentos.configure_owner,
+        Usuario.Rol_Residente:Residente.configure_resident,
     }
     
-    fun = config.get(rol)
+    fun=config.get(rol)
     
     if fun is not None:
-        fun(user, obj_apartment)
+        fun(user,id_apartment)
     
-def is_valid_email(email: str) -> bool:
-    """
-    Verifica si un string tiene un formato de correo electrónico válido.
-    Formato esperado: (algo)@(algo).(algo)
-    """
-    # Si el email es None o está vacío, no es válido.
-    if not email:
-        return False
-        
-    email_regex = r"^[^@]+@[^@]+\.[^@]+$"
-
-    if match(email_regex, email):
-        return True
-    
-    return False
-
-def is_valid_password(password:str):
-    """"""
-    if len(password) < 8:
-        return False
-    # Si no hay una mayuscula
-    if not search(r"[A-Z]",password):
-        return False
-    # Si no hay una minuscula
-    if not search(r"[a-z]",password):
-        return False
-    # Si no hay un numero
-    if not search(r"[0-9]",password):
-        return False
-    if " " in password:
-        return False
-    return True
-
-
 def valid_code_format(code:str,lenght:int,letter_proportion:int):
     """"""  
     numeric_proportion=lenght-letter_proportion

@@ -1,0 +1,349 @@
+/* Estilos específicos para la página de información del apartamento */
+
+.apartment-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.apartment-title {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.apartment-info-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row:hover {
+    background-color: #f8f9fa;
+}
+
+.info-label {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 16px;
+    color: #666;
+    font-weight: 400;
+}
+
+/* =====================================================
+   Estilos para el buscador de apartamentos
+   ===================================================== */
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.search-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.search-label {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.search-input:focus {
+    border-color: #5F9EA0;
+    box-shadow: 0 0 0 3px rgba(95, 158, 160, 0.2);
+    background-color: white;
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+.search-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.search-buttons .submit-button {
+    flex: 1;
+}
+
+.submit-button.secondary {
+    background-color: #6c757d;
+}
+
+.submit-button.secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Resultados de búsqueda */
+.search-results {
+    margin-top: 30px;
+}
+
+.results-title {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.result-card {
+    margin-bottom: 15px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.result-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.result-info {
+    flex: 1;
+}
+
+.result-info .info-row {
+    padding: 8px 0;
+    border-bottom: none;
+}
+
+.detail-button {
+    width: 50px;
+    height: 50px;
+    background-color: #333;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.detail-button:hover {
+    background-color: #555;
+    transform: scale(1.05);
+}
+
+.plus-icon {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+}
+
+.no-results-text {
+    color: #666;
+    font-size: 16px;
+}
+
+/* =====================================================
+   Estilos para detalle de apartamento
+   ===================================================== */
+
+.detail-view {
+    position: relative;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.back-button:hover {
+    background-color: #f5f5f5;
+    transform: translateX(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.detail-card {
+    padding: 25px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.detail-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.section-title {
+    font-size: 20px;
+    color: #333;
+    margin: 30px 0 15px 0;
+    font-weight: 600;
+    text-align: center;
+}
+
+.person-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 15px 0;
+}
+
+.person-row.with-border {
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+}
+
+.person-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.person-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.person-value {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.no-data {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    padding: 20px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .apartment-container {
+        margin: 20px;
+        padding: 10px;
+    }
+    
+    .apartment-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .apartment-info-card {
+        padding: 20px;
+    }
+    
+    .info-row {
+        padding: 12px 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .info-label,
+    .info-value {
+        font-size: 14px;
+    }
+    
+    .search-buttons {
+        flex-direction: column;
+    }
+    
+    .results-title {
+        font-size: 18px;
+    }
+    
+    .detail-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .person-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .section-title {
+        font-size: 18px;
+        margin: 20px 0 10px 0;
+    }
+}

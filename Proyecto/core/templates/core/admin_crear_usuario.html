@@ -82,6 +82,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{{ block.super }}
 <script>
     // Espera a que todo el contenido de la página se haya cargado
     document.addEventListener('DOMContentLoaded', function() {

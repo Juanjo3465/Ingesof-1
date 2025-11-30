@@ -1,0 +1,46 @@
+{% extends 'partials/header_user.html' %}
+{% load static %}
+
+{% block title %}Mis Apartamentos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/css_apartment.css' %}">
+{% endblock %}
+
+{% block body_content %}
+<div class="apartment-container">
+    <h1 class="apartment-title">Mis Apartamentos</h1>
+    
+    <div class="search-results">
+        {% if apartamentos %}
+            {% for apartamento in apartamentos %}
+            <div class="apartment-info-card result-card">
+                <div class="result-content">
+                    <div class="result-info">
+                        <div class="info-row">
+                            <span class="info-label">Interior:</span>
+                            <span class="info-value">{{ apartamento.interior|default:"-" }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Torre:</span>
+                            <span class="info-value">{{ apartamento.torre }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Número:</span>
+                            <span class="info-value">{{ apartamento.numero }}</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'Owner_apartment_info' apartamento.id_apartamento %}" class="detail-button">
+                        <span class="plus-icon">+</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="apartment-info-card no-results">
+                <p class="no-results-text">No tienes apartamentos registrados en propiedad.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

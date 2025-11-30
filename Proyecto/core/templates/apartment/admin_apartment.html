@@ -1,0 +1,107 @@
+{% extends 'partials/header_user.html' %}
+{% load static %}
+
+{% block title %}Buscar Apartamentos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/css_apartment.css' %}">
+{% endblock %}
+
+{% block body_content %}
+<div class="apartment-container">
+    <h1 class="apartment-title">Buscar Apartamentos</h1>
+    
+    <div class="apartment-info-card">
+        <div class="search-form">
+            <div class="search-row">
+                <label class="search-label" for="propietario_email">Email del Propietario</label>
+                <input type="email" 
+                       id="propietario_email" 
+                       name="propietario_email" 
+                       class="search-input" 
+                       placeholder="ejemplo@correo.com"
+                       value="{{ request.GET.propietario_email|default:'' }}">
+            </div>
+            
+            <div class="search-row">
+                <label class="search-label" for="interior">Interior</label>
+                <input type="number" 
+                       id="interior" 
+                       name="interior" 
+                       class="search-input" 
+                       placeholder="Número de interior"
+                       value="{{ request.GET.interior|default:'' }}">
+            </div>
+            
+            <div class="search-row">
+                <label class="search-label" for="torre">Torre</label>
+                <input type="number" 
+                       id="torre" 
+                       name="torre" 
+                       class="search-input" 
+                       placeholder="Número de torre"
+                       value="{{ request.GET.torre|default:'' }}">
+            </div>
+            
+            <div class="search-row">
+                <label class="search-label" for="numero">Número</label>
+                <input type="number" 
+                       id="numero" 
+                       name="numero" 
+                       class="search-input" 
+                       placeholder="Número de apartamento"
+                       value="{{ request.GET.numero|default:'' }}">
+            </div>
+            
+            <div class="search-buttons">
+                <button type="button" class="submit-button" onclick="buscarApartamentos()">
+                    Buscar
+                </button>
+                <button type="button" class="submit-button secondary" onclick="limpiarFiltros()">
+                    Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Resultados -->
+    <div class="search-results">
+        <h2 class="results-title">Resultados ({{ apartamentos|length }})</h2>
+        
+        {% if apartamentos %}
+            {% for apartamento in apartamentos %}
+            <div class="apartment-info-card result-card">
+                <div class="result-content">
+                    <div class="result-info">
+                        <div class="info-row">
+                            <span class="info-label">Interior:</span>
+                            <span class="info-value">{{ apartamento.interior|default:"-" }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Torre:</span>
+                            <span class="info-value">{{ apartamento.torre }}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Número:</span>
+                            <span class="info-value">{{ apartamento.numero }}</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'Admin_apartment_info' apartamento.id_apartamento %}" class="detail-button">
+                        <span class="plus-icon">+</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="apartment-info-card no-results">
+                <p class="no-results-text">No se encontraron apartamentos con los filtros seleccionados.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'core/js/apartment_search.js' %}"></script>
+{% endblock %}
