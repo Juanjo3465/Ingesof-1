@@ -9,9 +9,8 @@ from django.contrib import messages
 from ..models import Usuario, CodigoRecuperacion, Conjunto
 from ..services import LogService, AccountService, AuthenticationService, PasswordService, RecoveryService
 from ..services.decorators import login_required, role_required
-from ..services.services import get_app_user
 from django.contrib import messages
-from ..services.services import *
+from ..services.validations import *
 from .. services.validations import valide_password
 
 class UsuarioManager:
@@ -183,15 +182,15 @@ def crear_usuario_view(request):
             messages.error(request, 'Todos los campos excepto Celular y Fecha de Nacimiento son obligatorios.')
             return redirect('crear_usuario')
         
-        if not is_valid_email(correo):
+        if not validar_correo(correo):
             messages.error(request, f'El formato del correo "{correo}" no es válido.')
             return redirect('crear_usuario')
             
-        if not is_valid_password(contrasena):
+        if not valide_password(contrasena):
             messages.error(request, 'La contraseña no cumple los requisitos de seguridad (mín. 8 caracteres, una mayúscula, una minúscula y un número).')
             return redirect('crear_usuario')
             
-        fecha_nacimiento_obj = solicitar_fecha_valida(fecha_nacimiento_str)
+        fecha_nacimiento_obj = validar_fecha_nacimiento(fecha_nacimiento_str)
         if fecha_nacimiento_str and fecha_nacimiento_obj is None:
             messages.error(request, 'La fecha de nacimiento es inválida o está fuera del rango permitido.')
             return redirect('crear_usuario')
@@ -228,6 +227,7 @@ def crear_usuario_view(request):
     # --- Lógica GET (no cambia) ---
     return render(request, 'core/admin_crear_usuario.html')
 
+@role_required(Usuario.Rol_Administrador)
 def buscar_usuario_admin_view(request):
     """
     Gestiona la búsqueda y listado de usuarios para el administrador.

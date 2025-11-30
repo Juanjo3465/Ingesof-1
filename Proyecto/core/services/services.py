@@ -1,8 +1,10 @@
 """Funciones servicios"""
+from django.contrib.auth.models import User
 from .account_service import AccountService
-from ..models import Usuario, Apartamentos, Residente
+from core.models.usuario import Usuario
+from core.models.apartamentos import Apartamentos
+from core.models.residente import Residente
 from re import match, search
-import datetime
 
 def configure_apartment(username, id_apartment):
     account = AccountService()
@@ -62,41 +64,6 @@ def valid_code_format(code:str,lenght:int,letter_proportion:int):
 def equials_strings(string_1:str,string_2:str):
     """"""
     return string_1 == string_2
-
-def solicitar_contrasena_simple():
-    """
-    Solicita dos contraseñas y valida que coincidan.
-    Vuelve a pedir si no son iguales.
-    """
-    while True:
-        nueva = input("Ingrese nueva contraseña: ")
-        confirmar = input("Confirme nueva contraseña: ")
-
-        if nueva == confirmar:
-            print("\n Contraseña válida.")
-            return nueva
-        else:
-            print("\n Las contraseñas no coinciden. Inténtelo nuevamente.\n")
-
-def solicitar_fecha_valida(fecha_str: str):
-    """
-    Valida una fecha en formato 'YYYY-MM-DD' (que es lo que envía <input type="date">).
-    Valida que sea una fecha real y que el año esté entre 1920 y el año actual.
-    Devuelve un objeto date si es válida, de lo contrario devuelve None.
-    """
-   
-    if not fecha_str:
-        return None
-
-    try:
-        fecha_obj = datetime.strptime(fecha_str, '%Y-%m-%d')
-        
-        año_actual = datetime.now().year
-        if not (1920 <= fecha_obj.year <= año_actual):
-            return None 
-        return fecha_obj.date()
-    except ValueError:
-        return None
 
 def validar_asunto(asunto):
     """

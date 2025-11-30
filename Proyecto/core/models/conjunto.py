@@ -13,8 +13,7 @@ class Conjunto(models.Model):
         """"""
         managed = False
         db_table = 'Conjunto'
-        
-    @classmethod
+   
+    @classmethod    
     def get_complex(cls):
-        complex = Conjunto.objects.filter().first()
-        return complex
+        return cls.objects.first()

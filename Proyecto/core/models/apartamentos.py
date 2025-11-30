@@ -1,9 +1,5 @@
 """Modulo Apartamento"""
 from django.db import models
-<<<<<<< HEAD
-=======
-#from ..services import AccountService
->>>>>>> ba21b8c32cc65634a42ddcf0bf347aba30ce55aa
 
 class Apartamentos(models.Model):
     """"""
