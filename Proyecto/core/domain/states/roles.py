@@ -18,7 +18,11 @@ class Role(ABC):
     def get_menu():
         """"""
         pass
-
+    
+    @abstractmethod
+    def configure_apartment():
+        pass
+    
 class Administrador(Role):
     """"""
     @classmethod
