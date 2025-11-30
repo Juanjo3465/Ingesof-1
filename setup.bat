@@ -6,7 +6,7 @@ REM Variables de configuración para MySQL
 REM ============================================
 set MYSQL_SERVICE=mysql_db
 set MYSQL_USER=root
-set MYSQL_PASSWORD=1234
+set MYSQL_PASSWORD="1234"
 set SQL_FILE=Proyecto\DB\init.sql
 
 echo ===================================================
