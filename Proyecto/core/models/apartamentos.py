@@ -1,6 +1,6 @@
 """Modulo Apartamento"""
 from django.db import models
-from ..services import AccountService
+#from ..services import AccountService
 
 class Apartamentos(models.Model):
     """"""
