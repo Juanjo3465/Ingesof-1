@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Asambleas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f8fb;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ---------- HEADER ---------- */
+        .header {
+            background: linear-gradient(to bottom, #87CEEB 0%, #5F9EA0 100%);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #4A7C7E;
+        }
+
+        .header-left,
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .header-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .header-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .icon-circle, .icon-square {
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .icon-square {
+            border-radius: 5px;
+        }
+
+        .header-text {
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .conjunto-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .conjunto-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ---------- LAYOUT ---------- */
+        .container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 25px;
+        }
+
+        /* ---------- PANEL LATERAL ---------- */
+        .side-panel {
+            width: 230px;
+            background: white;
+            border: 2px solid #5F9EA0;
+            border-radius: 12px;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: fit-content;
+            margin: auto 0;
+            box-shadow: 0px 0px 10px rgba(0, 60, 80, 0.25);
+        }
+
+        .side-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            background-color: #e7f4f7;
+            border: 2px solid #5F9EA0;
+            color: #2b4f52;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .side-button:hover {
+            background-color: #d9eff3;
+        }
+
+        .side-icon {
+            width: 26px;
+            height: 26px;
+        }
+
+        /* ---------- CUADRO PRINCIPAL ---------- */
+        .main-card {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #5F9EA0;
+            box-shadow: 0px 0px 10px rgba(0, 60, 80, 0.20);
+        }
+
+        .main-card h2 {
+            text-align: center;
+            font-size: 26px;
+            color: #25565c;
+            margin-bottom: 20px;
+        }
+
+        .filter-bar {
+            width: 70%;
+            margin: 0 auto 25px auto;
+            display: flex;
+            background: white;
+            border-radius: 35px;
+            padding: 14px 18px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.15);
+        }
+
+        .filter-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        .assembly-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-top: 10px;
+        }
+
+        .assembly-card {
+            background: #eaf6f8;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 6px solid #5F9EA0;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .assembly-card:hover {
+            background: #d9eff3;
+            transform: translateX(5px);
+        }
+
+        .assembly-card h3 {
+            margin-bottom: 8px;
+            color: #20494d;
+            font-size: 20px;
+        }
+
+        .assembly-card p {
+            font-size: 14px;
+            margin: 4px 0;
+            color: #555;
+        }
+
+        .assembly-card .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .status-badge.programada {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status-badge.realizada {
+            background: #2196f3;
+            color: white;
+        }
+
+        .status-badge.cancelada {
+            background: #f44336;
+            color: white;
+        }
+
+        .status-badge.en_revision {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            margin: 20px;
+        }
+
+        .modal-header {
+            background: linear-gradient(to right, #87CEEB, #5F9EA0);
+            padding: 25px;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .modal-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section h3 {
+            color: #25565c;
+            font-size: 18px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #5F9EA0;
+            padding-bottom: 8px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin: 10px 0;
+            font-size: 15px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+            min-width: 120px;
+        }
+
+        .detail-value {
+            color: #666;
+            flex: 1;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .document-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .document-card:hover {
+            background: #e7f4f7;
+            border-color: #5F9EA0;
+        }
+
+        .document-card .doc-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .document-card p {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .btn-download {
+            background: #5F9EA0;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-download:hover {
+            background: #4A7C7E;
+            transform: scale(1.05);
+        }
+
+        .btn-download:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .participants-button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .participants-button:hover {
+            background: #111;
+            transform: scale(1.02);
+        }
+
+        .participants-info {
+            background: #e7f4f7;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .participants-info.show {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #5F9EA0;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #5F9EA0;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .participants-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .participant-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .participant-item strong {
+            color: #333;
+        }
+
+        .participant-type {
+            background: #5F9EA0;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #ddd;
+            text-align: right;
+        }
+
+        .btn-close {
+            background: #888;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .btn-close:hover {
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ---------- HEADER ---------- -->
+    <header class="header">
+        <div class="header-left">
+            <button class="header-button">
+                <div class="icon-circle">👤</div>
+                <span class="header-text">Cuenta</span>
+            </button>
+
+            <button class="header-button">
+                <div class="icon-square">🏢</div>
+                <span class="header-text">Info<br>Apartamento</span>
+            </button>
+        </div>
+
+        <div class="header-right">
+            <button class="header-button">
+                <svg class="icon-home" width="40" height="40" viewBox="0 0 24 24" fill="#333">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+            </button>
+
+            <button class="header-button">
+                <svg class="icon-car" width="40" height="40" viewBox="0 0 24 24" fill="#333">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+            </button>
+
+            <button class="conjunto-button">Nombre del conjunto</button>
+        </div>
+    </header>
+
+    <!-- ---------- CONTENIDO ---------- -->
+    <div class="container">
+
+        <!-- PANEL LATERAL -->
+        <aside class="side-panel">
+            <button class="side-button">
+                <img src="https://img.icons8.com/ios-filled/50/0b4c59/topic.png" class="side-icon">
+                Foro
+            </button>
+
+            <button class="side-button">
+                <img src="https://img.icons8.com/ios-filled/50/0b4c59/ticket.png" class="side-icon">
+                Reserva
+            </button>
+
+            <button class="side-button">
+                <img src="https://img.icons8.com/ios-filled/50/0b4c59/conference.png" class="side-icon">
+                Asamblea
+            </button>
+        </aside>
+
+        <!-- CUADRO PRINCIPAL -->
+        <main class="main-card">
+            <h2>Asambleas</h2>
+
+            <div class="filter-bar">
+                <input id="searchInput" type="text" placeholder="Buscar asambleas por nombre o fecha...">
+            </div>
+
+            <div id="assemblyList" class="assembly-list">
+                <div class="loading">Cargando asambleas...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Detalle -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Detalle de Asamblea</h2>
+            </div>
+
+            <div class="modal-body">
+                <!-- Información General -->
+                <div class="detail-section">
+                    <h3>📋 Información General</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Fecha y Hora:</span>
+                        <span class="detail-value" id="modalFecha">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Lugar:</span>
+                        <span class="detail-value" id="modalLugar">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Estado:</span>
+                        <span class="detail-value" id="modalEstado">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Descripción:</span>
+                        <span class="detail-value" id="modalDescripcion">-</span>
+                    </div>
+                </div>
+
+                <!-- Documentos -->
+                <div class="detail-section">
+                    <h3>📄 Documentos</h3>
+                    <div class="documents-grid">
+                        <div class="document-card">
+                            <div class="doc-icon">📄</div>
+                            <p>Convocatoria</p>
+                            <button class="btn-download" onclick="descargarDocumento('convocatoria')" id="btnConvocatoria" disabled>
+                                Descargar
+                            </button>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-icon">📄</div>
+                            <p>Citación</p>
+                            <button class="btn-download" onclick="descargarDocumento('citacion')" id="btnCitacion" disabled>
+                                Descargar
+                            </button>
+                        </div>
+
+                        <div class="document-card">
+                            <div class="doc-icon">📄</div>
+                            <p>Acta</p>
+                            <button class="btn-download" onclick="descargarDocumento('acta')" id="btnActa" disabled>
+                                Descargar
+                            </button>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #999; font-size: 13px; margin-top: 15px;">
+                        Nota: Los documentos están almacenados en la base de datos. En esta versión, la descarga simulará la funcionalidad.
+                    </p>
+                </div>
+
+                <!-- Botón Participantes -->
+                <button class="participants-button" onclick="toggleParticipantes()">
+                    👥 Ver Participantes
+                </button>
+
+                <!-- Info de Participantes -->
+                <div class="participants-info" id="participantsInfo">
+                    <div class="stats-grid" id="statsGrid">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+
+                    <h4 style="margin-bottom: 10px; color: #25565c;">Listado de Participantes:</h4>
+                    <div class="participants-list" id="participantsList">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-close" onclick="cerrarModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL del backend
+        const API_URL = 'http://localhost:5001/api';
+
+        let asambleas = [];
+        let asambleaActual = null;
+
+        // Cargar asambleas al iniciar
+        async function cargarAsambleas() {
+            try {
+                const response = await fetch(`${API_URL}/asambleas`);
+                const data = await response.json();
+
+                const listContainer = document.getElementById('assemblyList');
+
+                if (data.success && data.asambleas && data.asambleas.length > 0) {
+                    asambleas = data.asambleas;
+                    mostrarAsambleas(asambleas);
+                } else {
+                    listContainer.innerHTML = '<div class="no-results">No hay asambleas registradas</div>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('assemblyList').innerHTML = 
+                    '<div class="no-results">Error al cargar las asambleas. Verifica que el backend esté corriendo.</div>';
+            }
+        }
+
+        // Mostrar asambleas en la lista
+        function mostrarAsambleas(lista) {
+            const listContainer = document.getElementById('assemblyList');
+            
+            if (lista.length === 0) {
+                listContainer.innerHTML = '<div class="no-results">No se encontraron resultados</div>';
+                return;
+            }
+
+            listContainer.innerHTML = lista.map(asamblea => {
+                const estadoClase = asamblea.estado ? asamblea.estado.toLowerCase().replace(/\s+/g, '_') : 'programada';
+                const descripcionTexto = asamblea.descripcion 
+                    ? (asamblea.descripcion.length > 100 
+                        ? asamblea.descripcion.substring(0, 100) + '...' 
+                        : asamblea.descripcion)
+                    : 'Sin descripción';
+                
+                return `
+                    <div class="assembly-card" onclick="abrirDetalle(${asamblea.id_asamblea})">
+                        <h3>${asamblea.nombre || 'Sin título'}</h3>
+                        <p><b>Fecha:</b> ${formatearFecha(asamblea.fecha_hora)}</p>
+                        <p><b>Lugar:</b> ${asamblea.lugar || 'Sin especificar'}</p>
+                        <p><b>Descripción:</b> ${descripcionTexto}</p>
+                        <span class="status-badge ${estadoClase}">${asamblea.estado || 'Programada'}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Buscar asambleas
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const termino = e.target.value.toLowerCase();
+            const filtradas = asambleas.filter(asamblea => 
+                asamblea.nombre.toLowerCase().includes(termino) ||
+                asamblea.lugar.toLowerCase().includes(termino) ||
+                asamblea.descripcion?.toLowerCase().includes(termino) ||
+                asamblea.fecha_hora.includes(termino)
+            );
+            mostrarAsambleas(filtradas);
+        });
+
+        // Formatear fecha
+        function formatearFecha(fechaStr) {
+            if (!fechaStr) return 'Sin fecha';
+            
+            try {
+                const fecha = new Date(fechaStr);
+                if (isNaN(fecha.getTime())) return 'Fecha inválida';
+                
+                return fecha.toLocaleDateString('es-CO', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return 'Fecha inválida';
+            }
+        }
+
+        // Abrir detalle de asamblea
+        async function abrirDetalle(id) {
+            try {
+                const response = await fetch(`${API_URL}/asambleas/${id}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    asambleaActual = data.asamblea;
+                    mostrarDetalleModal(data.asamblea);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar los detalles de la asamblea');
+            }
+        }
+
+        // Mostrar detalle en modal
+        function mostrarDetalleModal(asamblea) {
+            document.getElementById('modalTitle').textContent = asamblea.nombre;
+            document.getElementById('modalFecha').textContent = formatearFecha(asamblea.fecha_hora);
+            document.getElementById('modalLugar').textContent = asamblea.lugar;
+            document.getElementById('modalEstado').textContent = asamblea.estado;
+            document.getElementById('modalDescripcion').textContent = asamblea.descripcion || 'Sin descripción';
+
+            // Habilitar/deshabilitar botones de descarga (simulado)
+            // En producción, verificarías si el documento existe en la BD
+            document.getElementById('btnConvocatoria').disabled = !asamblea.doc_convocatoria;
+            document.getElementById('btnCitacion').disabled = !asamblea.doc_citacion;
+            document.getElementById('btnActa').disabled = !asamblea.doc_acta;
+
+            // Resetear sección de participantes
+            document.getElementById('participantsInfo').classList.remove('show');
+
+            // Mostrar modal
+            document.getElementById('modalOverlay').classList.add('show');
+        }
+
+        // Descargar documento (simulado)
+        function descargarDocumento(tipo) {
+            alert(`Descargando ${tipo} de "${asambleaActual.nombre}".\n\nNota: En producción, este documento se descargaría desde la base de datos.`);
+            
+            // En producción, harías algo como:
+            // window.open(`${API_URL}/asambleas/${asambleaActual.id_asamblea}/documento/${tipo}`, '_blank');
+        }
+
+        // Toggle participantes
+        async function toggleParticipantes() {
+            const participantsInfo = document.getElementById('participantsInfo');
+            
+            if (participantsInfo.classList.contains('show')) {
+                participantsInfo.classList.remove('show');
+                return;
+            }
+
+            // Cargar participantes
+            try {
+                const response = await fetch(`${API_URL}/asambleas/${asambleaActual.id_asamblea}/participantes`);
+                const data = await response.json();
+
+                if (data.success) {
+                    mostrarParticipantes(data);
+                    participantsInfo.classList.add('show');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar los participantes');
+            }
+        }
+
+        // Mostrar participantes
+        function mostrarParticipantes(data) {
+            const stats = data.estadisticas;
+            const statsGrid = document.getElementById('statsGrid');
+            const participantsList = document.getElementById('participantsList');
+
+            // Mostrar estadísticas
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${stats.total_propietarios}</div>
+                    <div class="stat-label">Total Propietarios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${stats.propietarios_presentes}</div>
+                    <div class="stat-label">Asistirán Personalmente</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${stats.total_delegados}</div>
+                    <div class="stat-label">Delegados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${stats.total_participantes}</div>
+                    <div class="stat-label">Total Participantes</div>
+                </div>
+            `;
+
+            // Mostrar lista de participantes
+            let html = '';
+
+            // Propietarios que asistirán
+            if (data.propietarios_presentes && data.propietarios_presentes.length > 0) {
+                html += '<h5 style="margin: 15px 0 10px 0; color: #25565c;">Propietarios (Asistencia Personal):</h5>';
+                data.propietarios_presentes.forEach(prop => {
+                    html += `
+                        <div class="participant-item">
+                            <div>
+                                <strong>${prop.nombre}</strong>
+                                <br>
+                                <small>${prop.apartamentos || 'Sin apartamento'}</small>
+                            </div>
+                            <span class="participant-type">Propietario</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // Delegados
+            if (data.delegados && data.delegados.length > 0) {
+                html += '<h5 style="margin: 15px 0 10px 0; color: #25565c;">Delegados:</h5>';
+                data.delegados.forEach(del => {
+                    html += `
+                        <div class="participant-item">
+                            <div>
+                                <strong>${del.nombre_delegado}</strong> (CC: ${del.cedula})
+                                <br>
+                                <small>Representa a: ${del.nombre_propietario}</small>
+                            </div>
+                            <span class="participant-type" style="background: #ff9800;">Delegado</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (!html) {
+                html = '<p style="text-align: center; color: #999;">No hay información de participantes disponible</p>';
+            }
+
+            participantsList.innerHTML = html;
+        }
+
+        // Cerrar modal
+        function cerrarModal() {
+            document.getElementById('modalOverlay').classList.remove('show');
+            asambleaActual = null;
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'modalOverlay') {
+                cerrarModal();
+            }
+        });
+
+        // Cargar asambleas al iniciar
+        cargarAsambleas();
+    </script>
+
+</body>
+</html>
