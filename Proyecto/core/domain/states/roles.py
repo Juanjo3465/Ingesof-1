@@ -18,7 +18,11 @@ class Role(ABC):
     def get_menu():
         """"""
         pass
-
+    
+    @abstractmethod
+    def configure_apartment():
+        pass
+    
 class Administrador(Role):
     """"""
     @classmethod
@@ -38,6 +42,13 @@ class Administrador(Role):
         ]
         return menu
     
+    def configure_apartment(self):
+        """
+        Para el rol de Administrador, esta acción no aplica y no hace nada.
+        Se implementa solo para cumplir con la interfaz de la clase base abstracta 'Role'.
+        """
+        pass
+    
 class Propietario(Role):
     """"""
     @classmethod
@@ -55,6 +66,14 @@ class Propietario(Role):
             Role.Asamblea,
         ]
         return menu
+    def configure_apartment(self, user, apartment):
+        from ...services.services import configure_apartment
+
+        """
+        Llama al servicio central para configurar el apartamento para este usuario propietario.
+        """
+        # El servicio necesita el 'username' (correo) y el ID del apartamento
+        configure_apartment(username=user.correo, id_apartment=apartment.pk)
 
 class Residente(Role):
     """"""
@@ -72,3 +91,11 @@ class Residente(Role):
             Role.Reserva,
         ]
         return menu
+    def configure_apartment(self, user, apartment):
+        from ...services.services import configure_apartment
+
+        """
+        Llama al servicio central para configurar el apartamento para este usuario propietario.
+        """
+        # El servicio necesita el 'username' (correo) y el ID del apartamento
+        configure_apartment(username=user.correo, id_apartment=apartment.pk)

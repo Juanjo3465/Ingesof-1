@@ -9,7 +9,7 @@
     <div id="modalOverlay">
         <div class="modal-container">
 
-            <a href="{% url 'Inicial_page' %}" class="close-button">X</a>
+            <a href="{% url back_page %}" class="close-button">X</a>
 
             <h2 class="modal-title">Restablecer contraseña</h2>
 
@@ -29,16 +29,18 @@
                     name="codigo" 
                     class="form-input" 
                     placeholder="Código"
-                    required
                     maxlength="6"
                 >
 
-                <button type="submit" class="submit-button">Siguiente</button>  
-            </form>
+                <button type="submit" name="verificar" class="submit-button">Siguiente</button>
 
-            <button type="button" class="resend-button">
-                Reenviar
-            </button>
+                <div style="margin-top: 15px;">
+                    <p>¿No recibiste el código?</p>
+                    <button type="submit" name="reenviar" class="resend-button" style="margin-top: 15px;">
+                        Reenviar Código
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 {% endblock %}

@@ -1,31 +1,25 @@
 """Funciones servicios"""
-from django.contrib.auth.models import User
-from ..models import Usuario
+from .account_service import AccountService
+from ..models import Usuario, Apartamentos, Residente
 from re import match, search
-from secrets import choice
-from random import shuffle
-from string import ascii_uppercase,digits
-from datetime import datetime
+import datetime
 
-def get_app_user(user:User):
-    """Obtner el regitro de la base de datos de usuario"""
-    email=user.username
+def configure_apartment(username, id_apartment):
+    account = AccountService()
+    user = account.get_app_user_register(username)
+    id_user = user.id_usuario
+    rol = user.rol 
     
-    try:
-        user_app=Usuario.objects.get(correo=email)
-    except Usuario.DoesNotExist:
-        return None
+    config = {
+        Usuario.Rol_Propietario:Apartamentos.configure_owner,
+        Usuario.Rol_Residente:Residente.configure_resident,
+    }
     
-    return user_app
-
-def is_valid_email(email:str):
-    """"""
-    # Patron: String @ email . extention
-    email_regex = r"^[^@]+@[^@]+\.[^@]+$"
-    if match(email_regex,email):
-        return True
-    return False
-
+    fun=config.get(rol)
+    
+    if fun is not None:
+        fun(id_user,id_apartment)
+    
 def is_valid_password(password:str):
     """"""
     if len(password) < 8:
@@ -43,21 +37,8 @@ def is_valid_password(password:str):
         return False
     return True
 
-def create_autetication_code(lenght:int =6, letter_proportion:int =4):
-    """"""
-    if lenght < letter_proportion:
-        letter_proportion=lenght
-    if letter_proportion < 0:
-        letter_proportion=0
 
-    chars = (
-        [choice(ascii_uppercase) for _ in range(letter_proportion)] +
-        [choice(digits) for _ in range(lenght-letter_proportion)]
-    )
-    shuffle(chars)
-    return ''.join(chars)
-
-def valid_code(code:str,lenght:int,letter_proportion:int):
+def valid_code_format(code:str,lenght:int,letter_proportion:int):
     """"""  
     numeric_proportion=lenght-letter_proportion
 

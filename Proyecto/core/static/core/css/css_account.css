@@ -1,5 +1,6 @@
-/* Estilos para la página Mi Cuenta */
+/* Estilos para la página Mi Cuenta y Editar Cuenta */
 
+/* Contenedor general */
 .cuenta-container {
     display: flex;
     justify-content: center;
@@ -30,6 +31,7 @@
     letter-spacing: 0.5px;
 }
 
+/* Estilos para vista de información (solo lectura) */
 .cuenta-info {
     margin-bottom: 40px;
 }
@@ -67,7 +69,7 @@
     line-height: 1.5;
 }
 
-/* Estilo especial para el botón editar */
+/* Estilo especial para el botón editar en vista info */
 .cuenta-card .submit-button {
     margin-top: 20px;
     padding: 14px;
@@ -79,7 +81,160 @@
     text-decoration: none;
 }
 
+/* ========================================= */
+/* Estilos para formulario de edición */
+/* ========================================= */
+
+.edit-form {
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group .form-label {
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: #5F9EA0;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+}
+
+.form-group .form-input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    text-align: left;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.form-group .form-input:focus {
+    border-color: #87CEEB;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.1);
+}
+
+.form-group .form-input::placeholder {
+    color: #999;
+}
+
+/* Estilos para errores de validación */
+.input-error {
+    border-color: #dc3545 !important;
+    background-color: #fff5f5 !important;
+}
+
+.input-error:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+}
+
+.validation-error {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 5px;
+    display: block;
+    font-weight: 500;
+}
+
+/* Botones de acción en formulario */
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 35px;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-group .submit-button {
+    flex: 0 0 auto;
+    min-width: 160px;
+    padding: 14px 30px;
+    margin: 0;
+    background: linear-gradient(135deg, #87CEEB 0%, #5F9EA0 100%);
+    color: #333;
+    font-weight: 600;
+    border: 2px solid #5F9EA0;
+    transition: all 0.3s ease;
+}
+
+.button-group .submit-button:hover {
+    background: linear-gradient(135deg, #5F9EA0 0%, #4A7C7E 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(95, 158, 160, 0.3);
+}
+
+.cancel-button {
+    flex: 0 0 auto;
+    min-width: 120px;
+    padding: 14px 20px;
+    margin: 0;
+    background-color: #6c757d;
+    color: white;
+    border: 2px solid #6c757d;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.cancel-button:hover {
+    background-color: #333;
+    border-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Sección de contraseña */
+.password-section {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 2px solid #e8e8e8;
+    text-align: center;
+}
+
+.password-button {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: white;
+    color: #333;
+    border: 2px solid #333;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.password-button:hover {
+    background-color: #333;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================= */
 /* Responsive */
+/* ========================================= */
+
 @media (max-width: 768px) {
     .cuenta-container {
         padding: 30px 15px;
@@ -94,6 +249,7 @@
         margin-bottom: 30px;
     }
     
+    /* Vista información */
     .info-row {
         grid-template-columns: 1fr;
         gap: 8px;
@@ -112,10 +268,29 @@
     .cuenta-card .submit-button {
         max-width: 100%;
     }
+    
+    /* Formulario edición */
+    .button-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .button-group .submit-button,
+    .cancel-button {
+        max-width: 100%;
+    }
+    
+    .form-group .form-input {
+        padding: 10px 12px;
+    }
 }
 
 @media (max-width: 480px) {
     .cuenta-card {
         padding: 30px 20px;
+    }
+    
+    .password-button {
+        width: 100%;
     }
 }
