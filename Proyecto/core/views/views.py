@@ -2,11 +2,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from ..models import Usuario, CodigoRecuperacion
+from ..models import Usuario, CodigoRecuperacion, Conjunto
 from ..services import LogService, AccountService, AuthenticationService, PasswordService, RecoveryService
 from ..services.decorators import login_required, role_required
 from .. services.validations import valide_password
-from datetime import timezone
 
 class UsuarioManager:
     """"""
@@ -222,3 +221,10 @@ def confirm_password(request):
                 return render(request, 'login/confirm_user.html', context)
             
     return render(request, 'login/confirm_password.html')
+
+@login_required
+def complex_info(request):
+    """"""
+    conjunto=Conjunto.get_complex()
+    context={'conjunto':conjunto}
+    return render(request, 'complex_info.html', context)

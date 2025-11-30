@@ -57,6 +57,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     color: white;
     font-weight: 500;
+    text-decoration: none;
 }
 
 .conjunto-button:hover {

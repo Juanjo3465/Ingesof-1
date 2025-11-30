@@ -19,10 +19,6 @@ class Role(ABC):
         """"""
         pass
     
-    @abstractmethod
-    def configure_apartment():
-        pass
-    
 class Administrador(Role):
     """"""
     @classmethod
