@@ -22,7 +22,6 @@ class Usuario(models.Model):
     @cached_property
     def get_rol(self):
         """"""
-        
         Roles={
             self.Rol_Administrador:Administrador,
             self.Rol_Propietario:Propietario,

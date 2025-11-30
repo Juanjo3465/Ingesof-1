@@ -1,64 +1,22 @@
 """Funciones servicios"""
-from .account_service import AccountService
-from ..models import Usuario, Apartamentos, Residente
-from re import match, search
-from datetime import datetime
+from core.models.usuario import Usuario
+from core.models.apartamentos import Apartamentos
+from core.models.residente import Residente
+from re import match
 
-def configure_apartment(user, obj_apartment):
-    """
-    Dependiendo el rol, ejecuta una funcion u otra, por eso recibe el obj completo
-    de usuario y de apartamento
-    """
-    if user is None:
-        print(f"Error en configure_apartment: no se encontró el usuario con username {user.nombre}")
-        return
-
+def configure_apartment(user:Usuario, id_apartment):
     rol = user.rol 
     
     config = {
-        Usuario.Rol_Propietario: Apartamentos.configure_owner,
-        Usuario.Rol_Residente: Residente.configure_resident,
+        Usuario.Rol_Propietario:Apartamentos.configure_owner,
+        Usuario.Rol_Residente:Residente.configure_resident,
     }
     
-    fun = config.get(rol)
+    fun=config.get(rol)
     
     if fun is not None:
-        fun(user, obj_apartment)
+        fun(user,id_apartment)
     
-def is_valid_email(email: str) -> bool:
-    """
-    Verifica si un string tiene un formato de correo electrónico válido.
-    Formato esperado: (algo)@(algo).(algo)
-    """
-    # Si el email es None o está vacío, no es válido.
-    if not email:
-        return False
-        
-    email_regex = r"^[^@]+@[^@]+\.[^@]+$"
-
-    if match(email_regex, email):
-        return True
-    
-    return False
-
-def is_valid_password(password:str):
-    """"""
-    if len(password) < 8:
-        return False
-    # Si no hay una mayuscula
-    if not search(r"[A-Z]",password):
-        return False
-    # Si no hay una minuscula
-    if not search(r"[a-z]",password):
-        return False
-    # Si no hay un numero
-    if not search(r"[0-9]",password):
-        return False
-    if " " in password:
-        return False
-    return True
-
-
 def valid_code_format(code:str,lenght:int,letter_proportion:int):
     """"""  
     numeric_proportion=lenght-letter_proportion
@@ -83,41 +41,6 @@ def valid_code_format(code:str,lenght:int,letter_proportion:int):
 def equials_strings(string_1:str,string_2:str):
     """"""
     return string_1 == string_2
-
-def solicitar_contrasena_simple():
-    """
-    Solicita dos contraseñas y valida que coincidan.
-    Vuelve a pedir si no son iguales.
-    """
-    while True:
-        nueva = input("Ingrese nueva contraseña: ")
-        confirmar = input("Confirme nueva contraseña: ")
-
-        if nueva == confirmar:
-            print("\n Contraseña válida.")
-            return nueva
-        else:
-            print("\n Las contraseñas no coinciden. Inténtelo nuevamente.\n")
-
-def solicitar_fecha_valida(fecha_str: str):
-    """
-    Valida una fecha en formato 'YYYY-MM-DD' (que es lo que envía <input type="date">).
-    Valida que sea una fecha real y que el año esté entre 1920 y el año actual.
-    Devuelve un objeto date si es válida, de lo contrario devuelve None.
-    """
-   
-    if not fecha_str:
-        return None
-
-    try:
-        fecha_obj = datetime.strptime(fecha_str, '%Y-%m-%d')
-        
-        año_actual = datetime.now().year
-        if not (1920 <= fecha_obj.year <= año_actual):
-            return None 
-        return fecha_obj.date()
-    except ValueError:
-        return None
 
 def validar_asunto(asunto):
     """

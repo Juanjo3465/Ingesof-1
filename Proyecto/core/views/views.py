@@ -1,19 +1,18 @@
 """Funciones views de Django"""
-from django.shortcuts import render, redirect
-
-from core.services.password_service import PasswordService
-from ..models import Usuario
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db import transaction
+from ..models import Usuario, Apartamentos
 from ..services import LogService
 from django.contrib.auth.models import User
 from django.contrib import messages
-from ..models import Usuario, CodigoRecuperacion
-from ..services import LogService, AccountService, AuthenticationService, PasswordService, RecoveryService
+from ..models import Usuario, CodigoRecuperacion, Conjunto
+from ..services import LogService, AccountService, AuthenticationService, PasswordService, ApartmentService
+from ..services import ApartmentFilter
 from ..services.decorators import login_required, role_required
-#from ..services.services import get_app_user
 from django.contrib import messages
 from ..services.services import *
-from .. services.validations import valide_password
-from datetime import timezone
+from ..services.validations import *
+
 
 class UsuarioManager:
     """"""
@@ -185,16 +184,16 @@ def crear_usuario_view(request):
             messages.error(request, 'Todos los campos excepto Celular y Fecha de Nacimiento son obligatorios.')
             return redirect('crear_usuario')
         
-        if not is_valid_email(correo):
+        if validar_correo(correo) != "":
             messages.error(request, f'El formato del correo "{correo}" no es válido.')
             return redirect('crear_usuario')
             
-        if not is_valid_password(contrasena):
+        if valide_password(contrasena) != "":
             messages.error(request, 'La contraseña no cumple los requisitos de seguridad (mín. 8 caracteres, una mayúscula, una minúscula y un número).')
             return redirect('crear_usuario')
-            
-        fecha_nacimiento_obj = solicitar_fecha_valida(fecha_nacimiento_str)
-        if fecha_nacimiento_str and fecha_nacimiento_obj is None:
+        
+        fecha_nacimiento_obj = validar_fecha_nacimiento(fecha_nacimiento_str)
+        if fecha_nacimiento_str and fecha_nacimiento_obj != "":
             messages.error(request, 'La fecha de nacimiento es inválida o está fuera del rango permitido.')
             return redirect('crear_usuario')
 
@@ -207,30 +206,30 @@ def crear_usuario_view(request):
             return redirect('crear_usuario')            
             
         try:
-            password_service = PasswordService()
-            contrasena_hasheada = password_service.hash_password(contrasena)
+            with transaction.atomic():
+                password_service = PasswordService()
+                contrasena_hasheada = password_service.hash_password(contrasena)
 
-            nuevo_usuario = Usuario.objects.create(
-                cedula=cedula,
-                nombre=nombre,
-                correo=correo,
-                celular=celular,
-                fecha_nacimiento=fecha_nacimiento_obj, # objeto 'date' validado
-                contrasena=contrasena_hasheada,
-                rol=rol
-            )
-            
-            messages.success(request, f'Usuario "{nombre}" creado con éxito.')
-            
-            if rol in ['Propietario', 'Residente']:
+                nuevo_usuario = Usuario.objects.create(
+                    cedula=cedula,
+                    nombre=nombre,
+                    correo=correo,
+                    celular=celular,
+                    fecha_nacimiento=fecha_nacimiento_str, # objeto 'date' validado
+                    contrasena=contrasena_hasheada,
+                    rol=rol
+                )
                 
-                apartamento_obj = Apartamentos.objects.get(pk=apartamento_id)
-                rol_obj = nuevo_usuario.get_rol()
-                configure_apartment(nuevo_usuario, apartamento_obj)
+                messages.success(request, f'Usuario "{nombre}" creado con éxito.')
                 
-                messages.info(request, f'El usuario fue asociado correctamente al apartamento {apartamento_obj}.')
+                if rol in ['Propietario', 'Residente']:
+                    
+                    apartamento_obj = Apartamentos.objects.get(pk=apartamento_id)
+                    configure_apartment(nuevo_usuario, apartamento_obj)
+                    
+                    messages.info(request, f'El usuario fue asociado correctamente al apartamento {apartamento_obj}.')
 
-            return redirect('crear_usuario') 
+                return redirect('crear_usuario') 
 
         except Apartamentos.DoesNotExist:
             messages.error(request, 'El apartamento seleccionado no es válido.')
@@ -244,6 +243,7 @@ def crear_usuario_view(request):
     }
     return render(request, 'core/admin_crear_usuario.html',context)
 
+@role_required(Usuario.Rol_Administrador)
 def buscar_usuario_admin_view(request):
     """
     Gestiona la búsqueda y listado de usuarios para el administrador.
@@ -347,3 +347,109 @@ def confirm_password(request):
                 return render(request, 'login/confirm_user.html', context)
             
     return render(request, 'login/confirm_password.html')
+
+@login_required
+def complex_info(request):
+    """"""
+    conjunto=Conjunto.get_complex()
+    context={'conjunto':conjunto}
+    return render(request, 'complex_info.html', context)
+
+@role_required(Usuario.Rol_Residente)
+def resident_apartment(request):
+    """
+    Vista para mostrar la información del apartamento del residente
+    """
+    
+    user = request.user
+    
+    apartment = ApartmentService()
+    my_aparment=apartment.get_resident_apartment(user)
+    
+    if my_aparment is None:
+        return render(request, 'apartment/resident_apartment.html')
+    
+    context = {
+        'apartment': my_aparment
+    }
+    
+    return render(request, 'apartment/resident_apartment.html', context)
+
+@role_required(Usuario.Rol_Propietario)
+def owner_apartment(request):
+    """
+    Vista para listar los apartamentos del propietario logueado.
+    """
+    apartment_service = ApartmentService()
+    
+    apartamentos = apartment_service.get_owner_apartments(request.user)
+    
+    if apartamentos:
+        apartamentos = apartamentos.order_by('interior', 'torre', 'numero')
+        
+    context={
+        'apartamentos': apartamentos
+    }
+    
+    return render(request, 'apartment/owner_apartment.html', context)
+
+@role_required(Usuario.Rol_Propietario)
+def owner_apartment_info(request, id_apartamento):
+    """
+    Vista para mostrar el detalle de un apartamento del propietario logueado.
+    Solo el propietario del apartamento puede acceder a esta vista.
+    """
+    apartamento = get_object_or_404(Apartamentos, id_apartamento=id_apartamento)
+    
+    account_service = AccountService()
+    usuario = account_service.get_app_user(request.user)
+    
+    if apartamento.id_propietario != usuario:
+        return redirect('Owner_apartment')
+    
+    apartment_service = ApartmentService()
+    residentes = apartment_service.get_residents(apartamento)
+    
+    context = {
+        'apartamento': apartamento,
+        'residentes': residentes
+    }
+    
+    return render(request, 'apartment/owner_apartment_info.html', context)
+
+@role_required(Usuario.Rol_Administrador)
+def admin_apartment(request):
+    """
+    Vista para buscar apartamentos con filtros opcionales.
+    """
+    filtro = ApartmentFilter(
+        Apartamentos.objects.select_related('id_propietario').all(),
+        request.GET
+    )
+    
+    apartamentos = filtro.apply().order_by('interior', 'torre', 'numero')
+    
+    context={
+        'apartamentos': apartamentos
+    }
+    
+    return render(request, 'apartment/admin_apartment.html', context)
+
+@role_required(Usuario.Rol_Administrador)
+def admin_apartment_info(request, id_apartamento):
+    """
+    Vista para mostrar el detalle completo de un apartamento para el admin
+    """
+    apartamento = get_object_or_404(Apartamentos, id_apartamento=id_apartamento)
+    
+    service = ApartmentService()
+    propietario = service.get_owner(apartamento)
+    residentes = service.get_residents(apartamento)
+    
+    context = {
+        'apartamento': apartamento,
+        'propietario': propietario,
+        'residentes': residentes
+    }
+    
+    return render(request, 'apartment/admin_apartment_info.html', context)

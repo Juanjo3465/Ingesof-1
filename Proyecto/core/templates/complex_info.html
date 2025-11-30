@@ -1,0 +1,40 @@
+{% extends 'partials/header_user.html' %}
+{% load static %}
+
+{% block title %}Información del Conjunto{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/css_complex_info.css' %}">
+{% endblock %}
+
+{% block body_content %}
+<div class="conjunto-container">
+    <div class="conjunto-content">
+        <div class="conjunto-card">
+            <h2 class="conjunto-title">Conjunto</h2>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <label class="info-label">Nombre:</label>
+                    <p class="info-value">{{ conjunto.nombre }}</p>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">Dirección:</label>
+                    <p class="info-value">{{ conjunto.direccion }}</p>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">N. torres:</label>
+                    <p class="info-value">{{ conjunto.n_torres }}</p>
+                </div>
+                
+                <div class="info-item">
+                    <label class="info-label">N. apartamentos:</label>
+                    <p class="info-value">{{ conjunto.n_apartamentos }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
