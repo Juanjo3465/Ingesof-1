@@ -1,6 +1,7 @@
 """Paquete models"""
 from .apartamentos import Apartamentos
 from .asamblea import Asamblea
+from .codigo_recuperacion import CodigoRecuperacion
 from .conjunto import Conjunto
 from .delegado import Delegado
 from .documentoMensaje import DocumentoMensaje
@@ -16,6 +17,7 @@ from .usuarioMensaje import UsuarioMensaje
 __all__ = [
     'Apartamentos',
     'Asamblea',
+    'CodigoRecuperacion',
     'Conjunto',
     'Delegado',
     'DocumentoMensaje',

@@ -1,9 +1,11 @@
+"""Clase de servicios de recuperacion de contraseña"""
 from secrets import choice
 from random import shuffle
 from string import ascii_uppercase,digits
+from ..models import Usuario
 
 class RecoveryService:
-    
+    """"""
     def configurate_authentication_code(self):
         pass
 

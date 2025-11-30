@@ -13,4 +13,6 @@ urlpatterns = [
     path('Logout/', views.logout, name='Logout'),
     path('Verificar-sesion/', verify_session, name='Verify_session' ),
     path('Mi-cuenta/', views.account_info, name='Account_info'),
+    path('Editar-cuenta/', views.edit_account, name = 'Edit_account'),
+    path('Confirmar-contrasena', views.confirm_password, name = 'Confirm_password'),
 ]
