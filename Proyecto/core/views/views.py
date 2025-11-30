@@ -9,7 +9,7 @@ from django.contrib import messages
 from ..models import Usuario, CodigoRecuperacion
 from ..services import LogService, AccountService, AuthenticationService, PasswordService, RecoveryService
 from ..services.decorators import login_required, role_required
-from ..services.services import get_app_user
+#from ..services.services import get_app_user
 from django.contrib import messages
 from ..services.services import *
 from .. services.validations import valide_password
@@ -179,6 +179,7 @@ def crear_usuario_view(request):
         fecha_nacimiento_str = request.POST.get('fecha_nacimiento')
         contrasena = request.POST.get('contrasena')
         rol = request.POST.get('rol')
+        apartamento_id = request.POST.get('apartamento') 
 
         if not all([cedula, nombre, correo, contrasena, rol]):
             messages.error(request, 'Todos los campos excepto Celular y Fecha de Nacimiento son obligatorios.')
@@ -205,11 +206,17 @@ def crear_usuario_view(request):
             messages.error(request, f'La cédula "{cedula}" ya está registrada.')
             return redirect('crear_usuario')
 
+        try: 
+            id_apartamento = request.POST.get('apartamento')
+        except Exception as e:
+            id_apartamento = None
+            
+            
         try:
             password_service = PasswordService()
             contrasena_hasheada = password_service.hash_password(contrasena)
 
-            Usuario.objects.create(
+            nuevo_usuario = Usuario.objects.create(
                 cedula=cedula,
                 nombre=nombre,
                 correo=correo,
@@ -220,14 +227,36 @@ def crear_usuario_view(request):
             )
             
             messages.success(request, f'Usuario "{nombre}" creado con éxito.')
-            return redirect('crear_usuario')
+            
+            # --- CORRECCIÓN EN LA LÓGICA DE CONFIGURACIÓN DEL APARTAMENTO ---
+            # Si el rol lo requiere, ejecutamos la lógica de asociación
+            if rol in ['Propietario', 'Residente']:
+                
+                # Obtenemos el objeto Apartamento
+                apartamento_obj = Apartamentos.objects.get(pk=apartamento_id)
+                
+                # Obtenemos el objeto de Rol del usuario recién creado
+                rol_obj = nuevo_usuario.get_rol()
+                
+                # Llamamos al método del objeto de Rol, que delegará en el servicio. ¡Esta es la forma correcta!
+                configure_apartment(nuevo_usuario, apartamento_obj)
+                
+                messages.info(request, f'El usuario fue asociado correctamente al apartamento {apartamento_obj}.')
 
+            return redirect('crear_usuario') # Redirigimos a la misma página para crear otro usuario
+
+        except Apartamentos.DoesNotExist:
+            messages.error(request, 'El apartamento seleccionado no es válido.')
+            return redirect('crear_usuario')
         except Exception as e:
             messages.error(request, f'Ocurrió un error inesperado al crear el usuario: {e}')
             return redirect('crear_usuario')
 
     # --- Lógica GET (no cambia) ---
-    return render(request, 'core/admin_crear_usuario.html')
+    context = {
+        'apartamentos' : Apartamentos.objects.all() 
+    }
+    return render(request, 'core/admin_crear_usuario.html',context)
 
 def buscar_usuario_admin_view(request):
     """
