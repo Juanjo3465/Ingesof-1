@@ -204,13 +204,7 @@ def crear_usuario_view(request):
         
         if Usuario.objects.filter(cedula=cedula).exists():
             messages.error(request, f'La cédula "{cedula}" ya está registrada.')
-            return redirect('crear_usuario')
-
-        try: 
-            id_apartamento = request.POST.get('apartamento')
-        except Exception as e:
-            id_apartamento = None
-            
+            return redirect('crear_usuario')            
             
         try:
             password_service = PasswordService()
@@ -221,29 +215,22 @@ def crear_usuario_view(request):
                 nombre=nombre,
                 correo=correo,
                 celular=celular,
-                fecha_nacimiento=fecha_nacimiento_obj, # Usamos el objeto 'date' validado
+                fecha_nacimiento=fecha_nacimiento_obj, # objeto 'date' validado
                 contrasena=contrasena_hasheada,
                 rol=rol
             )
             
             messages.success(request, f'Usuario "{nombre}" creado con éxito.')
             
-            # --- CORRECCIÓN EN LA LÓGICA DE CONFIGURACIÓN DEL APARTAMENTO ---
-            # Si el rol lo requiere, ejecutamos la lógica de asociación
             if rol in ['Propietario', 'Residente']:
                 
-                # Obtenemos el objeto Apartamento
                 apartamento_obj = Apartamentos.objects.get(pk=apartamento_id)
-                
-                # Obtenemos el objeto de Rol del usuario recién creado
                 rol_obj = nuevo_usuario.get_rol()
-                
-                # Llamamos al método del objeto de Rol, que delegará en el servicio. ¡Esta es la forma correcta!
                 configure_apartment(nuevo_usuario, apartamento_obj)
                 
                 messages.info(request, f'El usuario fue asociado correctamente al apartamento {apartamento_obj}.')
 
-            return redirect('crear_usuario') # Redirigimos a la misma página para crear otro usuario
+            return redirect('crear_usuario') 
 
         except Apartamentos.DoesNotExist:
             messages.error(request, 'El apartamento seleccionado no es válido.')
@@ -252,7 +239,6 @@ def crear_usuario_view(request):
             messages.error(request, f'Ocurrió un error inesperado al crear el usuario: {e}')
             return redirect('crear_usuario')
 
-    # --- Lógica GET (no cambia) ---
     context = {
         'apartamentos' : Apartamentos.objects.all() 
     }
@@ -264,47 +250,33 @@ def buscar_usuario_admin_view(request):
     Permite filtrar por correo.
     """
     if request.method == 'POST':
-        # 1. Obtenemos la lista de IDs de los checkboxes marcados
         ids_a_eliminar = request.POST.getlist('usuarios_a_eliminar')
 
         if not ids_a_eliminar:
             messages.warning(request, 'No ha seleccionado ningún usuario para eliminar.')
         else:
-            # 2. Preparamos la consulta para eliminar
-            #    Filtramos por los IDs seleccionados Y nos aseguramos de excluir al admin actual
-            #    como una segunda capa de seguridad crucial.
             usuarios_para_borrar = Usuario.objects.filter(
                 pk__in=ids_a_eliminar
             ).exclude(correo=request.user.username)
-            
-            # Contamos cuántos usuarios se van a borrar realmente
-            count = usuarios_para_borrar.count()
 
+            count = usuarios_para_borrar.count()
             if count > 0:
-                # 3. Ejecutamos la eliminación en la base de datos
                 usuarios_para_borrar.delete()
                 messages.success(request, f'Se han eliminado {count} usuario(s) con éxito.')
             elif count == 0 and ids_a_eliminar:
                 messages.error(request, 'No se pudo eliminar a los usuarios seleccionados (posiblemente intentó eliminarse a sí mismo).')
         
-        # 4. Redirigimos de vuelta a la misma página para ver la lista actualizada
         return redirect('buscar_usuario')
-    # 1. Obtenemos el término de búsqueda desde la URL (petición GET)
-    query_correo = request.GET.get('correo_buscado', '') # El segundo valor es el por defecto
-
-    # 2. Iniciamos la consulta base a la base de datos
-    usuarios_list = Usuario.objects.all().exclude(correo=request.user.username).order_by('nombre')
     
-    # 3. Si el usuario escribió algo en la barra de búsqueda, filtramos la consulta
+    query_correo = request.GET.get('correo_buscado', '') 
+    usuarios_list = Usuario.objects.all().exclude(correo=request.user.username).order_by('nombre')
+
     if query_correo:
-        # '__icontains' es un filtro que no distingue mayúsculas/minúsculas
-        # y busca si el texto está 'contenido' en el campo.
         usuarios_list = usuarios_list.filter(correo__icontains=query_correo)
 
-    # 4. Preparamos el contexto para la plantilla
     contexto = {
         'usuarios': usuarios_list,
-        'query_correo_actual': query_correo # Para 'recordar' la búsqueda en el input
+        'query_correo_actual': query_correo 
     }
     
     return render(request, 'core/admin_buscar_usuario.html', contexto)

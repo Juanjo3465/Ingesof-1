@@ -26,22 +26,16 @@ class Apartamentos(models.Model):
     def configure_owner(cls, user_obj, obj_apartment):
         """
         Asigna un usuario como propietario de un apartamento específico.
-        Recibe el OBJETO de usuario completo y el ID del apartamento.
+        Recibe el OBJETO de usuario completo y el OBJETO del apartamento tambien.
         """
         try:
-            # 1. Obtenemos el apartamento usando el filtro de palabra clave correcto.
             apartment = obj_apartment
-            
-            # 2. Asignamos la INSTANCIA completa del usuario al campo ForeignKey.
             apartment.id_propietario = user_obj
-            
-            # 3. Guardamos los cambios en la base de datos.
             apartment.save()
             
             print(f"Usuario {user_obj.nombre} asignado como propietario del Apartamento ID {obj_apartment.id_apartamento}")
 
         except cls.DoesNotExist:
-            # Manejo de error si el ID del apartamento no es válido.
             print(f"Error: No se encontró un apartamento con ID {obj_apartment.id_apartamento}")
         except Exception as e:
             print(f"Ocurrió un error inesperado en configure_owner cansonnn: {e}")

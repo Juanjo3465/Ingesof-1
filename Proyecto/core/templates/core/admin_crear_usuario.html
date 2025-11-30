@@ -8,23 +8,23 @@
     <h2>Crear Nuevo Usuario</h2>
     <p>Rellene los siguientes campos para registrar un nuevo usuario en el sistema.</p>
 
-    {# El formulario ahora usa la nueva clase 'admin-create-form' #}
+
     <form action="{% url 'crear_usuario' %}" method="post" class="admin-create-form">
         {% csrf_token %}
 
-        <!-- CAMPO: Cédula -->
+        <!-- Cedula -->
         <div class="admin-create-form__group">
             <label for="cedula" class="admin-create-form__label">Cédula:</label>
             <input type="number" id="cedula" name="cedula" placeholder="Ej: 123456789" required class="admin-create-form__input">
         </div>
 
-        <!-- CAMPO: Nombre Completo -->
+        <!-- Nombre Completo -->
         <div class="admin-create-form__group">
             <label for="nombre" class="admin-create-form__label">Nombre Completo:</label>
             <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez" required class="admin-create-form__input">
         </div>
 
-        <!-- CAMPO: Correo Electrónico -->
+        <!-- Correo Electronico -->
         <div class="admin-create-form__group">
             <label for="correo" class="admin-create-form__label">Correo Electrónico:</label>
             <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required class="admin-create-form__input">
@@ -49,7 +49,7 @@
         </div>
 
         <!-- Rol -->
-        {# Aplicamos la clase de grupo y el modificador de ancho completo #}
+        {# Aplicamos la clase de grupo y el modificador de ancho completo, valida tambien para apartamento#}
         <div class="admin-create-form__group admin-create-form__group--full-width">
             <label for="rol" class="admin-create-form__label">Rol del Usuario:</label>
             <select id="rol" name="rol" required class="admin-create-form__input">
@@ -85,36 +85,28 @@
 <script>
     // Espera a que todo el contenido de la página se haya cargado
     document.addEventListener('DOMContentLoaded', function() {
-        
-        // 1. Obtenemos los elementos HTML con los que vamos a trabajar
+
         const rolSelect = document.getElementById('rol');
         const apartmentContainer = document.getElementById('apartment-field-container');
         const apartmentSelect = document.getElementById('apartamento');
 
-        // 2. Creamos una función que contiene la lógica de mostrar/ocultar
+
         function toggleApartmentField() {
-            // Obtenemos el valor seleccionado actualmente en el desplegable de Rol
             const selectedRole = rolSelect.value;
 
-            // 3. La Lógica Condicional
             if (selectedRole === 'Propietario' || selectedRole === 'Residente') {
-                // Si el rol es Propietario o Residente...
+
                 apartmentContainer.style.display = 'block'; // Mostramos el contenedor
-                apartmentSelect.required = true; // Hacemos que el campo sea obligatorio
+                apartmentSelect.required = true;
             } else {
-                // Si el rol es Admin o cualquier otro...
                 apartmentContainer.style.display = 'none'; // Ocultamos el contenedor
-                apartmentSelect.required = false; // Hacemos que el campo NO sea obligatorio
-                apartmentSelect.value = ''; // Reseteamos su valor por si acaso
+                apartmentSelect.required = false; 
+                apartmentSelect.value = '';
             }
         }
 
-        // 4. El "Oyente" de Eventos
-        // Le decimos al desplegable de Rol: "Cada vez que tu valor cambie..."
         rolSelect.addEventListener('change', toggleApartmentField);
 
-        // 5. (Opcional pero recomendado) Ejecutamos la función una vez al cargar la página
-        // por si el formulario se recarga con un valor ya seleccionado.
         toggleApartmentField();
     });
 </script>

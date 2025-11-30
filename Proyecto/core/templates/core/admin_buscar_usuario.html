@@ -8,11 +8,10 @@
 {% endblock %}
 
 {% block content_2 %}
-    {# Usamos la misma clase de caja para mantener la consistencia del diseño #}
     <div class="reserva-form-box">
         <h2 class="reserva-subtitle">Buscar o Eliminar Usuarios</h2>
         
-        <!-- ===== FORMULARIO DE BÚSQUEDA (GET) ===== -->
+        <!-- Para filtrar el correo-->
         <form action="{% url 'buscar_usuario' %}" method="get" class="reserva-filter-form">
             <input 
                 type="email" 
@@ -22,10 +21,9 @@
                 class="admin-search-input"> {# Usamos una clase nueva para darle estilo #}
             <button type="submit" class="reserva-btn-filter">Buscar</button>
         </form>
-        <!-- ======================================= -->
 
-        <!-- ===== FORMULARIO DE ELIMINACIÓN (POST) ===== -->
-        <form action="" method="post"> {# El action lo implementaremos después #}
+        <!-- Esto ya es para eliminar (toma todos los checkboxes y devuelve la pk) -->
+        <form action="{% url 'buscar_usuario' %}" method="post"> 
             {% csrf_token %}
             
             <div class="reserva-table-container">

@@ -5,9 +5,10 @@ from re import match, search
 from datetime import datetime
 
 def configure_apartment(user, obj_apartment):
-    # 1. Obtenemos el OBJETO de usuario completo
-    
-    # Si el usuario no se encuentra, no podemos continuar
+    """
+    Dependiendo el rol, ejecuta una funcion u otra, por eso recibe el obj completo
+    de usuario y de apartamento
+    """
     if user is None:
         print(f"Error en configure_apartment: no se encontró el usuario con username {user.nombre}")
         return
@@ -22,33 +23,19 @@ def configure_apartment(user, obj_apartment):
     fun = config.get(rol)
     
     if fun is not None:
-        # --- ¡LA CORRECCIÓN CLAVE! ---
-        # Le pasamos el OBJETO 'user' completo a la función de destino.
         fun(user, obj_apartment)
     
 def is_valid_email(email: str) -> bool:
     """
     Verifica si un string tiene un formato de correo electrónico válido.
     Formato esperado: (algo)@(algo).(algo)
-    Devuelve True si es válido, False en caso contrario.
     """
     # Si el email es None o está vacío, no es válido.
     if not email:
         return False
         
-    # Patrón de la expresión regular:
-    # ^         -> Inicio del string
-    # [^@]+     -> Uno o más caracteres que NO sean '@'
-    # @         -> El carácter literal '@'
-    # [^@]+     -> Uno o más caracteres que NO sean '@'
-    # \.        -> El carácter literal '.' (la barra invertida es para "escaparlo")
-    # [^@]+     -> Uno o más caracteres que NO sean '@'
-    # $         -> Fin del string
     email_regex = r"^[^@]+@[^@]+\.[^@]+$"
-    
-    # La función 'match' intenta hacer coincidir el patrón desde el INICIO del string.
-    # Si coincide, devuelve un objeto de coincidencia (que evalúa a True).
-    # Si no coincide, devuelve None (que evalúa a False).
+
     if match(email_regex, email):
         return True
     
