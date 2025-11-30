@@ -5,7 +5,7 @@ from re import match, search
 from secrets import choice
 from random import shuffle
 from string import ascii_uppercase,digits
-import datetime
+from datetime import datetime
 
 def get_app_user(user:User):
     """Obtner el regitro de la base de datos de usuario"""
@@ -97,33 +97,25 @@ def solicitar_contrasena_simple():
         else:
             print("\n Las contraseñas no coinciden. Inténtelo nuevamente.\n")
 
-def solicitar_fecha_valida():
+def solicitar_fecha_valida(fecha_str: str):
     """
-    Solicita una fecha en formato día-mes-año o día/mes/año
-    y valida que sea una fecha real y un año entre 1950 y 2099.
+    Valida una fecha en formato 'YYYY-MM-DD' (que es lo que envía <input type="date">).
+    Valida que sea una fecha real y que el año esté entre 1920 y el año actual.
+    Devuelve un objeto date si es válida, de lo contrario devuelve None.
     """
-    patron = r"^\d{1,2}[-/]\d{1,2}[-/]\d{4}$"
+   
+    if not fecha_str:
+        return None
 
-    while True:
-        fecha_str = input("Ingrese fecha (día-mes-año): ")
-
-        if not match(patron, fecha_str):
-            print(" Formato inválido. Use 12-03-2024 o 12/03/2024.\n")
-            continue
-
-        separador = "-" if "-" in fecha_str else "/"
-        dia, mes, anio = map(int, fecha_str.split(separador))
-
-        if not (1950 <= anio <= 2099):
-            print(" Año fuera del rango permitido (1950 a 2099).\n")
-            continue
-
-        try:
-            fecha_valida = datetime.date(anio, mes, dia)
-            print(" Fecha válida:", fecha_valida.strftime("%d-%m-%Y"))
-            return fecha_valida
-        except ValueError:
-            print(" La fecha no existe.\n")
+    try:
+        fecha_obj = datetime.strptime(fecha_str, '%Y-%m-%d')
+        
+        año_actual = datetime.now().year
+        if not (1920 <= fecha_obj.year <= año_actual):
+            return None 
+        return fecha_obj.date()
+    except ValueError:
+        return None
 
 def validar_asunto(asunto):
     """

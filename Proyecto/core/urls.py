@@ -13,4 +13,7 @@ urlpatterns = [
     path('Logout/', views.logout, name='Logout'),
     path('Verificar-sesion/', verify_session, name='Verify_session' ),
     path('Mi-cuenta/', views.account_info, name='Account_info'),
+    path('gestion-usuario/', views.gestion_usuarios_view, name='gestion_usuario'),
+    path('crear_usuario/', views.crear_usuario_view, name='crear_usuario'),
+    path('buscar_usuario/', views.buscar_usuario_admin_view, name='buscar_usuario'),
 ]

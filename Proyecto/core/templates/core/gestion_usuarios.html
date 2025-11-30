@@ -1,0 +1,21 @@
+{% extends 'base_reservas.html' %}
+{% load static %}
+
+{% block title %}Menu Reservas - My Building App{% endblock %}
+
+{% block content_1 %}
+
+<h1 class="reserva-main-title">{{ user.role.get_name }}</h1>
+{% endblock %}
+
+{% block content_2 %}
+<div class="reserva-menu-box">
+    <p class="reserva-subtitle">Bienvenido al panel de gestion de usuarios</p>
+    <p class="reserva-instruction-text">Para continuar selecciona lo que quieres hacer</p>
+    
+    <div class="reserva-menu-buttons">
+        <a href="{% url 'crear_usuario' %}" class="reserva-btn-menu">   Crear Nuevo Usuario  </a>
+        <a href="{% url 'buscar_usuario' %}" class="reserva-btn-menu">Buscar o Eliminar Usuario</a>
+    </div>
+</div>
+{% endblock %}

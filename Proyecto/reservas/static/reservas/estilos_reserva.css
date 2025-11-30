@@ -390,3 +390,80 @@
         padding: 20px;
     }
 }
+
+/*Para el menu de admin*/
+    /* 
+       Ahora todos los estilos empiezan con '.admin-create-form'.
+    */
+
+.admin-create-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 30px;
+    margin-top: 20px;
+}
+
+/* Elemento: 'group'. Un grupo de etiqueta y campo. */
+.admin-create-form__group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+/* Elemento: 'label'. La etiqueta de cada campo. */
+.admin-create-form__label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Elemento: 'input'. Los campos de texto y selección. */
+.admin-create-form__input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Modificador: '--full-width'. Una variación de un elemento. */
+.admin-create-form__group--full-width {
+    grid-column: 1 / -1;
+}
+
+.admin-create-form__group--full-width select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Elemento: 'actions'. El contenedor de los botones. */
+.admin-create-form__actions {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* ===== ESTILOS ADICIONALES PARA LA PÁGINA DE GESTIÓN DE USUARIOS ===== */
+
+/* Estilo para la barra de búsqueda de correo */
+.admin-search-input {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 2px solid #333;
+    width: 300px; /* Ancho mayor para la búsqueda */
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+.admin-search-input:focus {
+    outline: none;
+    border-color: #87CEEB;
+}
+
+/* 
+   Ahora las reglas de ancho SOLO se aplican a la tabla que tiene la clase 'user-management-table'.
+   Tu tabla de reservas original no se verá afectada.
+*/
+.user-management-table th:nth-child(1), .user-management-table td:nth-child(1) { width: 30%; text-align: left; } /* Nombre */
+.user-management-table th:nth-child(2) { width: 20%; }                     /* Cédula */
+.user-management-table th:nth-child(3), .user-management-table td:nth-child(3) { text-align: left; width: 30%; } /* Correo */
+.user-management-table th:nth-child(4) { width: 10%; }                     /* Rol */
+.user-management-table th:nth-child(5) { width: 10%; }                     /* Eliminar */
