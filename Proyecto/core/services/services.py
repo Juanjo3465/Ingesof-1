@@ -1,7 +1,44 @@
 """Funciones servicios"""
-from re import match
+from .account_service import AccountService
+from ..models import Usuario, Apartamentos, Residente
+from re import match, search
+import datetime
 
-def valid_code(code:str,lenght:int,letter_proportion:int):
+def configure_apartment(username, id_apartment):
+    account = AccountService()
+    user = account.get_app_user_register(username)
+    id_user = user.id_usuario
+    rol = user.rol 
+    
+    config = {
+        Usuario.Rol_Propietario:Apartamentos.configure_owner,
+        Usuario.Rol_Residente:Residente.configure_resident,
+    }
+    
+    fun=config.get(rol)
+    
+    if fun is not None:
+        fun(id_user,id_apartment)
+    
+def is_valid_password(password:str):
+    """"""
+    if len(password) < 8:
+        return False
+    # Si no hay una mayuscula
+    if not search(r"[A-Z]",password):
+        return False
+    # Si no hay una minuscula
+    if not search(r"[a-z]",password):
+        return False
+    # Si no hay un numero
+    if not search(r"[0-9]",password):
+        return False
+    if " " in password:
+        return False
+    return True
+
+
+def valid_code_format(code:str,lenght:int,letter_proportion:int):
     """"""  
     numeric_proportion=lenght-letter_proportion
 
@@ -25,6 +62,49 @@ def valid_code(code:str,lenght:int,letter_proportion:int):
 def equials_strings(string_1:str,string_2:str):
     """"""
     return string_1 == string_2
+
+def solicitar_contrasena_simple():
+    """
+    Solicita dos contraseñas y valida que coincidan.
+    Vuelve a pedir si no son iguales.
+    """
+    while True:
+        nueva = input("Ingrese nueva contraseña: ")
+        confirmar = input("Confirme nueva contraseña: ")
+
+        if nueva == confirmar:
+            print("\n Contraseña válida.")
+            return nueva
+        else:
+            print("\n Las contraseñas no coinciden. Inténtelo nuevamente.\n")
+
+def solicitar_fecha_valida():
+    """
+    Solicita una fecha en formato día-mes-año o día/mes/año
+    y valida que sea una fecha real y un año entre 1950 y 2099.
+    """
+    patron = r"^\d{1,2}[-/]\d{1,2}[-/]\d{4}$"
+
+    while True:
+        fecha_str = input("Ingrese fecha (día-mes-año): ")
+
+        if not match(patron, fecha_str):
+            print(" Formato inválido. Use 12-03-2024 o 12/03/2024.\n")
+            continue
+
+        separador = "-" if "-" in fecha_str else "/"
+        dia, mes, anio = map(int, fecha_str.split(separador))
+
+        if not (1950 <= anio <= 2099):
+            print(" Año fuera del rango permitido (1950 a 2099).\n")
+            continue
+
+        try:
+            fecha_valida = datetime.date(anio, mes, dia)
+            print(" Fecha válida:", fecha_valida.strftime("%d-%m-%Y"))
+            return fecha_valida
+        except ValueError:
+            print(" La fecha no existe.\n")
 
 def validar_asunto(asunto):
     """

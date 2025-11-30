@@ -17,6 +17,14 @@ class AccountService():
         
         return user_app
     
+    def get_app_user_register(self, username):
+        try:
+            user_app=Usuario.objects.get(correo=username)
+        except Usuario.DoesNotExist:
+            return None
+        
+        return user_app
+    
     def edit_account_validation(self,nombre: str, fecha_nacimiento, correo: str, celular: str):
         """ Valida todos los campos del formulario de editar cuenta """
         
