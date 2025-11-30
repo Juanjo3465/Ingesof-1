@@ -22,11 +22,19 @@ class Apartamentos(models.Model):
         unique_together = (('torre', 'numero'),)
         
     @classmethod
-    def configure_owner(cls, id_user, id_apartment):
-        """"""
-        apartment=cls.objects.get(id_apartment)
-        
-        id_new_owner=id_user
-        
-        apartment.id_propietario=id_new_owner
-        apartment.save()
+    def configure_owner(cls, user_obj, obj_apartment):
+        """
+        Asigna un usuario como propietario de un apartamento específico.
+        Recibe el OBJETO de usuario completo y el OBJETO del apartamento tambien.
+        """
+        try:
+            apartment = obj_apartment
+            apartment.id_propietario = user_obj
+            apartment.save()
+            
+            print(f"Usuario {user_obj.nombre} asignado como propietario del Apartamento ID {obj_apartment.id_apartamento}")
+
+        except cls.DoesNotExist:
+            print(f"Error: No se encontró un apartamento con ID {obj_apartment.id_apartamento}")
+        except Exception as e:
+            print(f"Ocurrió un error inesperado en configure_owner cansonnn: {e}")
