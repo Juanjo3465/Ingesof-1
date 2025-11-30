@@ -40,7 +40,7 @@ def login(request):
         log=LogService().login(request, username, password)
         
         if log:
-            return redirect('Menu')
+            return redirect('forum')
 
         context= {
             "error": "Usuario o contraseña incorrecta",

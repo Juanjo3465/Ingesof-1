@@ -43,11 +43,7 @@
                     </div>
                     <p class="post-title">{{post.titulo}}</p>
                     <p class="post-content">{{post.descripcion}} <a href="#" class="read-more">Leer mas...</a></p>
-                    {% if post.imagen %}
-                    <div class="post-image-placeholder">
-                        <img src="{{ post.imagen.url }}" alt="Imagen del post">
-                    </div>
-                    {% endif %}
+
                     <div class="post-actions">
                         <button class="action-button">
                             <span class="material-icons">thumb_up</span>
