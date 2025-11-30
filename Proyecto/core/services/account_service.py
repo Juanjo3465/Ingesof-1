@@ -1,12 +1,13 @@
 """Servicios de cuenta"""
 from django.contrib.auth.models import User
 from django.db import transaction
-from ..models import Usuario
+
 from .validations import validar_nombre, validar_correo, validar_celular, validar_fecha_nacimiento
 
 class AccountService():
     """"""
     def get_app_user(self,user:User):
+        from ..models import Usuario
         """Obtner el regitro de la base de datos de usuario"""
         email=user.username
         
@@ -18,6 +19,7 @@ class AccountService():
         return user_app
     
     def get_app_user_register(self, username):
+        from ..models import Usuario
         try:
             user_app=Usuario.objects.get(correo=username)
         except Usuario.DoesNotExist:

@@ -15,4 +15,7 @@ urlpatterns = [
     path('Mi-cuenta/', views.account_info, name='Account_info'),
     path('Editar-cuenta/', views.edit_account, name = 'Edit_account'),
     path('Confirmar-contrasena', views.confirm_password, name = 'Confirm_password'),
+    path('gestion-usuario/', views.gestion_usuarios_view, name='gestion_usuario'),
+    path('crear_usuario/', views.crear_usuario_view, name='crear_usuario'),
+    path('buscar_usuario/', views.buscar_usuario_admin_view, name='buscar_usuario'),
 ]

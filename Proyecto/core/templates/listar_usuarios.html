@@ -11,6 +11,11 @@
         {% for usuario in usuarios %}
             <li>
                 <strong>Nombre:</strong> {{ usuario.nombre}}
+                <strong>Rol:</strong> {{ usuario.rol}}
+                <strong>Llave primaria:</strong> {{ usuario.pk}}
+                <strong>Correo:</strong> {{ usuario.correo}}
+
+
             </li>
         {% empty %}
             <li>No hay usuarios registrados en la base de datos.</li>

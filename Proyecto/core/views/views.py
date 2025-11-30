@@ -1,10 +1,17 @@
 """Funciones views de Django"""
 from django.shortcuts import render, redirect
+
+from core.services.password_service import PasswordService
+from ..models import Usuario
+from ..services import LogService
 from django.contrib.auth.models import User
 from django.contrib import messages
 from ..models import Usuario, CodigoRecuperacion
 from ..services import LogService, AccountService, AuthenticationService, PasswordService, RecoveryService
 from ..services.decorators import login_required, role_required
+from ..services.services import get_app_user
+from django.contrib import messages
+from ..services.services import *
 from .. services.validations import valide_password
 from datetime import timezone
 
@@ -155,6 +162,123 @@ def account_info(request):
     
     context = {'usuario' : usuario}
     return render(request, 'account/account_info.html', context)
+    
+@role_required(Usuario.Rol_Administrador)
+def gestion_usuarios_view(request):
+    
+    return render(request, 'core/gestion_usuarios.html', {})
+
+@role_required(Usuario.Rol_Administrador)
+def crear_usuario_view(request):
+    if request.method == 'POST':
+
+        cedula = request.POST.get('cedula')
+        nombre = request.POST.get('nombre')
+        correo = request.POST.get('correo')
+        celular = request.POST.get('celular')
+        fecha_nacimiento_str = request.POST.get('fecha_nacimiento')
+        contrasena = request.POST.get('contrasena')
+        rol = request.POST.get('rol')
+
+        if not all([cedula, nombre, correo, contrasena, rol]):
+            messages.error(request, 'Todos los campos excepto Celular y Fecha de Nacimiento son obligatorios.')
+            return redirect('crear_usuario')
+        
+        if not is_valid_email(correo):
+            messages.error(request, f'El formato del correo "{correo}" no es válido.')
+            return redirect('crear_usuario')
+            
+        if not is_valid_password(contrasena):
+            messages.error(request, 'La contraseña no cumple los requisitos de seguridad (mín. 8 caracteres, una mayúscula, una minúscula y un número).')
+            return redirect('crear_usuario')
+            
+        fecha_nacimiento_obj = solicitar_fecha_valida(fecha_nacimiento_str)
+        if fecha_nacimiento_str and fecha_nacimiento_obj is None:
+            messages.error(request, 'La fecha de nacimiento es inválida o está fuera del rango permitido.')
+            return redirect('crear_usuario')
+
+        if Usuario.objects.filter(correo=correo).exists():
+            messages.error(request, f'El correo "{correo}" ya está registrado.')
+            return redirect('crear_usuario')
+        
+        if Usuario.objects.filter(cedula=cedula).exists():
+            messages.error(request, f'La cédula "{cedula}" ya está registrada.')
+            return redirect('crear_usuario')
+
+        try:
+            password_service = PasswordService()
+            contrasena_hasheada = password_service.hash_password(contrasena)
+
+            Usuario.objects.create(
+                cedula=cedula,
+                nombre=nombre,
+                correo=correo,
+                celular=celular,
+                fecha_nacimiento=fecha_nacimiento_obj, # Usamos el objeto 'date' validado
+                contrasena=contrasena_hasheada,
+                rol=rol
+            )
+            
+            messages.success(request, f'Usuario "{nombre}" creado con éxito.')
+            return redirect('crear_usuario')
+
+        except Exception as e:
+            messages.error(request, f'Ocurrió un error inesperado al crear el usuario: {e}')
+            return redirect('crear_usuario')
+
+    # --- Lógica GET (no cambia) ---
+    return render(request, 'core/admin_crear_usuario.html')
+
+def buscar_usuario_admin_view(request):
+    """
+    Gestiona la búsqueda y listado de usuarios para el administrador.
+    Permite filtrar por correo.
+    """
+    if request.method == 'POST':
+        # 1. Obtenemos la lista de IDs de los checkboxes marcados
+        ids_a_eliminar = request.POST.getlist('usuarios_a_eliminar')
+
+        if not ids_a_eliminar:
+            messages.warning(request, 'No ha seleccionado ningún usuario para eliminar.')
+        else:
+            # 2. Preparamos la consulta para eliminar
+            #    Filtramos por los IDs seleccionados Y nos aseguramos de excluir al admin actual
+            #    como una segunda capa de seguridad crucial.
+            usuarios_para_borrar = Usuario.objects.filter(
+                pk__in=ids_a_eliminar
+            ).exclude(correo=request.user.username)
+            
+            # Contamos cuántos usuarios se van a borrar realmente
+            count = usuarios_para_borrar.count()
+
+            if count > 0:
+                # 3. Ejecutamos la eliminación en la base de datos
+                usuarios_para_borrar.delete()
+                messages.success(request, f'Se han eliminado {count} usuario(s) con éxito.')
+            elif count == 0 and ids_a_eliminar:
+                messages.error(request, 'No se pudo eliminar a los usuarios seleccionados (posiblemente intentó eliminarse a sí mismo).')
+        
+        # 4. Redirigimos de vuelta a la misma página para ver la lista actualizada
+        return redirect('buscar_usuario')
+    # 1. Obtenemos el término de búsqueda desde la URL (petición GET)
+    query_correo = request.GET.get('correo_buscado', '') # El segundo valor es el por defecto
+
+    # 2. Iniciamos la consulta base a la base de datos
+    usuarios_list = Usuario.objects.all().exclude(correo=request.user.username).order_by('nombre')
+    
+    # 3. Si el usuario escribió algo en la barra de búsqueda, filtramos la consulta
+    if query_correo:
+        # '__icontains' es un filtro que no distingue mayúsculas/minúsculas
+        # y busca si el texto está 'contenido' en el campo.
+        usuarios_list = usuarios_list.filter(correo__icontains=query_correo)
+
+    # 4. Preparamos el contexto para la plantilla
+    contexto = {
+        'usuarios': usuarios_list,
+        'query_correo_actual': query_correo # Para 'recordar' la búsqueda en el input
+    }
+    
+    return render(request, 'core/admin_buscar_usuario.html', contexto)
 
 @login_required
 def edit_account(request):

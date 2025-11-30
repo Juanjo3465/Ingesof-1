@@ -1,7 +1,7 @@
 """Modulo Residente"""
 from django.db import models
 from datetime import date
-from ..services import AccountService
+#from ..services import AccountService
 
 class Residente(models.Model):
     """"""

@@ -1,0 +1,71 @@
+{% extends 'base_reservas.html' %}
+{% load static %}
+
+{% block title %}Buscar o Eliminar Usuario - My Building App{% endblock %}
+
+{% block content_1 %}
+<h1 class="reserva-main-title">{{ user.role.get_name }}</h1>
+{% endblock %}
+
+{% block content_2 %}
+    {# Usamos la misma clase de caja para mantener la consistencia del diseño #}
+    <div class="reserva-form-box">
+        <h2 class="reserva-subtitle">Buscar o Eliminar Usuarios</h2>
+        
+        <!-- ===== FORMULARIO DE BÚSQUEDA (GET) ===== -->
+        <form action="{% url 'buscar_usuario' %}" method="get" class="reserva-filter-form">
+            <input 
+                type="email" 
+                name="correo_buscado" 
+                placeholder="Buscar por correo electrónico..."
+                value="{{ query_correo_actual }}"
+                class="admin-search-input"> {# Usamos una clase nueva para darle estilo #}
+            <button type="submit" class="reserva-btn-filter">Buscar</button>
+        </form>
+        <!-- ======================================= -->
+
+        <!-- ===== FORMULARIO DE ELIMINACIÓN (POST) ===== -->
+        <form action="" method="post"> {# El action lo implementaremos después #}
+            {% csrf_token %}
+            
+            <div class="reserva-table-container">
+                <table class="reservas-table user-management-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cédula</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario.nombre }}</td>
+                            <td>{{ usuario.cedula }}</td>
+                            <td>{{ usuario.correo }}</td>
+                            <td>{{ usuario.rol }}</td>
+                            <td> 
+                                <input 
+                                    type="checkbox" 
+                                    name="usuarios_a_eliminar" 
+                                    value="{{ usuario.pk }}">
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
+                                No se encontraron usuarios que coincidan con la búsqueda.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {# Reutilizamos el estilo del botón de confirmar #}
+            <button type="submit" class="reserva-btn-confirm" style="background-color: #c0392b;">Eliminar Seleccionados</button>
+        </form>
+    </div>
+{% endblock %}
