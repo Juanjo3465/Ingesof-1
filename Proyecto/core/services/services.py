@@ -2,24 +2,45 @@
 from .account_service import AccountService
 from ..models import Usuario, Apartamentos, Residente
 from re import match, search
-import datetime
+from datetime import datetime
 
-def configure_apartment(username, id_apartment):
-    account = AccountService()
-    user = account.get_app_user_register(username)
-    id_user = user.id_usuario
+def configure_apartment(user, obj_apartment):
+    """
+    Dependiendo el rol, ejecuta una funcion u otra, por eso recibe el obj completo
+    de usuario y de apartamento
+    """
+    if user is None:
+        print(f"Error en configure_apartment: no se encontró el usuario con username {user.nombre}")
+        return
+
     rol = user.rol 
     
     config = {
-        Usuario.Rol_Propietario:Apartamentos.configure_owner,
-        Usuario.Rol_Residente:Residente.configure_resident,
+        Usuario.Rol_Propietario: Apartamentos.configure_owner,
+        Usuario.Rol_Residente: Residente.configure_resident,
     }
     
-    fun=config.get(rol)
+    fun = config.get(rol)
     
     if fun is not None:
-        fun(id_user,id_apartment)
+        fun(user, obj_apartment)
     
+def is_valid_email(email: str) -> bool:
+    """
+    Verifica si un string tiene un formato de correo electrónico válido.
+    Formato esperado: (algo)@(algo).(algo)
+    """
+    # Si el email es None o está vacío, no es válido.
+    if not email:
+        return False
+        
+    email_regex = r"^[^@]+@[^@]+\.[^@]+$"
+
+    if match(email_regex, email):
+        return True
+    
+    return False
+
 def is_valid_password(password:str):
     """"""
     if len(password) < 8:

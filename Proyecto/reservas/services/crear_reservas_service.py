@@ -60,7 +60,7 @@ def valida_alcance_reserva(campos_ingresados):
 def valida_limite_reservas_activas(id_usuario_actual,num_maximo_reservas_activas):
     max_reservas_activas = num_maximo_reservas_activas
     num_reservas_activas = contar_numero_reservas_activas(id_usuario_actual)
-    if num_reservas_activas > max_reservas_activas:
+    if num_reservas_activas >= max_reservas_activas:
         return False
     return True
     
