@@ -34,7 +34,7 @@ def role_required(*allowed_roles):
             user_role = request.user.role
 
             if user_role.get_name() not in allowed_roles:
-                return redirect('Menu') #Update when the home page be ready
+                return redirect('forum') 
 
             return view_func(request, *args, **kwargs)
         return wrapper

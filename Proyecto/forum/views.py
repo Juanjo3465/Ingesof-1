@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Publicacion, Usuario
-from django.http import HttpResponse
+from .models import Publicacion
+from core.models import Usuario
 from core.services.decorators import login_required, role_required
 
 # Create your views here.
