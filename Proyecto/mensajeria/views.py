@@ -150,14 +150,12 @@ def redactar(request):
     
     return render(request, 'mensajeria/redactar.html', context)
 
-
 @login_required
 def responder(request, mensaje_id):
     """Vista para responder a un mensaje"""
     service = MensajeriaService()
     usuario = service.get_usuario(request)
     
-    # Obtener mensaje original
     usuario_mensaje = service.obtener_mensaje(mensaje_id, usuario)
     
     if not usuario_mensaje:
@@ -167,21 +165,23 @@ def responder(request, mensaje_id):
     mensaje = usuario_mensaje.id_mensaje
     emisor_original = service.obtener_emisor(mensaje)
     
-    # Redirigir a redactar con datos prellenados
+    asunto_original = mensaje.asunto
+    if not asunto_original.startswith('Re:'):
+        asunto_respuesta = f"Re: {asunto_original}"
+    else:
+        asunto_respuesta = asunto_original
+    
     return redirect(
-        f"/mensajeria/redactar/?para={emisor_original.correo}&asunto=Re: {mensaje.asunto}&respuesta_a={mensaje.conversacion}"
+        f"/mensajeria/redactar/?para={emisor_original.correo}&asunto={asunto_respuesta}&respuesta_a={mensaje.conversacion}"
     )
 
 
 @login_required
 def toggle_destacado(request, mensaje_id):
-    """Alterna el estado de destacado de un mensaje (AJAX)"""
+    """Alterna el estado de destacado de un mensaje"""
     if request.method == 'POST':
         service = MensajeriaService()
         usuario = service.get_usuario(request)
-        
-        if not usuario:
-            return JsonResponse({'error': 'Usuario no encontrado'}, status=400)
         
         nuevo_estado = service.toggle_destacado(mensaje_id, usuario)
         
@@ -195,13 +195,10 @@ def toggle_destacado(request, mensaje_id):
 
 @login_required
 def marcar_leido(request, mensaje_id):
-    """Marca un mensaje como leído (AJAX)"""
+    """Marca un mensaje como leído"""
     if request.method == 'POST':
         service = MensajeriaService()
         usuario = service.get_usuario(request)
-        
-        if not usuario:
-            return JsonResponse({'error': 'Usuario no encontrado'}, status=400)
         
         exito = service.marcar_como_leido(mensaje_id, usuario)
         
