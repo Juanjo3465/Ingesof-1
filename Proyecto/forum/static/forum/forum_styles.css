@@ -226,6 +226,37 @@
     color: #5F9EA0;
 }
 
+/* Delete button */
+.post-card .delete-post-button {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+.post-card .delete-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #dc3545; /* Danger red */
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 3px 8px rgba(220, 53, 69, 0.3);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.post-card .delete-button:hover {
+    background-color: #b02a37;
+    transform: scale(1.05);
+}
+
+.delete-button .material-icons {
+    font-size: 18px;
+}
+
 .post-card .read-more {
     color: #5F9EA0;
     text-decoration: none;
