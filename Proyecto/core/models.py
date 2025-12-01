@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.core.validators import MinLengthValidator
 from django.utils import timezone
 
-class asamblea(models.Model):
+
+class Asamblea(models.Model):
     ESTADO_CHOICES = [
         ('Programada', 'Programada'),
         ('En curso', 'En curso'),
@@ -24,10 +26,10 @@ class asamblea(models.Model):
     
     class Meta:
         ordering = ['-fecha_hora']
-        db_table = 'aseamblea'  # ← CAMBIADO de 'asambleas' a 'aseamblea'
+        db_table = 'asambleas'
     
     def __str__(self):
-        return f"{self.nombre}"
+        return self.nombre
 
 
 class Propietario(models.Model):
@@ -54,7 +56,7 @@ class ParticipacionAsamblea(models.Model):
     ]
     
     id_participacion = models.AutoField(primary_key=True)
-    asamblea = models.ForeignKey(asamblea, on_delete=models.CASCADE, related_name='participaciones')
+    asamblea = models.ForeignKey(Asamblea, on_delete=models.CASCADE, related_name='participaciones')
     propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='participaciones')
     tipo_participacion = models.CharField(max_length=20, choices=TIPO_PARTICIPACION, default='Personal')
     fecha_registro = models.DateTimeField(auto_now_add=True)
@@ -66,14 +68,18 @@ class ParticipacionAsamblea(models.Model):
 
 class Delegado(models.Model):
     id_delegado = models.AutoField(primary_key=True)
-    asamblea = models.ForeignKey(asamblea, on_delete=models.CASCADE, related_name='delegados')
-    propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='delegados')
+    asamblea = models.ForeignKey(Asamblea, on_delete=models.CASCADE, related_name='delegados')
+    cedula_propietario = models.CharField(max_length=20, default='')
     nombre_delegado = models.CharField(max_length=200)
     cedula = models.CharField(max_length=20)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         db_table = 'delegados'
+        unique_together = ('asamblea', 'cedula_propietario')
+    
+    def __str__(self):
+        return f"{self.nombre_delegado}"
 
 
 class Peticion(models.Model):
@@ -85,8 +91,8 @@ class Peticion(models.Model):
     ]
     
     id_peticion = models.AutoField(primary_key=True)
-    asamblea = models.ForeignKey(asamblea, on_delete=models.CASCADE, related_name='peticiones')
-    propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='peticiones')
+    asamblea = models.ForeignKey(Asamblea, on_delete=models.CASCADE, related_name='peticiones')
+    propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, related_name='peticiones', null=True, blank=True)
     asunto = models.CharField(max_length=100)
     descripcion = models.TextField(max_length=1000)
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Pendiente')
@@ -96,3 +102,6 @@ class Peticion(models.Model):
     class Meta:
         db_table = 'peticiones'
         ordering = ['-fecha_creacion']
+    
+    def __str__(self):
+        return self.asunto

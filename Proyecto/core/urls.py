@@ -3,18 +3,16 @@ from . import views
 
 urlpatterns = [
     # ===== ASAMBLEAS =====
-    # Listar todas
-    path('api/asambleas', views.listar_asambleas, name='listar_asambleas'),
-    # Crear nueva
-    path('api/asambleas/', views.crear_asamblea, name='crear_asamblea'),
-    # Detalle de una asamblea
-    path('api/asambleas/<int:asamblea_id>', views.detalle_asamblea, name='detalle_asamblea'),
-    # Participantes de una asamblea
-    path('api/asambleas/<int:asamblea_id>/participantes', views.participantes_asamblea, name='participantes_asamblea'),
+    path('asambleas/', views.listar_asambleas, name='listar_asambleas'),
+    path('asambleas/crear/', views.crear_asamblea, name='crear_asamblea'),
+    path('asambleas/<int:asamblea_id>/', views.detalle_asamblea, name='detalle_asamblea'),
+    path('asambleas/<int:asamblea_id>/participantes/', views.participantes_asamblea, name='participantes_asamblea'),
 
     # ===== PETICIONES =====
-    # Listar todas
-    path('api/peticiones', views.listar_peticiones, name='listar_peticiones'),
-    # Crear nueva
-    path('api/peticiones/', views.crear_peticion, name='crear_peticion'),
+    path('peticiones/', views.listar_peticiones, name='listar_peticiones'),
+    path('peticiones/crear/', views.crear_peticion, name='crear_peticion'),
+    
+    # ===== DELEGADOS =====
+    path('delegados/', views.crear_delegado, name='crear_delegado'),
+    path('delegados/listar/', views.listar_delegados, name='listar_delegados'),
 ]

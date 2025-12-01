@@ -44,15 +44,20 @@ def crear_asamblea(request):
         
         # Convertir string de fecha a datetime
         try:
-            # El frontend envía: "2025-01-15T14:30"
-            fecha_hora = datetime.fromisoformat(fecha_hora_str)
-            # Hacer timezone-aware si USE_TZ=True
+            # El frontend envía formato: "2025-12-15T14:30"
+            if 'T' in fecha_hora_str:
+                fecha_hora = datetime.strptime(fecha_hora_str, '%Y-%m-%dT%H:%M')
+            else:
+                fecha_hora = datetime.strptime(fecha_hora_str, '%Y-%m-%d %H:%M:%S')
+            
+            # Hacer timezone-aware si USE_TZ=True en settings
             if timezone.is_naive(fecha_hora):
                 fecha_hora = timezone.make_aware(fecha_hora)
+                
         except (ValueError, TypeError) as e:
             return JsonResponse({
                 'success': False,
-                'mensaje': 'Formato de fecha inválido'
+                'mensaje': f'Formato de fecha inválido: {str(e)}'
             }, status=400)
         
         # Crear asamblea
@@ -71,7 +76,7 @@ def crear_asamblea(request):
                 'id_asamblea': asamblea.id_asamblea,
                 'nombre': asamblea.nombre,
                 'lugar': asamblea.lugar,
-                'fecha_hora': asamblea.fecha_hora.strftime('%Y-%m-%d %H:%M:%S'),
+                'fecha_hora': fecha_hora.strftime('%Y-%m-%d %H:%M:%S'),
                 'descripcion': asamblea.descripcion,
                 'estado': asamblea.estado
             }
@@ -87,9 +92,132 @@ def crear_asamblea(request):
             'success': False,
             'mensaje': f'Error al crear la asamblea: {str(e)}'
         }, status=500)
+@csrf_exempt
+@require_http_methods(["POST"])
+def crear_delegado(request):
+    """Crear delegado para una asamblea - Devuelve JSON"""
+    try:
+        data = json.loads(request.body)
+        
+        # Validaciones
+        id_asamblea = data.get('id_asamblea')
+        cedula_propietario = data.get('cedula_propietario', '').strip()
+        cedula_delegado = data.get('cedula', '').strip()
+        nombre = data.get('nombre', '').strip()
+        
+        if not id_asamblea:
+            return JsonResponse({
+                'success': False,
+                'mensaje': 'Debe seleccionar una asamblea'
+            }, status=400)
+        
+        if not cedula_propietario:
+            return JsonResponse({
+                'success': False,
+                'mensaje': 'La cédula del propietario es requerida'
+            }, status=400)
+        
+        if len(cedula_propietario) < 6 or len(cedula_propietario) > 20:
+            return JsonResponse({
+                'success': False,
+                'mensaje': 'La cédula del propietario debe tener entre 6 y 20 caracteres'
+            }, status=400)
+        
+        if len(cedula_delegado) < 6 or len(cedula_delegado) > 20:
+            return JsonResponse({
+                'success': False,
+                'mensaje': 'La cédula del delegado debe tener entre 6 y 20 caracteres'
+            }, status=400)
+        
+        if len(nombre) < 3:
+            return JsonResponse({
+                'success': False,
+                'mensaje': 'El nombre debe tener al menos 3 caracteres'
+            }, status=400)
+        
+        # Verificar que la asamblea existe
+        try:
+            asamblea = Asamblea.objects.get(pk=id_asamblea)
+        except Asamblea.DoesNotExist:
+            return JsonResponse({
+                'success': False,
+                'mensaje': 'La asamblea no existe'
+            }, status=404)
+        
+        # Verificar que no haya delegado ya para esta asamblea y esta cédula de propietario
+        delegado_existente = Delegado.objects.filter(
+            asamblea=asamblea,
+            cedula_propietario=cedula_propietario
+        ).first()
+        
+        if delegado_existente:
+            return JsonResponse({
+                'success': False,
+                'mensaje': 'Ya existe un delegado registrado para este propietario en esta asamblea'
+            }, status=400)
+        
+        # Crear delegado (sin validar que el propietario exista)
+        delegado = Delegado.objects.create(
+            asamblea=asamblea,
+            cedula_propietario=cedula_propietario,
+            nombre_delegado=nombre,
+            cedula=cedula_delegado
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'mensaje': 'Delegado registrado exitosamente',
+            'data': {
+                'id_delegado': delegado.id_delegado,
+                'nombre_delegado': delegado.nombre_delegado,
+                'cedula': delegado.cedula,
+                'cedula_propietario': delegado.cedula_propietario,
+                'asamblea': asamblea.nombre
+            }
+        }, status=201)
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'mensaje': 'JSON inválido'
+        }, status=400)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'mensaje': f'Error al registrar delegado: {str(e)}'
+        }, status=500)
 
 
 @require_http_methods(["GET"])
+def listar_delegados(request):
+    """Listar todos los delegados - Devuelve JSON"""
+    try:
+        delegados = Delegado.objects.select_related('asamblea').all().order_by('-fecha_registro')
+        
+        data = [{
+            'id_delegado': d.id_delegado,
+            'nombre_delegado': d.nombre_delegado,
+            'cedula': d.cedula,
+            'cedula_propietario': d.cedula_propietario,
+            'asamblea': d.asamblea.nombre,
+            'fecha_asamblea': d.asamblea.fecha_hora.strftime('%Y-%m-%d %H:%M:%S'),
+            'fecha_registro': d.fecha_registro.strftime('%Y-%m-%d %H:%M:%S'),
+        } for d in delegados]
+        
+        return JsonResponse({
+            'success': True,
+            'delegados': data,
+            'total': len(data)
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'mensaje': f'Error al listar delegados: {str(e)}'
+        }, status=500)
+@require_http_methods(["GET"])
+
+
 def listar_asambleas(request):
     """Listar todas las asambleas - Devuelve JSON"""
     try:
@@ -217,6 +345,8 @@ def crear_peticion(request):
         # Validaciones
         asunto = data.get('asunto', '').strip()
         descripcion = data.get('descripcion', '').strip()
+        id_asamblea = data.get('id_asamblea')
+        id_propietario = data.get('id_propietario')
         
         if len(asunto) < 5:
             return JsonResponse({
@@ -230,10 +360,28 @@ def crear_peticion(request):
                 'mensaje': 'La descripción debe tener al menos 20 caracteres'
             }, status=400)
         
+        # Verificar que la asamblea existe
+        try:
+            asamblea = Asamblea.objects.get(pk=id_asamblea)
+        except Asamblea.DoesNotExist:
+            return JsonResponse({
+                'success': False,
+                'mensaje': 'La asamblea no existe'
+            }, status=404)
+        
+        # Intentar obtener el propietario, pero si no existe, dejarlo en null
+        propietario = None
+        if id_propietario:
+            try:
+                propietario = Propietario.objects.get(pk=id_propietario)
+            except Propietario.DoesNotExist:
+                # Si el propietario no existe, simplemente lo dejamos como null
+                propietario = None
+        
         # Crear petición
         peticion = Peticion.objects.create(
-            asamblea_id=data.get('id_asamblea'),
-            propietario_id=data.get('id_propietario'),
+            asamblea=asamblea,
+            propietario=propietario,
             asunto=asunto,
             descripcion=descripcion,
             estado='Pendiente'
@@ -275,7 +423,7 @@ def listar_peticiones(request):
             'asunto': p.asunto,
             'descripcion': p.descripcion,
             'estado': p.estado,
-            'nombre_propietario': p.propietario.nombre,
+            'nombre_propietario': p.propietario.nombre if p.propietario else 'Sin propietario',
             'nombre_asamblea': p.asamblea.nombre,
             'fecha_creacion': p.fecha_creacion.strftime('%Y-%m-%d %H:%M:%S'),
         } for p in peticiones]
