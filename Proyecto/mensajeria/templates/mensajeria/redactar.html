@@ -1,0 +1,113 @@
+{% extends 'partials/header_user.html' %}
+{% load static %}
+
+{% block title %}Mensajería - Redactar{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'mensajeria/css/css_mensajeria.css' %}">
+{% endblock %}
+
+{% block body_content %}
+<div class="redactar-container">
+    <div class="redactar-header">
+        <a href="{% url 'mensajeria:bandeja' %}" class="btn-volver">
+            ← Volver a la bandeja
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if respuesta_a %}
+    <div class="respuesta-info">
+        <p><strong>Respondiendo a conversación:</strong> {{ asunto_inicial }}</p>
+    </div>
+    {% endif %}
+
+    <div class="redactar-card">
+        <form method="POST" class="redactar-form">
+            {% csrf_token %}
+            
+            {% if respuesta_a %}
+            <input type="hidden" name="conversacion_id" value="{{ respuesta_a }}">
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="icon">👤</span> Para
+                    </label>
+                    <input 
+                        type="text" 
+                        name="destinatarios" 
+                        class="form-input" 
+                        placeholder="Ej: 2-1-301, correo@email.com"
+                        value="{{ destinatario_inicial }}"
+                        required
+                    >
+                    <span class="form-help">
+                        Formatos: interior-torre-apto (2-1-301), torre-apto (1-301), correo, o 'administracion'.
+                        Separa múltiples con coma.
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="icon">🏷️</span> Categoría
+                    </label>
+                    <select name="categoria" class="form-select">
+                        {% for cat in categorias %}
+                        <option value="{{ cat }}">{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label class="form-label">
+                        <span class="icon">📌</span> Asunto
+                    </label>
+                    <input 
+                        type="text" 
+                        name="asunto" 
+                        class="form-input" 
+                        placeholder="Asunto del mensaje"
+                        value="{{ asunto_inicial }}"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label class="form-label">
+                        <span class="icon">📝</span> Descripción
+                    </label>
+                    <textarea 
+                        name="descripcion" 
+                        class="form-textarea" 
+                        placeholder="Escribe tu mensaje aquí..."
+                        required
+                    ></textarea>
+                </div>
+            </div>
+        </form>
+
+        <div class="form-acciones">
+            <a href="{% url 'mensajeria:bandeja' %}" class="btn btn-cancelar">
+                Cancelar
+            </a>
+            <button type="submit" form="redactar-form" class="btn btn-enviar" onclick="document.querySelector('.redactar-form').submit()">
+                ✉ Enviar
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
