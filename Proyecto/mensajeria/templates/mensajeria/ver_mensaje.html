@@ -1,0 +1,123 @@
+{% extends 'partials/header_user.html' %}
+{% load static %}
+
+{% block title %}Mensajería - {{ mensaje.asunto }}{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'mensajeria/css/mensajeria.css' %}">
+{% endblock %}
+
+{% block body_content %}
+<div class="mensaje-container">
+    <div class="mensaje-header">
+        <a href="{% url 'mensajeria:bandeja' %}" class="btn-volver">
+            ← Volver a la bandeja
+        </a>
+    </div>
+
+    <div class="mensaje-card">
+        <div class="mensaje-card-header">
+            <div class="mensaje-meta">
+                <div class="meta-item">
+                    <span class="meta-label">De</span>
+                    <span class="meta-value">{{ emisor.nombre }} ({{ emisor.correo }})</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Para</span>
+                    <span class="meta-value">
+                        {% for r in receptores %}
+                            {{ r.id_usuario.nombre }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            -
+                        {% endfor %}
+                    </span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Categoría</span>
+                    <span class="categoria-badge categoria-{{ mensaje.categoria|lower }}">
+                        {{ mensaje.categoria }}
+                    </span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Fecha</span>
+                    <span class="meta-value">{{ mensaje.fecha_hora|date:"d/m/Y H:i" }}</span>
+                </div>
+            </div>
+            <h2 class="mensaje-asunto">{{ mensaje.asunto }}</h2>
+        </div>
+
+        <div class="mensaje-card-body">
+            <p class="mensaje-descripcion">{{ mensaje.descripcion }}</p>
+
+            <!-- Sección de documentos (para futuro) -->
+            <!--
+            <div class="documentos-section">
+                <h4 class="documentos-titulo">Documentos adjuntos</h4>
+                <a href="#" class="documento-item">
+                    <span class="documento-icon">📄</span>
+                    documento.pdf
+                </a>
+            </div>
+            -->
+        </div>
+
+        <div class="mensaje-acciones">
+            {% if not es_emisor %}
+            <a href="{% url 'mensajeria:responder' mensaje.id_mensaje %}" class="btn-accion btn-responder">
+                ✉ Responder
+            </a>
+            {% endif %}
+            <button 
+                class="btn-accion btn-destacar {% if destacado %}activo{% endif %}" 
+                onclick="toggleDestacado({{ mensaje.id_mensaje }}, this)"
+            >
+                ★ {% if destacado %}Destacado{% else %}Destacar{% endif %}
+            </button>
+        </div>
+    </div>
+
+    {% if conversacion|length > 1 %}
+    <h3 class="conversacion-titulo">Conversación ({{ conversacion|length }} mensajes)</h3>
+    <div class="conversacion-lista">
+        {% for msg in conversacion %}
+        <div class="conversacion-mensaje {% if msg.es_mio %}propio{% endif %} {% if msg.id == mensaje.id_mensaje %}actual{% endif %}">
+            <div class="conversacion-header">
+                <span class="conversacion-emisor">{{ msg.emisor }}</span>
+                <span class="conversacion-fecha">{{ msg.fecha|date:"d/m/Y H:i" }}</span>
+            </div>
+            <p class="conversacion-contenido">{{ msg.descripcion }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock body_content %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+function toggleDestacado(mensajeId, btn) {
+    fetch(`/mensajeria/toggle-destacado/${mensajeId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.destacado !== undefined) {
+            if (data.destacado) {
+                btn.classList.add('activo');
+                btn.innerHTML = '★ Destacado';
+            } else {
+                btn.classList.remove('activo');
+                btn.innerHTML = '★ Destacar';
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}

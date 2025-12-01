@@ -4,7 +4,7 @@ from django.db import models
 class UsuarioMensaje(models.Model):
     """"""
     id = models.BigAutoField(primary_key=True)
-    id_usuario = models.ForeignKey('Usuario', models.CASCADE, db_column='id_usuario')
+    id_usuario = models.ForeignKey('core.Usuario', models.CASCADE, db_column='id_usuario')
     id_mensaje = models.ForeignKey('Mensaje', models.CASCADE, db_column='id_mensaje')
     papel = models.CharField(max_length=8, blank=True, null=True)
     destacado = models.IntegerField(blank=True, null=True)

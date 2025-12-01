@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'forum.apps.ForumConfig',
     'core.apps.CoreConfig',
     'reservas.apps.ReservasConfig',
+    'mensajeria.apps.MensajeriaConfig',
 ]
 
 MIDDLEWARE = [
