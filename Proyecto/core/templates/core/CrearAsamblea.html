@@ -172,6 +172,40 @@
             margin: 0;
         }
 
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: linear-gradient(135deg, #5F9EA0 0%, #4A7C7E 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(135deg, #4A7C7E 0%, #3a6264 100%);
+        }
+
+        .nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
         .assembly-form {
             display: flex;
             flex-direction: column;
@@ -383,6 +417,27 @@
                 <h2>Crear Nueva Asamblea</h2>
             </div>
 
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="window.location.href='prueba.html'">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                    </svg>
+                    Ver Todas las Asambleas
+                </button>
+                <button class="nav-btn" onclick="window.location.href='peticion.html'">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                    Crear Petición
+                </button>
+                <button class="nav-btn" onclick="window.location.href='delegar.html'">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    Delegar Representación
+                </button>
+            </div>
+
             <form class="assembly-form" id="assemblyForm">
                 <div class="form-row">
                     <div class="form-group" style="flex: 2;">
@@ -519,10 +574,8 @@
                     descripcion: descripcionInput.value.trim(),
                     estado: 'Programada'
                 };
-                console.log('Datos a enviar:', formData);
-                console.log('Tipo de fecha_hora:', typeof formData.fecha_hora);
-
-                const response = await fetch(`${API_URL}/api/asambleas/`, {
+               
+                const response = await fetch(`${API_URL}/api/asambleas/crear/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
