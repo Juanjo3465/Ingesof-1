@@ -140,18 +140,13 @@ def listar_usuarios(request):
     return render(request, 'listar_usuarios.html', contexto)
 
 @login_required
-def menu(request):
-    """"""
-    return render(request, 'base_menu.html')
-
-@login_required
 def logout(request):
     """"""
     if request.method == 'POST':
         auth=LogService()
         auth.logout(request)
         return redirect('Inicial_page')
-    return redirect('Menu')
+    return redirect('forum')
 
 @login_required
 def account_info(request):
@@ -165,7 +160,7 @@ def account_info(request):
 @role_required(Usuario.Rol_Administrador)
 def gestion_usuarios_view(request):
     
-    return render(request, 'core/gestion_usuarios.html', {})
+    return render(request, 'core/gestion_usuarios.html')
 
 @role_required(Usuario.Rol_Administrador)
 def crear_usuario_view(request):

@@ -1,70 +1,67 @@
-<!-- admin_approval.html -->
+{% extends 'base_menu.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Approval - Foro de la Comunidad</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'forum/admin_styles.css' %}">
-   
-</head>
-<body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1 class="admin-title">
-                <span class="material-icons">admin_panel_settings</span>
-                Panel de Aprobación de Publicaciones
-            </h1>
-            
-        </div>
 
-        <div class="posts-scroll-window" id="pendingPostsContainer">
+{% block title %}Panel de Aprobación - Foro{% endblock %}
 
-            {% for post in pending_posts %}
-            <div class="pending-post-card" data-post-id="{{ post.id_publicacion }}">
-                <span class="post-status-badge status-pending">Pendiente</span>
-                <div class="post-header">
-                    <div class="user-avatar">{{ post.id_usuario.nombre|slice:":2"|upper }}</div>
-                    <div class="post-user-info">
-                        <div class="username">{{ post.id_usuario.nombre }}</div>
-                        <div class="post-meta">
-                            <span>Enviado: {{ post.fecha_publicacion }}</span>
-                            <span>Categoría: {{ post.categoria }}</span>
-                        </div>
+{% block extra_css %}
+{{ block.super }}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'forum/admin_styles.css' %}">
+{% endblock %}
+
+{% block main_content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1 class="admin-title">
+            <span class="material-icons">admin_panel_settings</span>
+            Panel de Aprobación de Publicaciones
+        </h1>
+        <a href="{% url 'forum' %}">
+            <button class="btn btn-back">
+                <span class="material-icons">arrow_back</span>
+                Volver al Foro
+            </button>
+        </a>
+    </div>
+
+    <div class="posts-scroll-window" id="pendingPostsContainer">
+        {% for post in pending_posts %}
+        <div class="pending-post-card" data-post-id="{{ post.id_publicacion }}">
+            <span class="post-status-badge status-pending">Pendiente</span>
+            <div class="post-header">
+                <div class="user-avatar">{{ post.id_usuario.nombre|slice:":2"|upper }}</div>
+                <div class="post-user-info">
+                    <div class="username">{{ post.id_usuario.nombre }}</div>
+                    <div class="post-meta">
+                        <span>Enviado: {{ post.fecha_publicacion }}</span>
+                        <span>Categoría: {{ post.categoria }}</span>
                     </div>
                 </div>
-                <h3 class="post-title">{{ post.titulo }}</h3>
-                <p class="post-content">{{ post.descripcion }}</p>
-                {% if post.imagen %}
-                <div class="post-image-preview">
-                    <img src="{{ post.imagen.url }}" alt="Imagen del post">
-                </div>
-                {% endif %}
-                <div class="admin-actions">
-                    <a href="{% url 'accept_post' post.id_publicacion %}">
-                        <button class="btn btn-approve approve-btn">
-                            <span class="material-icons">check_circle</span>
-                            Aprobar
-                        </button>
-                    </a>
-                    <a href="{% url 'reject_post' post.id_publicacion %}">
-                        <button class="btn btn-reject reject-btn">
-                            <span class="material-icons">cancel</span>
-                            Rechazar
-                        </button>
-                    </a>
-                </div>
             </div>
-            {% empty %}
-            <div class="empty-state">
-                <span class="material-icons">assignment_turned_in</span>
-                <h3>No hay publicaciones pendientes</h3>
-                <p>Todas las solicitudes han sido revisadas.</p>
+            <h3 class="post-title">{{ post.titulo }}</h3>
+            <p class="post-content">{{ post.descripcion }}</p>
+            <div class="admin-actions">
+                <a href="{% url 'accept_post' post.id_publicacion %}">
+                    <button class="btn btn-approve">
+                        <span class="material-icons">check_circle</span>
+                        Aprobar
+                    </button>
+                </a>
+                <a href="{% url 'reject_post' post.id_publicacion %}">
+                    <button class="btn btn-reject">
+                        <span class="material-icons">cancel</span>
+                        Rechazar
+                    </button>
+                </a>
             </div>
-            {% endfor %}
         </div>
+        {% empty %}
+        <div class="empty-state">
+            <span class="material-icons">assignment_turned_in</span>
+            <h3>No hay publicaciones pendientes</h3>
+            <p>Todas las solicitudes han sido revisadas.</p>
+        </div>
+        {% endfor %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

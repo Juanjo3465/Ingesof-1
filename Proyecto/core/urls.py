@@ -5,7 +5,6 @@ from core.views import views, verify_session
 urlpatterns = [
     path('Usuarios/', views.listar_usuarios, name='lista_de_usuarios'),
     path('', views.inicial_page, name='Inicial_page'),
-    path('Menu/', views.menu, name='Menu'),
     path('Login/', views.login, name='Login'),
     path('Login/Confirmar-usuario/', views.confirm_user, name='Confirm_user'),
     path('Recuperar-contraseña/', views.enter_code, name='Enter_code'),

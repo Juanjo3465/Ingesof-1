@@ -1,171 +1,180 @@
+{% extends 'base_menu.html' %}
 {% load static %}
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Foro de la Comunidad</title>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'forum/forum_styles.css' %}">
-    </head>
-    <body>
-        <div class="forum-container">
-            <div class="forum-header">
-                <div class="category-buttons">
-                    <a href="{% url 'forum' %}">
-                        <button class="category-button {% if not selected_category %}active{% endif %}">General</button>
-                    </a>
-                    <a href="{% url 'filter_by_category' 'anuncios' %}">
-                        <button class="category-button {% if selected_category == 'anuncios' %}active{% endif %}">Anuncios</button>
-                    </a>
-                    <a href="{% url 'filter_by_category' 'eventos' %}">
-                        <button class="category-button {% if selected_category == 'eventos' %}active{% endif %}">Eventos</button>
-                    </a>
-                    <a href="{% url 'filter_by_category' 'novedades' %}">
-                        <button class="category-button {% if selected_category == 'novedades' %}active{% endif %}">Novedades</button>
-                    </a>
-                    <a href="{% url 'mis_publicaciones' %}">
-                        <button class="category-button {% if selected_category == 'mis_publicaciones' %}active{% endif %}">Mis publicaciones</button>
-                    </a>
-                </div>
-                <a href="{% url 'admin_approval' %}">
-                    <button class="my-posts-button">Administrador</button>
-                </a>
-            </div>
 
-            <div class="posts-scroll-window">
+{% block title %}Foro de la Comunidad{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'forum/forum_styles.css' %}">
+{% endblock %}
+
+{% block main_content %}
+<div class="forum-container">
+    <div class="forum-header">
+        <div class="category-buttons">
+            <a href="{% url 'forum' %}">
+                <button class="category-button {% if not selected_category %}active{% endif %}">General</button>
+            </a>
+            <a href="{% url 'filter_by_category' 'anuncios' %}">
+                <button class="category-button {% if selected_category == 'anuncios' %}active{% endif %}">Anuncios</button>
+            </a>
+            <a href="{% url 'filter_by_category' 'eventos' %}">
+                <button class="category-button {% if selected_category == 'eventos' %}active{% endif %}">Eventos</button>
+            </a>
+            <a href="{% url 'filter_by_category' 'novedades' %}">
+                <button class="category-button {% if selected_category == 'novedades' %}active{% endif %}">Novedades</button>
+            </a>
+            <a href="{% url 'mis_publicaciones' %}">
+                <button class="category-button {% if selected_category == 'mis_publicaciones' %}active{% endif %}">Mis publicaciones</button>
+            </a>
+        </div>
+        <a href="{% url 'admin_approval' %}">
+            <button class="my-posts-button">Administrador</button>
+        </a>
+    </div>
+
+    <div class="posts-scroll-window">
+        {% for post in posts %}
+        <div class="post-card">
+            <div class="user-info">
+                <div class="user-avatar">{{ post.id_usuario.nombre|slice:":2"|upper }}</div>
+                <span class="username">{{ post.id_usuario.nombre }}</span>
+                <span class="post-time">{{ post.fecha_publicacion }}</span>
+            </div>
+            <p class="post-title">{{ post.titulo }}</p>
+            <p class="post-content">
+                {{ post.descripcion }}
+                <a href="#" class="read-more">Leer más...</a>
+            </p>
+            <div class="post-actions">
+                <button class="action-button" data-post-id="{{ post.id_publicacion }}">
+                    <span class="material-icons">thumb_up</span>
+                    <span>{{ post.likes }}</span>
+                </button>
+                <button class="action-button">
+                    <span class="material-icons">comment</span>
+                    <span>{{ post.comentarios.count }}</span>
+                </button>
+                <button class="action-button">
+                    <span class="material-icons">share</span>
+                    <span>Compartir</span>
+                </button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <span class="material-icons">forum</span>
+            <p>No hay publicaciones registradas en la base de datos.</p>
+            <p>Sé el primero en publicar algo.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="add-post-button" id="addPostButton">
+        <span class="material-icons">add</span>
+    </div>
+</div>
+
+<!-- Modal para crear nuevo post -->
+<div class="modal-overlay" id="postModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Crear Nueva Publicación</h2>
+            <button class="close-modal" id="closeModal">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <form action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data" id="newPostForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="postTitle">Título</label>
+                <input name="titulo" type="text" id="postTitle" class="form-control" placeholder="Escribe un título para tu publicación" required>
+            </div>
+            <div class="form-group">
+                <label for="postContent">Descripción</label>
+                <textarea name="descripcion" id="postContent" class="form-control" placeholder="¿Qué quieres compartir con la comunidad?" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="postCategory">Categoría</label>
+                <select id="postCategory" name="categoria" class="form-control" required>
+                    <option value="" disabled selected>Selecciona una categoría</option>
+                    <option value="anuncios">Anuncios</option>
+                    <option value="novedades">Novedades</option>
+                    <option value="eventos">Eventos</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancelPost">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Publicar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    // Funcionalidad del Modal
+    const addPostButton = document.getElementById('addPostButton');
+    const postModal = document.getElementById('postModal');
+    const closeModal = document.getElementById('closeModal');
+    const cancelPost = document.getElementById('cancelPost');
+    
+    addPostButton.addEventListener('click', () => {
+        postModal.classList.add('active');
+    });
+    
+    function closePostModal() {
+        postModal.classList.remove('active');
+    }
+    
+    closeModal.addEventListener('click', closePostModal);
+    cancelPost.addEventListener('click', closePostModal);
+    
+    // Cerrar modal al hacer clic fuera del contenido
+    postModal.addEventListener('click', (e) => {
+        if (e.target === postModal) {
+            closePostModal();
+        }
+    });
+    
+    // Cerrar modal con tecla Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && postModal.classList.contains('active')) {
+            closePostModal();
+        }
+    });
+    
+    // Funcionalidad de botones de categoría
+    const categoryButtons = document.querySelectorAll('.category-button');
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Funcionalidad del botón de like
+    const likeButtons = document.querySelectorAll('.action-button');
+    likeButtons.forEach(button => {
+        const icon = button.querySelector('.material-icons');
+        if (icon && icon.textContent === 'thumb_up') {
+            button.addEventListener('click', function() {
+                const likeCount = this.querySelector('span:last-child');
                 
-                {% for post in posts %}
-                <div class="post-card">
-                    <div class="user-info">
-                        <div class="user-avatar">{{post.id_usuario.nombre|slice:":2"|upper}}</div>
-                        <span class="username">{{post.id_usuario.nombre}}</span>
-                        <span class="post-time">{{post.fecha_publicacion}}</span>
-                    </div>
-                    <p class="post-title">{{post.titulo}}</p>
-                    <p class="post-content">{{post.descripcion}} <a href="#" class="read-more">Leer mas...</a></p>
-
-                    <div class="post-actions">
-                        <button class="action-button">
-                            <span class="material-icons">thumb_up</span>
-                            <span>{{post.likes}}</span>
-                        </button>
-                        <button class="action-button">
-                            <span class="material-icons">comment</span>
-                            <span>{{post.comentarios.count}}</span>
-                        </button>
-                        <button class="action-button">
-                            <span class="material-icons">share</span>
-                            <span>Compartir</span>
-                        </button>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="empty-state">
-                    <span class="material-icons">forum</span>
-                    <p>No hay publicaciones registradas en la base de datos.</p>
-                    <p>Sé el primero en publicar algo.</p>
-                </div>
-                {% endfor %}
-            </div>
-
-            <div class="add-post-button" id="addPostButton">
-                <span class="material-icons">add</span>
-            </div>
-        </div>
-
-        <!-- Modal for creating new post -->
-        <div class="modal-overlay" id="postModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">Crear Nueva Publicación</h2>
-                    <button class="close-modal" id="closeModal">
-                        <span class="material-icons">close</span>
-                    </button>
-                </div>
-                <form action="{% url 'create_post' %}" method="POST"  enctype="multipart/form-data"  id="newPostForm">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="postTitle">Título</label>
-                        <input name="titulo" type="text" id="postTitle" class="form-control" placeholder="Escribe un título para tu publicación">
-                    </div>
-                    <div class="form-group">
-                        <label for="postContent">Descripcion</label>
-                        <textarea name="descripcion" id="postContent" class="form-control" placeholder="¿Qué quieres compartir con la comunidad?"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="postCategory">Categoría</label>
-                        <select id="postCategory" name="categoria" class="form-control">
-                            <option value="" disabled selected>Selecciona una categoría</option>
-                            <option value="anuncios">Anuncios</option>
-                            <option value="novedades">Novedades</option>
-                            <option value="eventos">Eventos</option>
-                        </select>
-                    </div>
-                    <div class="modal-actions">
-                        <button type="button" class="btn btn-secondary" id="cancelPost">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Publicar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <script>
-            // Modal functionality
-            const addPostButton = document.getElementById('addPostButton');
-            const postModal = document.getElementById('postModal');
-            const closeModal = document.getElementById('closeModal');
-            const cancelPost = document.getElementById('cancelPost');
-            const newPostForm = document.getElementById('newPostForm');
-            
-            addPostButton.addEventListener('click', () => {
-                postModal.classList.add('active');
-            });
-            
-            function closePostModal() {
-                postModal.classList.remove('active');
-            }
-            
-            closeModal.addEventListener('click', closePostModal);
-            cancelPost.addEventListener('click', closePostModal);
-            
-            // Close modal when clicking outside the content
-            postModal.addEventListener('click', (e) => {
-                if (e.target === postModal) {
-                    closePostModal();
+                if (this.classList.contains('liked')) {
+                    this.classList.remove('liked');
+                    icon.style.color = '';
+                    likeCount.textContent = parseInt(likeCount.textContent) - 1;
+                } else {
+                    this.classList.add('liked');
+                    icon.style.color = '#5F9EA0';
+                    likeCount.textContent = parseInt(likeCount.textContent) + 1;
                 }
             });
-            
-            // Form submission
-
-            
-            // Category buttons functionality
-            const categoryButtons = document.querySelectorAll('.category-button');
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    categoryButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    // Here you would typically filter posts by category
-                });
-            });
-            
-            // Like button functionality
-            const likeButtons = document.querySelectorAll('.action-button');
-            likeButtons.forEach(button => {
-                if (button.querySelector('.material-icons').textContent === 'thumb_up') {
-                    button.addEventListener('click', function() {
-                        const likeCount = this.querySelector('span:last-child');
-                        const icon = this.querySelector('.material-icons');
-                        
-                        if (icon.style.color === 'rgb(0, 123, 255)') {
-                            icon.style.color = '';
-                            likeCount.textContent = parseInt(likeCount.textContent) - 1;
-                        } else {
-                            icon.style.color = '#007bff';
-                            likeCount.textContent = parseInt(likeCount.textContent) + 1;
-                        }
-                    });
-                }
-            });
-        </script>
-    </body>
-    </html>
+        }
+    });
+</script>
+{% endblock %}

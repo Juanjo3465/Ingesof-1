@@ -5,10 +5,8 @@ from .codigo_recuperacion import CodigoRecuperacion
 from .conjunto import Conjunto
 from .delegado import Delegado
 from .documentoMensaje import DocumentoMensaje
-from .documentoPublicacion import DocumentoPublicacion
 from .mensaje import Mensaje
 from .peticion import Peticion
-from .publicacion import Publicacion
 from .reporte import Reporte
 from .residente import Residente
 from .usuario import Usuario
