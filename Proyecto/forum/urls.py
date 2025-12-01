@@ -9,4 +9,5 @@ urlpatterns = [
     path('admin_approval/', views.admin_approval, name='admin_approval'),
     path('accept_post/<int:post_id>/', views.accept_post, name='accept_post'),
     path('reject_post/<int:post_id>/', views.reject_post, name='reject_post'),
+    path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),
 ]
