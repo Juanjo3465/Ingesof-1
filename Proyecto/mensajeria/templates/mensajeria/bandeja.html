@@ -1,0 +1,111 @@
+{% extends 'partials/header_user.html' %}
+{% load static %}
+
+{% block title %}Mensajería - Bandeja{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'mensajeria/css/css_mensajeria.css' %}">
+{% endblock %}
+
+{% block body_content %}
+<div class="mensajeria-container">
+    <div class="mensajeria-header">
+        <a href="{% url 'mensajeria:redactar' %}" class="btn-redactar">
+            ✉ Nuevo Mensaje
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="tabs-container">
+        <a href="?tab=recibidos" class="tab-btn {% if tab_activo == 'recibidos' %}active{% endif %}">
+            Recibidos
+            {% if no_leidos > 0 %}<span class="badge">{{ no_leidos }}</span>{% endif %}
+        </a>
+        <a href="?tab=enviados" class="tab-btn {% if tab_activo == 'enviados' %}active{% endif %}">
+            Enviados
+        </a>
+        <a href="?tab=destacados" class="tab-btn {% if tab_activo == 'destacados' %}active{% endif %}">
+            Destacados
+        </a>
+    </div>
+
+    <div class="busqueda-container">
+        <form method="GET" class="busqueda-form">
+            <input type="hidden" name="tab" value="{{ tab_activo }}">
+            <input 
+                type="text" 
+                name="busqueda" 
+                class="busqueda-input" 
+                placeholder="Palabra clave"
+                value="{{ busqueda }}"
+            >
+            <button type="submit" class="btn-buscar">Buscar</button>
+        </form>
+    </div>
+
+    {% if mensajes %}
+    <table class="mensajes-tabla">
+        <thead>
+            <tr>
+                <th>Emisor{% if tab_activo == 'enviados' %} / Remitente{% endif %}</th>
+                <th>Asunto</th>
+                <th>Categoría</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for msg in mensajes %}
+            <tr class="{% if not msg.leido %}no-leido{% endif %}" onclick="window.location='{% url 'mensajeria:ver_mensaje' msg.id %}'">
+                <td>
+                    <div class="emisor-info">
+                        <span class="emisor-nombre">{{ msg.emisor }}</span>
+                        <span class="emisor-correo">{{ msg.emisor_correo }}</span>
+                    </div>
+                </td>
+                <td>{{ msg.asunto }}</td>
+                <td>
+                    <span class="categoria-badge categoria-{{ msg.categoria|lower }}">
+                        {{ msg.categoria }}
+                    </span>
+                </td>
+                <td class="fecha-mensaje">
+                    {{ msg.fecha|date:"d/m/Y H:i" }}
+                </td>
+                <td class="acciones-mensaje" onclick="event.stopPropagation();">
+                    <button 
+                        class="btn-destacar {% if msg.destacado %}activo{% endif %}" 
+                        onclick="toggleDestacado({{ msg.id }}, this)"
+                        title="Destacar"
+                    >
+                        ★
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="mensaje-vacio">
+        <i>📭</i>
+        <p>No hay mensajes en esta bandeja</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock body_content %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    const CSRF_TOKEN = '{{ csrf_token }}';
+</script>
+<script src="{% static 'mensajeria/js/toggle_destacado.js' %}"></script>
+{% endblock %}

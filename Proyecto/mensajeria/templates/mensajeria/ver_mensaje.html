@@ -1,11 +1,11 @@
 {% extends 'partials/header_user.html' %}
 {% load static %}
 
-{% block title %}Mensajería - {{ mensaje.asunto }}{% endblock %}
+{% block title %}Mensajería - ver mensaje{{ mensaje.asunto }}{% endblock %}
 
 {% block extra_css %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static 'mensajeria/css/mensajeria.css' %}">
+<link rel="stylesheet" href="{% static 'mensajeria/css/css_mensajeria.css' %}">
 {% endblock %}
 
 {% block body_content %}
@@ -49,17 +49,6 @@
 
         <div class="mensaje-card-body">
             <p class="mensaje-descripcion">{{ mensaje.descripcion }}</p>
-
-            <!-- Sección de documentos (para futuro) -->
-            <!--
-            <div class="documentos-section">
-                <h4 class="documentos-titulo">Documentos adjuntos</h4>
-                <a href="#" class="documento-item">
-                    <span class="documento-icon">📄</span>
-                    documento.pdf
-                </a>
-            </div>
-            -->
         </div>
 
         <div class="mensaje-acciones">
@@ -72,13 +61,13 @@
                 class="btn-accion btn-destacar {% if destacado %}activo{% endif %}" 
                 onclick="toggleDestacado({{ mensaje.id_mensaje }}, this)"
             >
-                ★ {% if destacado %}Destacado{% else %}Destacar{% endif %}
+                ★
             </button>
         </div>
     </div>
 
     {% if conversacion|length > 1 %}
-    <h3 class="conversacion-titulo">Conversación ({{ conversacion|length }} mensajes)</h3>
+    <h3 class="conversacion-titulo">Conversación: ({{ conversacion|length }} mensajes)</h3>
     <div class="conversacion-lista">
         {% for msg in conversacion %}
         <div class="conversacion-mensaje {% if msg.es_mio %}propio{% endif %} {% if msg.id == mensaje.id_mensaje %}actual{% endif %}">
@@ -97,27 +86,7 @@
 {% block extra_js %}
 {{ block.super }}
 <script>
-function toggleDestacado(mensajeId, btn) {
-    fetch(`/mensajeria/toggle-destacado/${mensajeId}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
-            'Content-Type': 'application/json',
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.destacado !== undefined) {
-            if (data.destacado) {
-                btn.classList.add('activo');
-                btn.innerHTML = '★ Destacado';
-            } else {
-                btn.classList.remove('activo');
-                btn.innerHTML = '★ Destacar';
-            }
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
+    const CSRF_TOKEN = '{{ csrf_token }}';
 </script>
+<script src="{% static 'mensajeria/js/toggle_destacado.js' %}"></script>
 {% endblock %}
