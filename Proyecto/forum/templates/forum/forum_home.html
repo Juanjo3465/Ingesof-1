@@ -29,9 +29,11 @@
                 <button class="category-button {% if selected_category == 'mis_publicaciones' %}active{% endif %}">Mis publicaciones</button>
             </a>
         </div>
+        {% if request.user.role.get_name == 'Admin' %}
         <a href="{% url 'admin_approval' %}">
             <button class="my-posts-button">Administrador</button>
         </a>
+        {% endif %}
     </div>
 
     <div class="posts-scroll-window">
@@ -45,12 +47,10 @@
             <p class="post-title">{{ post.titulo }}</p>
             <p class="post-content">
                 {{ post.descripcion }}
-                <a href="#" class="read-more">Leer más...</a>
             </p>
             <div class="post-actions">
-                <button class="action-button" data-post-id="{{ post.id_publicacion }}">
+                <button class="action-button">
                     <span class="material-icons">thumb_up</span>
-                    <span>{{ post.likes }}</span>
                 </button>
                 <button class="action-button">
                     <span class="material-icons">comment</span>
@@ -61,6 +61,16 @@
                     <span>Compartir</span>
                 </button>
             </div>
+            {%if request.user.role.get_name == 'Admin' %}
+            <div class="delete-post-button">
+                <a href="{% url 'delete_post' post.id_publicacion %}">
+                    <button class="delete-button">
+                        <span class="material-icons">delete</span> Eliminar
+                    </button>
+                </a>
+            </div>
+            {% endif %}
+
         </div>
         {% empty %}
         <div class="empty-state">
@@ -162,16 +172,13 @@
         const icon = button.querySelector('.material-icons');
         if (icon && icon.textContent === 'thumb_up') {
             button.addEventListener('click', function() {
-                const likeCount = this.querySelector('span:last-child');
                 
                 if (this.classList.contains('liked')) {
                     this.classList.remove('liked');
                     icon.style.color = '';
-                    likeCount.textContent = parseInt(likeCount.textContent) - 1;
                 } else {
                     this.classList.add('liked');
-                    icon.style.color = '#5F9EA0';
-                    likeCount.textContent = parseInt(likeCount.textContent) + 1;
+                    icon.style.color = '#07bee7ff';
                 }
             });
         }

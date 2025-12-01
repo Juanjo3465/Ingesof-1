@@ -35,7 +35,7 @@ def create_post(request):
         # Redirect back to the main page after saving
     return redirect('forum')  # Replace 'main' with the name of your main view
       
-    
+@login_required
 def filter_by_category(request, category):
     posts = Publicacion.objects.filter(categoria=category, visibilidad=1)
     contexto = { 'posts': posts, 'selected_category': category }
@@ -48,20 +48,30 @@ def mis_publicaciones(request):
     contexto = { 'posts': posts, 'selected_category': 'mis_publicaciones' }
     return render(request, 'forum/forum_home.html', contexto) 
 
+
+#ADMINISTRADOR VIEWS
 @role_required(Usuario.Rol_Administrador)
 def admin_approval(request):
     approval_pending_posts = Publicacion.objects.filter(visibilidad=None)
-    contexto = { 'pending_posts': approval_pending_posts }
+    contexto = { 'pending_posts': approval_pending_posts}
     return render(request, 'forum/admin_approval.html', contexto)
 
+@role_required(Usuario.Rol_Administrador)
 def accept_post(request, post_id):
     post = Publicacion.objects.get(pk=post_id)
     post.visibilidad = 1
     post.save()
     return redirect("admin_approval")
 
+@role_required(Usuario.Rol_Administrador)
 def reject_post(request, post_id):
     post = Publicacion.objects.get(pk=post_id)
     post.visibilidad = 2
     post.save()
     return redirect("admin_approval")
+
+@role_required(Usuario.Rol_Administrador)
+def delete_post(request, post_id):
+    post = Publicacion.objects.get(pk=post_id)
+    post.delete()
+    return redirect("forum")
