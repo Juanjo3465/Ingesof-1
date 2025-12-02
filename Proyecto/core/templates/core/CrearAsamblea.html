@@ -1,0 +1,476 @@
+{% extends 'partials/header_user.html' %}
+{% load static %}
+
+{% block title %}Crear Asamblea{% endblock %}
+
+{% block extra_css %}
+{{block.super}}
+<style>
+    .main-card {
+        flex: 1;
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        border: 2px solid #5F9EA0;
+        box-shadow: 0px 0px 10px rgba(0, 60, 80, 0.20);
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .assembly-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .back-button {
+        background: white;
+        border: 2px solid #5F9EA0;
+        border-radius: 8px;
+        padding: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+
+    .back-button:hover {
+        background-color: #e7f4f7;
+    }
+
+    .main-card h2 {
+        font-size: 26px;
+        color: #25565c;
+        margin: 0;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: linear-gradient(135deg, #5F9EA0 0%, #4A7C7E 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+    }
+
+    .nav-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        background: linear-gradient(135deg, #4A7C7E 0%, #3a6264 100%);
+        color: white;
+    }
+
+    .nav-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .assembly-form {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 15px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+        font-size: 15px;
+    }
+
+    .form-group .required {
+        color: #d32f2f;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 12px 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: border-color 0.3s;
+        outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #5F9EA0;
+    }
+
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+        font-family: inherit;
+    }
+
+    .char-counter {
+        font-size: 12px;
+        color: #666;
+        text-align: right;
+    }
+
+    .error-message {
+        color: #d32f2f;
+        font-size: 13px;
+        min-height: 18px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .btn-cancel {
+        padding: 12px 30px;
+        background: #f5f5f5;
+        color: #333;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-cancel:hover {
+        background: #e0e0e0;
+    }
+
+    .btn-submit {
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #5F9EA0 0%, #4A7C7E 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-submit:hover {
+        background: linear-gradient(135deg, #4A7C7E 0%, #3a6264 100%);
+        transform: translateY(-2px);
+    }
+
+    .btn-submit:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .message-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .message-overlay.show {
+        display: flex;
+    }
+
+    .message-box {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        max-width: 400px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .message-box h3 {
+        margin-bottom: 15px;
+        font-size: 22px;
+    }
+
+    .message-box p {
+        margin-bottom: 20px;
+        color: #666;
+    }
+
+    .message-box button {
+        padding: 10px 30px;
+        background: #5F9EA0;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .message-box.success h3 {
+        color: #2e7d32;
+    }
+
+    .message-box.error h3 {
+        color: #d32f2f;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            flex-direction: column;
+        }
+        .nav-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body_content %}
+<main class="main-card">
+    <div class="assembly-header">
+        <button class="back-button" onclick="window.history.back()">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="#333">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </button>
+        <h2>Crear Nueva Asamblea</h2>
+    </div>
+
+    <div class="nav-buttons">
+        <a class="nav-btn" href="{% url 'consultar_asambleas' %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            Ver Todas las Asambleas
+        </a>
+        <a class="nav-btn" href="{% url 'crear_peticion' %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+            Crear Petición
+        </a>
+        <a class="nav-btn" href="{% url 'delegar' %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+            Delegar Representación
+        </a>
+    </div>
+
+    <form class="assembly-form" id="assemblyForm">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+                <label>Nombre de la Asamblea <span class="required">*</span></label>
+                <input type="text" id="nombre" placeholder="Ej: Asamblea Ordinaria Enero 2025" maxlength="100" required>
+                <div class="char-counter" id="nombreCounter">0 / 100</div>
+                <div class="error-message" id="nombreError"></div>
+            </div>
+            <div class="form-group">
+                <label>Lugar <span class="required">*</span></label>
+                <input type="text" id="lugar" placeholder="Ej: Salón Comunal" maxlength="100" required>
+                <div class="error-message" id="lugarError"></div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Fecha y Hora <span class="required">*</span></label>
+                <input type="datetime-local" id="fechaHora" required>
+                <div class="error-message" id="fechaError"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Descripción <span class="required">*</span></label>
+            <textarea id="descripcion" placeholder="Describe los temas a tratar en la asamblea..." maxlength="1000" required></textarea>
+            <div class="char-counter" id="descripcionCounter">0 / 1000</div>
+            <div class="error-message" id="descripcionError"></div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-cancel">Cancelar</button>
+            <button type="submit" class="btn-submit" id="submitButton">Crear Asamblea</button>
+        </div>
+    </form>
+</main>
+
+<div class="message-overlay" id="messageOverlay">
+    <div class="message-box" id="messageBox">
+        <h3 id="messageTitle"></h3>
+        <p id="messageText"></p>
+        <button onclick="closeMessage()">Cerrar</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{block.super}}
+<script>
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    const form = document.getElementById('assemblyForm');
+    const nombreInput = document.getElementById('nombre');
+    const lugarInput = document.getElementById('lugar');
+    const fechaHoraInput = document.getElementById('fechaHora');
+    const descripcionInput = document.getElementById('descripcion');
+    const nombreCounter = document.getElementById('nombreCounter');
+    const descripcionCounter = document.getElementById('descripcionCounter');
+    const nombreError = document.getElementById('nombreError');
+    const lugarError = document.getElementById('lugarError');
+    const fechaError = document.getElementById('fechaError');
+    const descripcionError = document.getElementById('descripcionError');
+    const submitButton = document.getElementById('submitButton');
+    const messageOverlay = document.getElementById('messageOverlay');
+    const messageBox = document.getElementById('messageBox');
+    const messageTitle = document.getElementById('messageTitle');
+    const messageText = document.getElementById('messageText');
+
+    nombreInput.addEventListener('input', () => {
+        nombreCounter.textContent = `${nombreInput.value.length} / 100`;
+        nombreError.textContent = '';
+    });
+
+    descripcionInput.addEventListener('input', () => {
+        descripcionCounter.textContent = `${descripcionInput.value.length} / 1000`;
+        descripcionError.textContent = '';
+    });
+
+    function validarFormulario() {
+        let esValido = true;
+        nombreError.textContent = '';
+        lugarError.textContent = '';
+        fechaError.textContent = '';
+        descripcionError.textContent = '';
+
+        const nombre = nombreInput.value.trim();
+        const lugar = lugarInput.value.trim();
+        const fechaHora = fechaHoraInput.value;
+        const descripcion = descripcionInput.value.trim();
+
+        if (nombre.length < 5) {
+            nombreError.textContent = 'El nombre debe tener al menos 5 caracteres';
+            esValido = false;
+        }
+
+        if (lugar.length < 3) {
+            lugarError.textContent = 'El lugar debe tener al menos 3 caracteres';
+            esValido = false;
+        }
+
+        if (!fechaHora) {
+            fechaError.textContent = 'Debe seleccionar una fecha y hora';
+            esValido = false;
+        } else {
+            const fechaSeleccionada = new Date(fechaHora);
+            const ahora = new Date();
+            if (fechaSeleccionada < ahora) {
+                fechaError.textContent = 'La fecha no puede ser anterior a la actual';
+                esValido = false;
+            }
+        }
+
+        if (descripcion.length < 20) {
+            descripcionError.textContent = 'La descripción debe tener al menos 20 caracteres';
+            esValido = false;
+        }
+
+        return esValido;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!validarFormulario()) {
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'Creando...';
+
+        try {
+            const formData = {
+                nombre: nombreInput.value.trim(),
+                lugar: lugarInput.value.trim(),
+                fecha_hora: fechaHoraInput.value,
+                descripcion: descripcionInput.value.trim(),
+                estado: 'Programada'
+            };
+           
+            const response = await fetch("{% url 'api_crear_asamblea' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                mostrarMensaje('¡Éxito!', 'La asamblea ha sido creada exitosamente', 'success');
+                form.reset();
+                nombreCounter.textContent = '0 / 100';
+                descripcionCounter.textContent = '0 / 1000';
+            } else {
+                mostrarMensaje('Error', data.mensaje || 'No se pudo crear la asamblea', 'error');
+            }
+        } catch (error) {
+            mostrarMensaje('Error', 'No se pudo conectar con el servidor.', 'error');
+            console.error('Error:', error);
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Crear Asamblea';
+        }
+    });
+
+    function mostrarMensaje(titulo, texto, tipo) {
+        messageTitle.textContent = titulo;
+        messageText.textContent = texto;
+        messageBox.className = `message-box ${tipo}`;
+        messageOverlay.classList.add('show');
+    }
+
+    function closeMessage() {
+        messageOverlay.classList.remove('show');
+    }
+
+    document.querySelector('.btn-cancel').addEventListener('click', () => {
+        if (confirm('¿Estás seguro de que deseas cancelar? Se perderán todos los datos ingresados.')) {
+            form.reset();
+            nombreCounter.textContent = '0 / 100';
+            descripcionCounter.textContent = '0 / 1000';
+        }
+    });
+</script>
+{% endblock %}

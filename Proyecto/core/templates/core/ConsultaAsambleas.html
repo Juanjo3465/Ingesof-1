@@ -1,0 +1,757 @@
+{% extends 'partials/header_user.html' %}
+{% load static %}
+
+{% block title %}Consultar Asambleas{% endblock %}
+
+{% block extra_css %}
+{{block.super}}
+<style>
+    .main-card {
+        flex: 1;
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        border: 2px solid #5F9EA0;
+        box-shadow: 0px 0px 10px rgba(0, 60, 80, 0.20);
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .assembly-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .back-button {
+        background: white;
+        border: 2px solid #5F9EA0;
+        border-radius: 8px;
+        padding: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+
+    .back-button:hover {
+        background-color: #e7f4f7;
+    }
+
+    .main-card h2 {
+        font-size: 26px;
+        color: #25565c;
+        margin: 0;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: linear-gradient(135deg, #5F9EA0 0%, #4A7C7E 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+    }
+
+    .nav-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        background: linear-gradient(135deg, #4A7C7E 0%, #3a6264 100%);
+        color: white;
+    }
+
+    .nav-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Tabs */
+    .tabs-container {
+        margin-bottom: 20px;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 5px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    .tab-btn {
+        padding: 12px 24px;
+        background: #f5f5f5;
+        border: none;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        color: #666;
+        transition: all 0.3s;
+    }
+
+    .tab-btn:hover {
+        background: #e0e0e0;
+    }
+
+    .tab-btn.active {
+        background: linear-gradient(135deg, #5F9EA0 0%, #4A7C7E 100%);
+        color: white;
+    }
+
+    .tab-content {
+        display: none;
+        padding: 20px 0;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Filtros */
+    .filters-section {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .filter-group label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        padding: 8px 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+        border-color: #5F9EA0;
+    }
+
+    /* Tablas */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .data-table th {
+        background: linear-gradient(135deg, #5F9EA0 0%, #4A7C7E 100%);
+        color: white;
+        font-weight: 600;
+    }
+
+    .data-table tr:hover {
+        background-color: #f5f9fa;
+    }
+
+    .estado-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .estado-programada {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+
+    .estado-en-curso {
+        background: #fff3e0;
+        color: #ef6c00;
+    }
+
+    .estado-finalizada {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .estado-cancelada {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .estado-pendiente {
+        background: #fff3e0;
+        color: #ef6c00;
+    }
+
+    .estado-aprobada {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .estado-rechazada {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .btn-accion {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        margin-right: 5px;
+        transition: all 0.3s;
+    }
+
+    .btn-ver {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+
+    .btn-ver:hover {
+        background: #bbdefb;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+        font-style: italic;
+    }
+
+    .total-count {
+        margin-top: 15px;
+        text-align: right;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        color: #25565c;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    @media (max-width: 768px) {
+        .filters-section {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .data-table {
+            font-size: 13px;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 8px 10px;
+        }
+
+        .tabs {
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body_content %}
+<main class="main-card">
+    <div class="assembly-header">
+        <button class="back-button" onclick="window.history.back()">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="#333">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+        </button>
+        <h2>Gestión de Asambleas</h2>
+    </div>
+
+    <div class="nav-buttons">
+        <a class="nav-btn" href="{% url 'crear_asamblea' %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Crear Nueva Asamblea
+        </a>
+        <a class="nav-btn" href="{% url 'crear_peticion' %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+            Crear Petición
+        </a>
+        <a class="nav-btn" href="{% url 'delegar' %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+            Delegar Representación
+        </a>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="mostrarTab('asambleas')">
+                📋 Asambleas
+            </button>
+            <button class="tab-btn" onclick="mostrarTab('delegados')">
+                👥 Delegados
+            </button>
+            <button class="tab-btn" onclick="mostrarTab('peticiones')">
+                📝 Peticiones
+            </button>
+        </div>
+    </div>
+
+    <!-- Tab Asambleas -->
+    <div id="tab-asambleas" class="tab-content active">
+        <h3 class="section-title">Listado de Asambleas</h3>
+        
+        <div class="filters-section">
+            <div class="filter-group">
+                <label>Estado:</label>
+                <select id="filtroEstadoAsamblea">
+                    <option value="">Todos</option>
+                    <option value="Programada">Programada</option>
+                    <option value="En curso">En curso</option>
+                    <option value="Finalizada">Finalizada</option>
+                    <option value="Cancelada">Cancelada</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Buscar:</label>
+                <input type="text" id="filtroBusquedaAsamblea" placeholder="Nombre o lugar...">
+            </div>
+        </div>
+
+        <div id="tablaAsambleas">
+            <div class="loading">Cargando asambleas...</div>
+        </div>
+        <div class="total-count" id="totalAsambleas"></div>
+    </div>
+
+    <!-- Tab Delegados -->
+    <div id="tab-delegados" class="tab-content">
+        <h3 class="section-title">Listado de Delegados</h3>
+        
+        <div class="filters-section">
+            <div class="filter-group">
+                <label>Buscar:</label>
+                <input type="text" id="filtroBusquedaDelegado" placeholder="Nombre o cédula...">
+            </div>
+        </div>
+
+        <div id="tablaDelegados">
+            <div class="loading">Cargando delegados...</div>
+        </div>
+        <div class="total-count" id="totalDelegados"></div>
+    </div>
+
+    <!-- Tab Peticiones -->
+    <div id="tab-peticiones" class="tab-content">
+        <h3 class="section-title">Listado de Peticiones</h3>
+        
+        <div class="filters-section">
+            <div class="filter-group">
+                <label>Estado:</label>
+                <select id="filtroEstadoPeticion">
+                    <option value="">Todos</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Aprobada">Aprobada</option>
+                    <option value="Rechazada">Rechazada</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Buscar:</label>
+                <input type="text" id="filtroBusquedaPeticion" placeholder="Asunto...">
+            </div>
+        </div>
+
+        <div id="tablaPeticiones">
+            <div class="loading">Cargando peticiones...</div>
+        </div>
+        <div class="total-count" id="totalPeticiones"></div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+{{block.super}}
+<script>
+    let todasLasAsambleas = [];
+    let todosLosDelegados = [];
+    let todasLasPeticiones = [];
+
+    // ========== TABS ==========
+    function mostrarTab(tabName) {
+        // Ocultar todos los contenidos
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Desactivar todos los botones
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Mostrar el tab seleccionado
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+        
+        // Activar el botón correspondiente
+        event.target.classList.add('active');
+
+        // Cargar datos si es necesario
+        if (tabName === 'delegados' && todosLosDelegados.length === 0) {
+            cargarDelegados();
+        } else if (tabName === 'peticiones' && todasLasPeticiones.length === 0) {
+            cargarPeticiones();
+        }
+    }
+
+    // ========== ASAMBLEAS ==========
+    async function cargarAsambleas() {
+        const container = document.getElementById('tablaAsambleas');
+        
+        try {
+            const response = await fetch("{% url 'api_listar_asambleas' %}");
+            const data = await response.json();
+
+            if (data.success) {
+                todasLasAsambleas = data.asambleas;
+                renderizarTablaAsambleas(todasLasAsambleas);
+            } else {
+                container.innerHTML = `<div class="no-data">Error: ${data.mensaje}</div>`;
+            }
+        } catch (error) {
+            container.innerHTML = '<div class="no-data">Error al cargar las asambleas</div>';
+            console.error('Error:', error);
+        }
+    }
+
+    function renderizarTablaAsambleas(asambleas) {
+        const container = document.getElementById('tablaAsambleas');
+        const totalCount = document.getElementById('totalAsambleas');
+
+        if (asambleas.length === 0) {
+            container.innerHTML = '<div class="no-data">No hay asambleas registradas</div>';
+            totalCount.textContent = '';
+            return;
+        }
+
+        let html = `
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Lugar</th>
+                        <th>Fecha y Hora</th>
+                        <th>Estado</th>
+                        <th>Documentos</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        asambleas.forEach(asamblea => {
+            const fecha = asamblea.fecha_hora ? 
+                new Date(asamblea.fecha_hora).toLocaleString('es-CO', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : 'Sin fecha';
+
+            const estadoClass = obtenerClaseEstado(asamblea.estado);
+            
+            const documentos = [];
+            if (asamblea.doc_convocatoria) documentos.push('📄 Conv.');
+            if (asamblea.doc_citacion) documentos.push('📋 Cit.');
+            if (asamblea.acta_asamblea) documentos.push('📝 Acta');
+
+            html += `
+                <tr>
+                    <td>${asamblea.nombre || '-'}</td>
+                    <td>${asamblea.lugar || '-'}</td>
+                    <td>${fecha}</td>
+                    <td><span class="estado-badge ${estadoClass}">${asamblea.estado || '-'}</span></td>
+                    <td>${documentos.length > 0 ? documentos.join(' ') : '-'}</td>
+                </tr>
+            `;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        totalCount.textContent = `Total: ${asambleas.length} asamblea(s)`;
+    }
+
+    function obtenerClaseEstado(estado) {
+        const clases = {
+            'Programada': 'estado-programada',
+            'En curso': 'estado-en-curso',
+            'Finalizada': 'estado-finalizada',
+            'Cancelada': 'estado-cancelada',
+            'Pendiente': 'estado-pendiente',
+            'Aprobada': 'estado-aprobada',
+            'Rechazada': 'estado-rechazada'
+        };
+        return clases[estado] || 'estado-programada';
+    }
+
+    function filtrarAsambleas() {
+        const estado = document.getElementById('filtroEstadoAsamblea').value;
+        const busqueda = document.getElementById('filtroBusquedaAsamblea').value.toLowerCase();
+
+        let filtradas = todasLasAsambleas;
+
+        if (estado) {
+            filtradas = filtradas.filter(a => a.estado === estado);
+        }
+
+        if (busqueda) {
+            filtradas = filtradas.filter(a => 
+                (a.nombre && a.nombre.toLowerCase().includes(busqueda)) ||
+                (a.lugar && a.lugar.toLowerCase().includes(busqueda))
+            );
+        }
+
+        renderizarTablaAsambleas(filtradas);
+    }
+
+    // ========== DELEGADOS ==========
+    async function cargarDelegados() {
+        const container = document.getElementById('tablaDelegados');
+        
+        try {
+            const response = await fetch("{% url 'api_listar_delegados' %}");
+            const data = await response.json();
+
+            if (data.success) {
+                todosLosDelegados = data.delegados;
+                renderizarTablaDelegados(todosLosDelegados);
+            } else {
+                container.innerHTML = `<div class="no-data">Error: ${data.mensaje}</div>`;
+            }
+        } catch (error) {
+            container.innerHTML = '<div class="no-data">Error al cargar los delegados</div>';
+            console.error('Error:', error);
+        }
+    }
+
+    function renderizarTablaDelegados(delegados) {
+        const container = document.getElementById('tablaDelegados');
+        const totalCount = document.getElementById('totalDelegados');
+
+        if (delegados.length === 0) {
+            container.innerHTML = '<div class="no-data">No hay delegados registrados</div>';
+            totalCount.textContent = '';
+            return;
+        }
+
+        let html = `
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nombre Delegado</th>
+                        <th>Cédula Delegado</th>
+                        <th>Propietario</th>
+                        <th>Asamblea</th>
+                        <th>Fecha Asamblea</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        delegados.forEach(delegado => {
+            const fecha = delegado.fecha_asamblea ? 
+                new Date(delegado.fecha_asamblea).toLocaleString('es-CO', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : 'Sin fecha';
+
+            html += `
+                <tr>
+                    <td>${delegado.nombre || '-'}</td>
+                    <td>${delegado.cedula || '-'}</td>
+                    <td>${delegado.propietario_nombre || '-'}</td>
+                    <td>${delegado.asamblea_nombre || '-'}</td>
+                    <td>${fecha}</td>
+                </tr>
+            `;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        totalCount.textContent = `Total: ${delegados.length} delegado(s)`;
+    }
+
+    function filtrarDelegados() {
+        const busqueda = document.getElementById('filtroBusquedaDelegado').value.toLowerCase();
+
+        let filtrados = todosLosDelegados;
+
+        if (busqueda) {
+            filtrados = filtrados.filter(d => 
+                (d.nombre && d.nombre.toLowerCase().includes(busqueda)) ||
+                (d.cedula && d.cedula.toString().includes(busqueda)) ||
+                (d.propietario_nombre && d.propietario_nombre.toLowerCase().includes(busqueda))
+            );
+        }
+
+        renderizarTablaDelegados(filtrados);
+    }
+
+    // ========== PETICIONES ==========
+    async function cargarPeticiones() {
+        const container = document.getElementById('tablaPeticiones');
+        
+        try {
+            const response = await fetch("{% url 'api_listar_peticiones' %}");
+            const data = await response.json();
+
+            if (data.success) {
+                todasLasPeticiones = data.peticiones;
+                renderizarTablaPeticiones(todasLasPeticiones);
+            } else {
+                container.innerHTML = `<div class="no-data">Error: ${data.mensaje}</div>`;
+            }
+        } catch (error) {
+            container.innerHTML = '<div class="no-data">Error al cargar las peticiones</div>';
+            console.error('Error:', error);
+        }
+    }
+
+    function renderizarTablaPeticiones(peticiones) {
+        const container = document.getElementById('tablaPeticiones');
+        const totalCount = document.getElementById('totalPeticiones');
+
+        if (peticiones.length === 0) {
+            container.innerHTML = '<div class="no-data">No hay peticiones registradas</div>';
+            totalCount.textContent = '';
+            return;
+        }
+
+        let html = `
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Asunto</th>
+                        <th>Descripción</th>
+                        <th>Propietario</th>
+                        <th>Asamblea</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        peticiones.forEach(peticion => {
+            const fecha = peticion.fecha_peticion ? 
+                new Date(peticion.fecha_peticion).toLocaleString('es-CO', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                }) : 'Sin fecha';
+
+            const estadoClass = obtenerClaseEstado(peticion.estado);
+            
+            // Truncar descripción si es muy larga
+            const descripcionCorta = peticion.descripcion && peticion.descripcion.length > 50 
+                ? peticion.descripcion.substring(0, 50) + '...' 
+                : peticion.descripcion || '-';
+
+            html += `
+                <tr>
+                    <td>${peticion.asunto || '-'}</td>
+                    <td title="${peticion.descripcion || ''}">${descripcionCorta}</td>
+                    <td>${peticion.propietario_nombre || '-'}</td>
+                    <td>${peticion.asamblea_nombre || '-'}</td>
+                    <td>${fecha}</td>
+                    <td><span class="estado-badge ${estadoClass}">${peticion.estado || '-'}</span></td>
+                </tr>
+            `;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        totalCount.textContent = `Total: ${peticiones.length} petición(es)`;
+    }
+
+    function filtrarPeticiones() {
+        const estado = document.getElementById('filtroEstadoPeticion').value;
+        const busqueda = document.getElementById('filtroBusquedaPeticion').value.toLowerCase();
+
+        let filtradas = todasLasPeticiones;
+
+        if (estado) {
+            filtradas = filtradas.filter(p => p.estado === estado);
+        }
+
+        if (busqueda) {
+            filtradas = filtradas.filter(p => 
+                (p.asunto && p.asunto.toLowerCase().includes(busqueda)) ||
+                (p.descripcion && p.descripcion.toLowerCase().includes(busqueda))
+            );
+        }
+
+        renderizarTablaPeticiones(filtradas);
+    }
+
+    // ========== EVENT LISTENERS ==========
+    document.getElementById('filtroEstadoAsamblea').addEventListener('change', filtrarAsambleas);
+    document.getElementById('filtroBusquedaAsamblea').addEventListener('input', filtrarAsambleas);
+    document.getElementById('filtroBusquedaDelegado').addEventListener('input', filtrarDelegados);
+    document.getElementById('filtroEstadoPeticion').addEventListener('change', filtrarPeticiones);
+    document.getElementById('filtroBusquedaPeticion').addEventListener('input', filtrarPeticiones);
+
+    // Cargar asambleas al iniciar
+    cargarAsambleas();
+</script>
+{% endblock %}
